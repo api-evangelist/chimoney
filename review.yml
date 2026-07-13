@@ -1,0 +1,144 @@
+aid: chimoney
+name: Chimoney
+review:
+  question: Does Chimoney expose a documented public WebSocket API?
+  answer: false
+  date: '2026-07-12'
+  reviewer: API Evangelist
+  asyncapiSpecCreated: false
+  asyncapiScopeNote: |
+    No AsyncAPI document was authored. Chimoney's public API surface is
+    request/response REST over HTTPS. Its only server-push mechanism is
+    outbound webhooks (Chimoney POSTs JSON events to an endpoint URL you
+    configure in the dashboard) - there is no bidirectional or streaming
+    transport on Chimoney's own API to model, and webhooks are configured in
+    the dashboard rather than exposed as an API resource with a documented
+    schema. No SSE or WebSocket surface is documented.
+findings:
+  summary: |
+    Chimoney does not publish a documented public WebSocket API. Chimoney is a
+    developer-first global payouts / disbursement platform. Its API (v0.2,
+    OpenAPI 3.0.0 spec version 0.2.2) is pure REST over HTTPS, served from
+    https://api.chimoney.io (production) and https://api-v2-sandbox.chimoney.io
+    (sandbox), with paths under /v0.2/. Authentication is an API key passed in
+    the X-API-KEY header, issued self-serve from the developer dashboard
+    (https://dash.chimoney.io/developers). Asynchronous notification is handled
+    by outbound webhooks configured in the dashboard (Developers -> App WebHooks
+    -> Endpoints), which POST JSON event payloads (e.g. payout.bank.completed,
+    payout.gift-card.failed, chimoney.payment.completed) to your server. No
+    realtime, bidirectional, or streaming WebSocket (ws:// or wss://) endpoint,
+    and no Server-Sent Events surface, is documented anywhere in Chimoney's API
+    reference as of the review date.
+  transports:
+    - protocol: REST
+      scheme: https
+      baseURL: https://api.chimoney.io/v0.2
+      documented: true
+      note: Full API surface (Payouts, Wallets, MultiCurrency Wallets, Sub-Accounts, Redeem, Info, Accounts, Payments). Sandbox host is https://api-v2-sandbox.chimoney.io.
+    - protocol: Webhook
+      scheme: https
+      documented: true
+      note: Outbound event notifications POSTed to a dashboard-configured endpoint URL. Server-to-endpoint HTTP, not WebSocket. No documented signature-verification header at review date.
+    - protocol: WebSocket
+      scheme: wss
+      documented: false
+      note: No WebSocket endpoint is documented in Chimoney's API reference or dashboard as of the review date.
+  authentication:
+    scheme: apiKey
+    in: header
+    parameterName: X-API-KEY
+    note: Key issued from https://dash.chimoney.io/developers. Separate sandbox key/host for testing; production access after KYB verification.
+  endpointsConfirmedRest:
+    - POST   https://api.chimoney.io/v0.2/payouts/bank
+    - POST   https://api.chimoney.io/v0.2/payouts/mobile-money
+    - POST   https://api.chimoney.io/v0.2/payouts/airtime
+    - POST   https://api.chimoney.io/v0.2/payouts/gift-card
+    - POST   https://api.chimoney.io/v0.2/payouts/chimoney
+    - POST   https://api.chimoney.io/v0.2/payouts/wallet
+    - POST   https://api.chimoney.io/v0.2/payouts/interledger-wallet-address
+    - POST   https://api.chimoney.io/v0.2/payouts/interac
+    - POST   https://api.chimoney.io/v0.2/payouts/bills/ca
+    - POST   https://api.chimoney.io/v0.2/payouts/initiate-chimoney
+    - POST   https://api.chimoney.io/v0.2/payouts/process
+    - POST   https://api.chimoney.io/v0.2/payouts/status
+    - POST   https://api.chimoney.io/v0.2/wallets/list
+    - POST   https://api.chimoney.io/v0.2/wallets/lookup
+    - POST   https://api.chimoney.io/v0.2/wallets/transfer
+    - POST   https://api.chimoney.io/v0.2/multicurrency-wallets/create
+    - GET    https://api.chimoney.io/v0.2/multicurrency-wallets/get
+    - GET    https://api.chimoney.io/v0.2/multicurrency-wallets/list
+    - POST   https://api.chimoney.io/v0.2/multicurrency-wallets/update
+    - POST   https://api.chimoney.io/v0.2/multicurrency-wallets/transfer
+    - POST   https://api.chimoney.io/v0.2/multicurrency-wallets/transfer/quote
+    - POST   https://api.chimoney.io/v0.2/sub-account/create
+    - GET    https://api.chimoney.io/v0.2/sub-account/get
+    - GET    https://api.chimoney.io/v0.2/sub-account/list
+    - POST   https://api.chimoney.io/v0.2/sub-account/update
+    - DELETE https://api.chimoney.io/v0.2/sub-account/delete
+    - POST   https://api.chimoney.io/v0.2/sub-account/community/create
+    - GET    https://api.chimoney.io/v0.2/sub-account/community/members
+    - POST   https://api.chimoney.io/v0.2/redeem/any
+    - POST   https://api.chimoney.io/v0.2/redeem/chimoney
+    - POST   https://api.chimoney.io/v0.2/redeem/airtime
+    - POST   https://api.chimoney.io/v0.2/redeem/gift-card
+    - POST   https://api.chimoney.io/v0.2/redeem/mobile-money
+    - GET    https://api.chimoney.io/v0.2/info/assets
+    - GET    https://api.chimoney.io/v0.2/info/country-banks
+    - GET    https://api.chimoney.io/v0.2/info/bank-branches
+    - GET    https://api.chimoney.io/v0.2/info/airtime-countries
+    - GET    https://api.chimoney.io/v0.2/info/mobile-money-codes
+    - GET    https://api.chimoney.io/v0.2/info/exchange-rates
+    - GET    https://api.chimoney.io/v0.2/info/local-amount-in-usd
+    - GET    https://api.chimoney.io/v0.2/info/usd-amount-in-local
+    - POST   https://api.chimoney.io/v0.2/info/verify-bank-account-number
+    - POST   https://api.chimoney.io/v0.2/accounts/transactions
+    - POST   https://api.chimoney.io/v0.2/accounts/transaction
+    - POST   https://api.chimoney.io/v0.2/accounts/issue-id-transactions
+    - POST   https://api.chimoney.io/v0.2/accounts/public-profile
+    - POST   https://api.chimoney.io/v0.2/accounts/transfer
+    - DELETE https://api.chimoney.io/v0.2/accounts/delete-unpaid-transaction
+    - POST   https://api.chimoney.io/v0.2/accounts/issue-wallet-address
+    - POST   https://api.chimoney.io/v0.2/payment/initiate
+    - POST   https://api.chimoney.io/v0.2/payment/verify
+    - POST   https://api.chimoney.io/v0.2/payment/simulate
+  modeledNotConfirmed:
+    - note: |
+        Request-body schemas in openapi/chimoney-openapi.yml are representative
+        and simplified for the most common endpoints (payouts, wallets,
+        multicurrency, sub-accounts, redeem, payments); the full field set is
+        larger. Endpoint paths, methods, tags, and summaries are grounded
+        verbatim in the live spec. The OpenAPI is a curated subset (52 of 59
+        operations); omitted operations include the AI invoice generator,
+        additional Info lookups (bank-search, country-states-regions,
+        bill-merchants, fee-estimate, identification-types,
+        beneficiary-rules), community update/verify-code, spei/interledger
+        variants, and multicurrency bank-account/request issuance.
+    - note: |
+        Pricing (per-payout fees, FX spread) is modeled honestly and NOT
+        reconciled - Chimoney publishes no numeric API price table; see
+        plans/ and finops/ with reconciled:false.
+sources:
+  - url: https://api.chimoney.io/v0.2/swagger.json
+    type: OpenAPI
+    note: Live OpenAPI 3.0.0 spec (version 0.2.2), 59 paths. securitySchemes.apiKeyAuth = apiKey in header X-API-KEY. servers = https://api.chimoney.io/ (prod) and https://api-v2-sandbox.chimoney.io (sandbox). All operations are HTTPS REST.
+  - url: https://api.chimoney.io/v0.2/api-docs/
+    type: APIReference
+    note: Swagger UI for the v0.2 API. All documented operations are HTTPS REST.
+  - url: https://chimoney.readme.io/reference/authentication
+    type: Documentation
+    note: API key from dash.chimoney.io/developers; no WebSocket mentioned.
+  - url: https://chimoney.readme.io/reference/webhooks-and-events
+    type: Documentation
+    note: Webhooks configured in the dashboard, POST JSON event payloads. Outbound HTTP, not WebSocket.
+  - url: https://chimoney.io/developers-api/
+    type: Documentation
+    note: Product overview - global payouts, agent/multicurrency wallets, campaigns. GitHub org github.com/Chimoney, LinkedIn linkedin.com/company/chimoney.
+actions:
+  asyncapiPath: null
+  apisYmlUpdated: true
+  reason: |
+    No WebSocket (or SSE) protocol surface exists on Chimoney's own API. The
+    API is request/response REST over HTTPS; asynchronous delivery is via
+    dashboard-configured outbound webhooks. No AsyncAPI document was created
+    because there is no server-push streaming transport with a documented
+    schema on Chimoney's own API to model.

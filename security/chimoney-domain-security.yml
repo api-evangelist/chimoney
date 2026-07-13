@@ -1,0 +1,26 @@
+generated: '2026-07-12'
+method: probed
+source: live DNS/TLS/HTTP probes of apis.yml + OpenAPI hosts
+hosts:
+- host: chimoney.io
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Oct  2 18:31:45 2026 GMT
+  hsts: false
+- host: api.chimoney.io
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Aug 19 00:21:04 2026 GMT
+  hsts: false
+- host: api-v2-sandbox.chimoney.io
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Aug 20 10:44:51 2026 GMT
+  hsts: false
+domains:
+- domain: chimoney.io
+  dnssec: false
+  caa: []
+  spf: false
+  dmarc: true
+  dmarc_policy: quarantine

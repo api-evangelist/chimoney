@@ -1,0 +1,1591 @@
+{
+  "info": {
+    "name": "Chimoney API",
+    "description": "Chimoney global payouts and disbursement REST API (v0.2). Base URL: https://api.chimoney.io (production) or https://api-v2-sandbox.chimoney.io (sandbox). All requests are authenticated with an API key in the X-API-KEY header, issued from https://dash.chimoney.io/developers. Grounded in the live OpenAPI (https://api.chimoney.io/v0.2/swagger.json, spec 0.2.2).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "X-API-KEY",
+        "type": "string"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}",
+        "type": "string"
+      },
+      {
+        "key": "in",
+        "value": "header",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://api.chimoney.io",
+      "type": "string"
+    },
+    {
+      "key": "apiKey",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Payouts",
+      "item": [
+        {
+          "name": "Payout to Bank in a supported Country.",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"debitCurrency\": \"USD\",\n  \"banks\": [\n    {\n      \"countryToSend\": \"Nigeria\",\n      \"account_bank\": \"044\",\n      \"account_number\": \"0690000031\",\n      \"valueInUSD\": 10\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/payouts/bank",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "payouts",
+                "bank"
+              ]
+            },
+            "description": "Payout to Bank in a supported Country."
+          }
+        },
+        {
+          "name": "Payout Mobile Money (Momo).",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"momos\": [\n    {\n      \"countryToSend\": \"Kenya\",\n      \"phoneNumber\": \"254710102720\",\n      \"momoCode\": \"MPS\",\n      \"valueInUSD\": 10\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/payouts/mobile-money",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "payouts",
+                "mobile-money"
+              ]
+            },
+            "description": "Payout Mobile Money (Momo)."
+          }
+        },
+        {
+          "name": "Payout Airtime to a Phone number.",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/payouts/airtime",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "payouts",
+                "airtime"
+              ]
+            },
+            "description": "Payout Airtime to a Phone number."
+          }
+        },
+        {
+          "name": "Payout Giftcards to an email.",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"giftcards\": [\n    {\n      \"email\": \"test@example.com\",\n      \"valueInUSD\": 10\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/payouts/gift-card",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "payouts",
+                "gift-card"
+              ]
+            },
+            "description": "Payout Giftcards to an email."
+          }
+        },
+        {
+          "name": "Payout Chimoney.",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"chimoneys\": [\n    {\n      \"email\": \"test@example.com\",\n      \"valueInUSD\": 10\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/payouts/chimoney",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "payouts",
+                "chimoney"
+              ]
+            },
+            "description": "Payout Chimoney."
+          }
+        },
+        {
+          "name": "Payout to a Chimoney Wallet.",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/payouts/wallet",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "payouts",
+                "wallet"
+              ]
+            },
+            "description": "Payout to a Chimoney Wallet."
+          }
+        },
+        {
+          "name": "Payout to a Interledger Wallet Address.",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/payouts/interledger-wallet-address",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "payouts",
+                "interledger-wallet-address"
+              ]
+            },
+            "description": "Payout to a Interledger Wallet Address."
+          }
+        },
+        {
+          "name": "Payout Interac.",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/payouts/interac",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "payouts",
+                "interac"
+              ]
+            },
+            "description": "Payout Interac."
+          }
+        },
+        {
+          "name": "Payout Canadian Bill payment.",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/payouts/bills/ca",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "payouts",
+                "bills",
+                "ca"
+              ]
+            },
+            "description": "Payout Canadian Bill payment."
+          }
+        },
+        {
+          "name": "Initiate Chimoney transaction.",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/payouts/initiate-chimoney",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "payouts",
+                "initiate-chimoney"
+              ]
+            },
+            "description": "Initiate Chimoney transaction."
+          }
+        },
+        {
+          "name": "Debit wallet to process unpaid transaction.",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/payouts/process",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "payouts",
+                "process"
+              ]
+            },
+            "description": "Debit wallet to process unpaid transaction."
+          }
+        },
+        {
+          "name": "Check Payout status.",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"chiRef\": \"REPLACE_WITH_CHIREF\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/payouts/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "payouts",
+                "status"
+              ]
+            },
+            "description": "Check Payout status."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Wallets",
+      "item": [
+        {
+          "name": "List associated wallets.",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/wallets/list",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "wallets",
+                "list"
+              ]
+            },
+            "description": "List associated wallets."
+          }
+        },
+        {
+          "name": "Get single wallet details.",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/wallets/lookup",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "wallets",
+                "lookup"
+              ]
+            },
+            "description": "Get single wallet details."
+          }
+        },
+        {
+          "name": "Transfer between wallets.",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"receiver\": \"RECEIVER_ID\",\n  \"valueInUSD\": 200,\n  \"wallet\": \"chi\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/wallets/transfer",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "wallets",
+                "transfer"
+              ]
+            },
+            "description": "Transfer between wallets."
+          }
+        }
+      ]
+    },
+    {
+      "name": "MultiCurrency Wallets",
+      "item": [
+        {
+          "name": "Create a new Multicurrency Wallet.",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Mide Jones\",\n  \"email\": \"user@example.com\",\n  \"phoneNumber\": \"+16471234567\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/multicurrency-wallets/create",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "multicurrency-wallets",
+                "create"
+              ]
+            },
+            "description": "Create a new Multicurrency Wallet."
+          }
+        },
+        {
+          "name": "Get details of an existing multicurrency wallet.",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/multicurrency-wallets/get",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "multicurrency-wallets",
+                "get"
+              ]
+            },
+            "description": "Get details of an existing multicurrency wallet."
+          }
+        },
+        {
+          "name": "Get all multicurrency wallets of an organization/account.",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/multicurrency-wallets/list",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "multicurrency-wallets",
+                "list"
+              ]
+            },
+            "description": "Get all multicurrency wallets of an organization/account."
+          }
+        },
+        {
+          "name": "Update a multicurrency-wallets.",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/multicurrency-wallets/update",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "multicurrency-wallets",
+                "update"
+              ]
+            },
+            "description": "Update a multicurrency-wallets."
+          }
+        },
+        {
+          "name": "Transfer from multicurrency wallet to another wallet, an email or a phone number.",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/multicurrency-wallets/transfer",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "multicurrency-wallets",
+                "transfer"
+              ]
+            },
+            "description": "Transfer from multicurrency wallet to another wallet, an email or a phone number."
+          }
+        },
+        {
+          "name": "Get Quote to Transfer between multicurrency wallets.",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/multicurrency-wallets/transfer/quote",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "multicurrency-wallets",
+                "transfer",
+                "quote"
+              ]
+            },
+            "description": "Get Quote to Transfer between multicurrency wallets."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sub-Accounts",
+      "item": [
+        {
+          "name": "Create a new sub-account.",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Mide Jones\",\n  \"email\": \"user@example.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/sub-account/create",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "sub-account",
+                "create"
+              ]
+            },
+            "description": "Create a new sub-account."
+          }
+        },
+        {
+          "name": "Get details of an existing sub account.",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/sub-account/get",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "sub-account",
+                "get"
+              ]
+            },
+            "description": "Get details of an existing sub account."
+          }
+        },
+        {
+          "name": "Get all sub-accounts associated with a user.",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/sub-account/list",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "sub-account",
+                "list"
+              ]
+            },
+            "description": "Get all sub-accounts associated with a user."
+          }
+        },
+        {
+          "name": "Update a sub-account.",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/sub-account/update",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "sub-account",
+                "update"
+              ]
+            },
+            "description": "Update a sub-account."
+          }
+        },
+        {
+          "name": "Delete an existing sub-account.",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/sub-account/delete",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "sub-account",
+                "delete"
+              ]
+            },
+            "description": "Delete an existing sub-account."
+          }
+        },
+        {
+          "name": "Create a sub-account community associated with a user.",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/sub-account/community/create",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "sub-account",
+                "community",
+                "create"
+              ]
+            },
+            "description": "Create a sub-account community associated with a user."
+          }
+        },
+        {
+          "name": "Get community members .",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/sub-account/community/members",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "sub-account",
+                "community",
+                "members"
+              ]
+            },
+            "description": "Get community members ."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Redeem",
+      "item": [
+        {
+          "name": "Redeem any.",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/redeem/any",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "redeem",
+                "any"
+              ]
+            },
+            "description": "Redeem any."
+          }
+        },
+        {
+          "name": "Redeem Chimoney.",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"chiRef\": \"REPLACE_WITH_CHIREF\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/redeem/chimoney",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "redeem",
+                "chimoney"
+              ]
+            },
+            "description": "Redeem Chimoney."
+          }
+        },
+        {
+          "name": "Redeem airtime.",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/redeem/airtime",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "redeem",
+                "airtime"
+              ]
+            },
+            "description": "Redeem airtime."
+          }
+        },
+        {
+          "name": "Redeem giftcard.",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/redeem/gift-card",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "redeem",
+                "gift-card"
+              ]
+            },
+            "description": "Redeem giftcard."
+          }
+        },
+        {
+          "name": "Redeem mobile money.",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/redeem/mobile-money",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "redeem",
+                "mobile-money"
+              ]
+            },
+            "description": "Redeem mobile money."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Info",
+      "item": [
+        {
+          "name": "Get list of all assests.",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/info/assets",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "info",
+                "assets"
+              ]
+            },
+            "description": "Get list of all assests."
+          }
+        },
+        {
+          "name": "Get list of Supported banks and bank code.",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/info/country-banks",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "info",
+                "country-banks"
+              ]
+            },
+            "description": "Get list of Supported banks and bank code."
+          }
+        },
+        {
+          "name": "Get list of bank branches and branch code.",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/info/bank-branches",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "info",
+                "bank-branches"
+              ]
+            },
+            "description": "Get list of bank branches and branch code."
+          }
+        },
+        {
+          "name": "Get list of all supported airtime Countries.",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/info/airtime-countries",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "info",
+                "airtime-countries"
+              ]
+            },
+            "description": "Get list of all supported airtime Countries."
+          }
+        },
+        {
+          "name": "Get list of all supported mobile money code.",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/info/mobile-money-codes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "info",
+                "mobile-money-codes"
+              ]
+            },
+            "description": "Get list of all supported mobile money code."
+          }
+        },
+        {
+          "name": "get exchange rates.",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/info/exchange-rates",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "info",
+                "exchange-rates"
+              ]
+            },
+            "description": "get exchange rates."
+          }
+        },
+        {
+          "name": "convert local currency amount to USD.",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/info/local-amount-in-usd",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "info",
+                "local-amount-in-usd"
+              ]
+            },
+            "description": "convert local currency amount to USD."
+          }
+        },
+        {
+          "name": "Convert USD amount to Local currency amount.",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/info/usd-amount-in-local",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "info",
+                "usd-amount-in-local"
+              ]
+            },
+            "description": "Convert USD amount to Local currency amount."
+          }
+        },
+        {
+          "name": "verify a bank account number or multiple bank account numbers.",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/info/verify-bank-account-number",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "info",
+                "verify-bank-account-number"
+              ]
+            },
+            "description": "verify a bank account number or multiple bank account numbers."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Accounts",
+      "item": [
+        {
+          "name": "Get all transactions by account.",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/accounts/transactions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "accounts",
+                "transactions"
+              ]
+            },
+            "description": "Get all transactions by account."
+          }
+        },
+        {
+          "name": "Get single transaction detail.",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/accounts/transaction",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "accounts",
+                "transaction"
+              ]
+            },
+            "description": "Get single transaction detail."
+          }
+        },
+        {
+          "name": "Get transaction details by issueID.",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/accounts/issue-id-transactions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "accounts",
+                "issue-id-transactions"
+              ]
+            },
+            "description": "Get transaction details by issueID."
+          }
+        },
+        {
+          "name": "Get Public profile of a Chimoney User.",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/accounts/public-profile",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "accounts",
+                "public-profile"
+              ]
+            },
+            "description": "Get Public profile of a Chimoney User."
+          }
+        },
+        {
+          "name": "Account Transfer.",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/accounts/transfer",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "accounts",
+                "transfer"
+              ]
+            },
+            "description": "Account Transfer."
+          }
+        },
+        {
+          "name": "Deletes an unpaid transaction.",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/accounts/delete-unpaid-transaction",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "accounts",
+                "delete-unpaid-transaction"
+              ]
+            },
+            "description": "Deletes an unpaid transaction."
+          }
+        },
+        {
+          "name": "Issue an Interledger wallet address for a user",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/accounts/issue-wallet-address",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "accounts",
+                "issue-wallet-address"
+              ]
+            },
+            "description": "Issue an Interledger wallet address for a user"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Payments",
+      "item": [
+        {
+          "name": "Initiate a payment request",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"valueInUSD\": 50,\n  \"payerEmail\": \"payer@example.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/payment/initiate",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "payment",
+                "initiate"
+              ]
+            },
+            "description": "Initiate a payment request"
+          }
+        },
+        {
+          "name": "verify a payment.",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/payment/verify",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "payment",
+                "verify"
+              ]
+            },
+            "description": "verify a payment."
+          }
+        },
+        {
+          "name": "Simulate a card or other status change. Accepted include [\"failed\", \"expired\", \"fraud\", \"paid\"]. Only works in staging",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v0.2/payment/simulate",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v0.2",
+                "payment",
+                "simulate"
+              ]
+            },
+            "description": "Simulate a card or other status change. Accepted include [\"failed\", \"expired\", \"fraud\", \"paid\"]. Only works in staging"
+          }
+        }
+      ]
+    }
+  ]
+}

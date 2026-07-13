@@ -1,0 +1,211 @@
+aid: chimoney
+url: https://raw.githubusercontent.com/api-evangelist/chimoney/refs/heads/main/apis.yml
+name: Chimoney
+kind: company
+description: Chimoney is a developer-first global payouts and disbursement platform with
+  deep coverage across Africa and 130+ countries. Its REST API sends money to bank accounts,
+  mobile money wallets, airtime, gift cards, Chimoney wallets, and Interledger wallet
+  addresses, and manages multicurrency wallets, sub-accounts, redemption, inbound payment
+  collection, and reference lookups (supported banks, assets, exchange rates). Authentication
+  is an API key passed in the X-API-KEY header, issued self-serve from the Chimoney developer
+  dashboard, with a separate sandbox host for testing.
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+tags:
+- Payouts
+- Disbursements
+- Payments
+- Africa
+- Global Payouts
+- Wallets
+- Multicurrency
+- Gift Cards
+- Mobile Money
+- Fintech
+created: '2026-07-12'
+modified: '2026-07-12'
+specificationVersion: '0.19'
+apis:
+- aid: chimoney:chimoney-payouts-api
+  name: Chimoney Payouts API
+  tags:
+  - Payouts
+  - Disbursements
+  - Mobile Money
+  - Gift Cards
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://chimoney.readme.io/reference/payouts
+  baseURL: https://api.chimoney.io/v0.2
+  properties:
+  - url: https://chimoney.readme.io/reference/payouts
+    type: Documentation
+  - url: https://api.chimoney.io/v0.2/api-docs/
+    type: APIReference
+  - url: openapi/chimoney-openapi.yml
+    type: OpenAPI
+  - url: collections/chimoney.postman_collection.json
+    type: PostmanCollection
+  - url: collections/chimoney.opencollection.json
+    type: OpenCollection
+  description: Send money to beneficiaries across 130+ countries - bank accounts, mobile
+    money wallets, airtime, gift cards, Chimoney wallets, Interac, and Interledger wallet
+    addresses - plus initiate, process, and check the status of payout transactions.
+- aid: chimoney:chimoney-wallets-api
+  name: Chimoney Wallets API
+  tags:
+  - Wallets
+  - Transfers
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://chimoney.readme.io/reference/wallets
+  baseURL: https://api.chimoney.io/v0.2
+  properties:
+  - url: https://chimoney.readme.io/reference/wallets
+    type: Documentation
+  - url: openapi/chimoney-openapi.yml
+    type: OpenAPI
+  - url: collections/chimoney.postman_collection.json
+    type: PostmanCollection
+  - url: collections/chimoney.opencollection.json
+    type: OpenCollection
+  description: List associated Chimoney wallets, look up a single wallet's details, and
+    transfer value between Chimoney wallets.
+- aid: chimoney:chimoney-multicurrency-wallets-api
+  name: Chimoney Multicurrency Wallets API
+  tags:
+  - Multicurrency
+  - Wallets
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://chimoney.readme.io/reference/multicurrency-wallets
+  baseURL: https://api.chimoney.io/v0.2
+  properties:
+  - url: https://chimoney.readme.io/reference/multicurrency-wallets
+    type: Documentation
+  - url: openapi/chimoney-openapi.yml
+    type: OpenAPI
+  - url: collections/chimoney.postman_collection.json
+    type: PostmanCollection
+  - url: collections/chimoney.opencollection.json
+    type: OpenCollection
+  description: Create, update, retrieve, and list multicurrency wallets, request transfer
+    quotes, and move funds between multicurrency wallets, emails, or phone numbers.
+- aid: chimoney:chimoney-sub-accounts-api
+  name: Chimoney Sub-Accounts API
+  tags:
+  - Sub-Accounts
+  - Accounts
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://chimoney.readme.io/reference/sub-accounts
+  baseURL: https://api.chimoney.io/v0.2
+  properties:
+  - url: https://chimoney.readme.io/reference/sub-accounts
+    type: Documentation
+  - url: openapi/chimoney-openapi.yml
+    type: OpenAPI
+  - url: collections/chimoney.postman_collection.json
+    type: PostmanCollection
+  - url: collections/chimoney.opencollection.json
+    type: OpenCollection
+  description: Create, update, delete, and list sub-accounts (wallet accounts) under your
+    organization, and manage sub-account communities and their members.
+- aid: chimoney:chimoney-redeem-api
+  name: Chimoney Redeem API
+  tags:
+  - Redeem
+  - Payouts
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://chimoney.readme.io/reference/redeem
+  baseURL: https://api.chimoney.io/v0.2
+  properties:
+  - url: https://chimoney.readme.io/reference/redeem
+    type: Documentation
+  - url: openapi/chimoney-openapi.yml
+    type: OpenAPI
+  - url: collections/chimoney.postman_collection.json
+    type: PostmanCollection
+  - url: collections/chimoney.opencollection.json
+    type: OpenCollection
+  description: Redeem issued value - any asset, Chimoney, airtime, gift cards, or mobile
+    money - against a Chimoney transaction reference.
+- aid: chimoney:chimoney-info-api
+  name: Chimoney Info API
+  tags:
+  - Reference Data
+  - Banks
+  - Exchange Rates
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://chimoney.readme.io/reference/info
+  baseURL: https://api.chimoney.io/v0.2
+  properties:
+  - url: https://chimoney.readme.io/reference/info
+    type: Documentation
+  - url: openapi/chimoney-openapi.yml
+    type: OpenAPI
+  - url: collections/chimoney.postman_collection.json
+    type: PostmanCollection
+  - url: collections/chimoney.opencollection.json
+    type: OpenCollection
+  description: Reference lookups powering payouts - supported banks and bank codes, bank
+    branches, assets, airtime countries, mobile money codes, exchange rates, USD/local
+    currency conversion, and bank account verification.
+- aid: chimoney:chimoney-accounts-api
+  name: Chimoney Accounts API
+  tags:
+  - Accounts
+  - Transactions
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://chimoney.readme.io/reference/accounts
+  baseURL: https://api.chimoney.io/v0.2
+  properties:
+  - url: https://chimoney.readme.io/reference/accounts
+    type: Documentation
+  - url: openapi/chimoney-openapi.yml
+    type: OpenAPI
+  - url: collections/chimoney.postman_collection.json
+    type: PostmanCollection
+  - url: collections/chimoney.opencollection.json
+    type: OpenCollection
+  description: Retrieve all or single transactions, look up transactions by issue ID, fetch
+    public profiles, transfer between accounts, delete unpaid transactions, and issue
+    Interledger wallet addresses for users.
+- aid: chimoney:chimoney-payments-api
+  name: Chimoney Payments API
+  tags:
+  - Payments
+  - Collection
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://chimoney.readme.io/reference/payments
+  baseURL: https://api.chimoney.io/v0.2
+  properties:
+  - url: https://chimoney.readme.io/reference/payments
+    type: Documentation
+  - url: openapi/chimoney-openapi.yml
+    type: OpenAPI
+  - url: collections/chimoney.postman_collection.json
+    type: PostmanCollection
+  - url: collections/chimoney.opencollection.json
+    type: OpenCollection
+  description: Initiate inbound payment (collection) requests, verify a payment's status,
+    and simulate status changes in the sandbox environment.
+common:
+- type: DomainSecurity
+  url: security/chimoney-domain-security.yml
+- type: Authentication
+  url: authentication/chimoney-authentication.yml
+- type: GitHubOrganization
+  url: https://github.com/Chimoney
+- type: LinkedIn
+  url: https://www.linkedin.com/company/chimoney
+- type: Website
+  url: https://chimoney.io
+- type: Documentation
+  url: https://chimoney.readme.io
+- type: Plans
+  url: plans/chimoney-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/chimoney-rate-limits.yml
+- type: FinOps
+  url: finops/chimoney-finops.yml
+- url: https://chimoney.io/blogs
+  type: Blog
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

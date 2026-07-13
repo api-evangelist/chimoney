@@ -1,0 +1,95 @@
+specification: FinOps Framework
+specificationVersion: '1.0'
+schema: https://www.finops.org/framework/
+provider: Chimoney
+providerId: chimoney
+created: '2026-07-12'
+modified: '2026-07-12'
+reconciled: false
+tags:
+- Payouts
+- Disbursements
+- Payments
+- Fintech
+- FinOps
+- Cost Management
+- FOCUS
+description: >-
+  FinOps view of Chimoney spend. Chimoney is a transaction-priced global payouts
+  platform - there is no published subscription fee for API access itself.
+  Spend is dominated by (1) the value of funds you disburse, (2) per-payout fees
+  that vary by rail (bank, mobile money, airtime, gift card, Chimoney wallet,
+  Interledger) and destination country, and (3) FX spread on cross-currency
+  payouts. Wallet-to-wallet Chimoney transfers are the cheapest path; external
+  rails carry a fee. Because the platform moves real money, cost governance
+  overlaps with treasury and reconciliation: funded wallet balances, per-rail
+  fees, and FX all need tracking.
+notes: >-
+  Per-transaction rates and FX spread are not published and not reconciled here;
+  confirm with Chimoney. Fees for a specific payout can be estimated at request
+  time via the Info exchange-rate / conversion endpoints and transfer quotes,
+  which is the practical hook for cost visibility and allocation.
+sources:
+- https://chimoney.io/pricing/
+- https://chimoney.io/developers-api/
+- https://chimoney.readme.io/reference/info
+- https://focus.finops.org/focus-specification/v1-3/
+alignedWith:
+  framework: FinOps Foundation Framework
+  frameworkUrl: https://www.finops.org/framework/
+  dataSpec: FOCUS
+  dataSpecVersion: '1.3'
+  dataSpecUrl: https://focus.finops.org/focus-specification/v1-3/
+publisherName: Chimoney
+serviceCategory: Payments and Money Movement
+billingModel:
+  pricingCategory: Usage-Based
+  billingFrequency: Per-Transaction
+  billingCurrency: USD
+  chargeCategories:
+  - Usage
+  - Purchase
+focusColumns:
+  ServiceName: Chimoney Payouts
+  ServiceCategory: Payments and Money Movement
+  ProviderName: Chimoney
+  PublisherName: Chimoney
+  InvoiceIssuerName: Chimoney
+  BillingCurrency: USD
+  ChargeCategory: Usage
+  PricingCategory: Usage-Based
+meters:
+- name: payout_fee
+  description: Per-payout fee charged per transaction, varying by rail and destination country.
+  unit: transactions
+  aggregation: sum
+  dimensions:
+  - subAccount
+  - rail
+  - country
+- name: disbursed_value
+  description: Face value of funds paid out to beneficiaries, drawn from the funded wallet balance.
+  unit: currency
+  aggregation: sum
+  dimensions:
+  - subAccount
+  - currency
+- name: fx_spread
+  description: Currency-conversion spread applied on cross-currency payouts.
+  unit: currency
+  aggregation: sum
+  dimensions:
+  - sourceCurrency
+  - targetCurrency
+principles:
+- name: Visibility
+  description: Track disbursed value, per-rail payout fees, and FX spread per sub-account and destination country; reconcile against wallet funding.
+- name: Allocation
+  description: Use sub-accounts and transaction references to map payout costs to teams, campaigns, or customers.
+- name: Optimization
+  description: Prefer wallet-to-wallet Chimoney transfers where possible, batch payouts, and choose the cheapest viable rail per country; quote FX before sending.
+- name: Accountability
+  description: Assign owners per sub-account; review monthly disbursed value and fees against budget and funded balance.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

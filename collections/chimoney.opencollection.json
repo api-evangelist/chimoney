@@ -1,0 +1,804 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Chimoney API",
+    "version": "0.2.2"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "apikey": {
+        "key": "X-API-KEY",
+        "value": "{{apiKey}}",
+        "in": "header"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Payouts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Payout to Bank in a supported Country.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/payouts/bank",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"debitCurrency\": \"USD\",\n  \"banks\": [\n    {\n      \"countryToSend\": \"Nigeria\",\n      \"account_bank\": \"044\",\n      \"account_number\": \"0690000031\",\n      \"valueInUSD\": 10\n    }\n  ]\n}"
+            }
+          },
+          "docs": "Payout to Bank in a supported Country."
+        },
+        {
+          "info": {
+            "name": "Payout Mobile Money (Momo).",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/payouts/mobile-money",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"momos\": [\n    {\n      \"countryToSend\": \"Kenya\",\n      \"phoneNumber\": \"254710102720\",\n      \"momoCode\": \"MPS\",\n      \"valueInUSD\": 10\n    }\n  ]\n}"
+            }
+          },
+          "docs": "Payout Mobile Money (Momo)."
+        },
+        {
+          "info": {
+            "name": "Payout Airtime to a Phone number.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/payouts/airtime",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Payout Airtime to a Phone number."
+        },
+        {
+          "info": {
+            "name": "Payout Giftcards to an email.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/payouts/gift-card",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"giftcards\": [\n    {\n      \"email\": \"test@example.com\",\n      \"valueInUSD\": 10\n    }\n  ]\n}"
+            }
+          },
+          "docs": "Payout Giftcards to an email."
+        },
+        {
+          "info": {
+            "name": "Payout Chimoney.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/payouts/chimoney",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"chimoneys\": [\n    {\n      \"email\": \"test@example.com\",\n      \"valueInUSD\": 10\n    }\n  ]\n}"
+            }
+          },
+          "docs": "Payout Chimoney."
+        },
+        {
+          "info": {
+            "name": "Payout to a Chimoney Wallet.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/payouts/wallet",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Payout to a Chimoney Wallet."
+        },
+        {
+          "info": {
+            "name": "Payout to a Interledger Wallet Address.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/payouts/interledger-wallet-address",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Payout to a Interledger Wallet Address."
+        },
+        {
+          "info": {
+            "name": "Payout Interac.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/payouts/interac",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Payout Interac."
+        },
+        {
+          "info": {
+            "name": "Payout Canadian Bill payment.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/payouts/bills/ca",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Payout Canadian Bill payment."
+        },
+        {
+          "info": {
+            "name": "Initiate Chimoney transaction.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/payouts/initiate-chimoney",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Initiate Chimoney transaction."
+        },
+        {
+          "info": {
+            "name": "Debit wallet to process unpaid transaction.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/payouts/process",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Debit wallet to process unpaid transaction."
+        },
+        {
+          "info": {
+            "name": "Check Payout status.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/payouts/status",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"chiRef\": \"REPLACE_WITH_CHIREF\"\n}"
+            }
+          },
+          "docs": "Check Payout status."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Wallets",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List associated wallets.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/wallets/list",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "List associated wallets."
+        },
+        {
+          "info": {
+            "name": "Get single wallet details.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/wallets/lookup",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get single wallet details."
+        },
+        {
+          "info": {
+            "name": "Transfer between wallets.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/wallets/transfer",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"receiver\": \"RECEIVER_ID\",\n  \"valueInUSD\": 200,\n  \"wallet\": \"chi\"\n}"
+            }
+          },
+          "docs": "Transfer between wallets."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "MultiCurrency Wallets",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a new Multicurrency Wallet.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/multicurrency-wallets/create",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"name\": \"Mide Jones\",\n  \"email\": \"user@example.com\",\n  \"phoneNumber\": \"+16471234567\"\n}"
+            }
+          },
+          "docs": "Create a new Multicurrency Wallet."
+        },
+        {
+          "info": {
+            "name": "Get details of an existing multicurrency wallet.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.chimoney.io/v0.2/multicurrency-wallets/get"
+          },
+          "docs": "Get details of an existing multicurrency wallet."
+        },
+        {
+          "info": {
+            "name": "Get all multicurrency wallets of an organization/account.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.chimoney.io/v0.2/multicurrency-wallets/list"
+          },
+          "docs": "Get all multicurrency wallets of an organization/account."
+        },
+        {
+          "info": {
+            "name": "Update a multicurrency-wallets.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/multicurrency-wallets/update",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update a multicurrency-wallets."
+        },
+        {
+          "info": {
+            "name": "Transfer from multicurrency wallet to another wallet, an email or a phone number.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/multicurrency-wallets/transfer",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Transfer from multicurrency wallet to another wallet, an email or a phone number."
+        },
+        {
+          "info": {
+            "name": "Get Quote to Transfer between multicurrency wallets.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/multicurrency-wallets/transfer/quote",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get Quote to Transfer between multicurrency wallets."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Sub-Accounts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a new sub-account.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/sub-account/create",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"name\": \"Mide Jones\",\n  \"email\": \"user@example.com\"\n}"
+            }
+          },
+          "docs": "Create a new sub-account."
+        },
+        {
+          "info": {
+            "name": "Get details of an existing sub account.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.chimoney.io/v0.2/sub-account/get"
+          },
+          "docs": "Get details of an existing sub account."
+        },
+        {
+          "info": {
+            "name": "Get all sub-accounts associated with a user.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.chimoney.io/v0.2/sub-account/list"
+          },
+          "docs": "Get all sub-accounts associated with a user."
+        },
+        {
+          "info": {
+            "name": "Update a sub-account.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/sub-account/update",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update a sub-account."
+        },
+        {
+          "info": {
+            "name": "Delete an existing sub-account.",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.chimoney.io/v0.2/sub-account/delete"
+          },
+          "docs": "Delete an existing sub-account."
+        },
+        {
+          "info": {
+            "name": "Create a sub-account community associated with a user.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/sub-account/community/create",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a sub-account community associated with a user."
+        },
+        {
+          "info": {
+            "name": "Get community members .",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.chimoney.io/v0.2/sub-account/community/members"
+          },
+          "docs": "Get community members ."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Redeem",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Redeem any.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/redeem/any",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Redeem any."
+        },
+        {
+          "info": {
+            "name": "Redeem Chimoney.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/redeem/chimoney",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"chiRef\": \"REPLACE_WITH_CHIREF\"\n}"
+            }
+          },
+          "docs": "Redeem Chimoney."
+        },
+        {
+          "info": {
+            "name": "Redeem airtime.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/redeem/airtime",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Redeem airtime."
+        },
+        {
+          "info": {
+            "name": "Redeem giftcard.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/redeem/gift-card",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Redeem giftcard."
+        },
+        {
+          "info": {
+            "name": "Redeem mobile money.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/redeem/mobile-money",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Redeem mobile money."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Info",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get list of all assests.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.chimoney.io/v0.2/info/assets"
+          },
+          "docs": "Get list of all assests."
+        },
+        {
+          "info": {
+            "name": "Get list of Supported banks and bank code.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.chimoney.io/v0.2/info/country-banks"
+          },
+          "docs": "Get list of Supported banks and bank code."
+        },
+        {
+          "info": {
+            "name": "Get list of bank branches and branch code.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.chimoney.io/v0.2/info/bank-branches"
+          },
+          "docs": "Get list of bank branches and branch code."
+        },
+        {
+          "info": {
+            "name": "Get list of all supported airtime Countries.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.chimoney.io/v0.2/info/airtime-countries"
+          },
+          "docs": "Get list of all supported airtime Countries."
+        },
+        {
+          "info": {
+            "name": "Get list of all supported mobile money code.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.chimoney.io/v0.2/info/mobile-money-codes"
+          },
+          "docs": "Get list of all supported mobile money code."
+        },
+        {
+          "info": {
+            "name": "get exchange rates.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.chimoney.io/v0.2/info/exchange-rates"
+          },
+          "docs": "get exchange rates."
+        },
+        {
+          "info": {
+            "name": "convert local currency amount to USD.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.chimoney.io/v0.2/info/local-amount-in-usd"
+          },
+          "docs": "convert local currency amount to USD."
+        },
+        {
+          "info": {
+            "name": "Convert USD amount to Local currency amount.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.chimoney.io/v0.2/info/usd-amount-in-local"
+          },
+          "docs": "Convert USD amount to Local currency amount."
+        },
+        {
+          "info": {
+            "name": "verify a bank account number or multiple bank account numbers.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/info/verify-bank-account-number",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "verify a bank account number or multiple bank account numbers."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Accounts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get all transactions by account.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/accounts/transactions",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get all transactions by account."
+        },
+        {
+          "info": {
+            "name": "Get single transaction detail.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/accounts/transaction",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get single transaction detail."
+        },
+        {
+          "info": {
+            "name": "Get transaction details by issueID.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/accounts/issue-id-transactions",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get transaction details by issueID."
+        },
+        {
+          "info": {
+            "name": "Get Public profile of a Chimoney User.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/accounts/public-profile",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get Public profile of a Chimoney User."
+        },
+        {
+          "info": {
+            "name": "Account Transfer.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/accounts/transfer",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Account Transfer."
+        },
+        {
+          "info": {
+            "name": "Deletes an unpaid transaction.",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.chimoney.io/v0.2/accounts/delete-unpaid-transaction"
+          },
+          "docs": "Deletes an unpaid transaction."
+        },
+        {
+          "info": {
+            "name": "Issue an Interledger wallet address for a user",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/accounts/issue-wallet-address",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Issue an Interledger wallet address for a user"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Payments",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Initiate a payment request",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/payment/initiate",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"valueInUSD\": 50,\n  \"payerEmail\": \"payer@example.com\"\n}"
+            }
+          },
+          "docs": "Initiate a payment request"
+        },
+        {
+          "info": {
+            "name": "verify a payment.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/payment/verify",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "verify a payment."
+        },
+        {
+          "info": {
+            "name": "Simulate a card or other status change. Accepted include [\"failed\", \"expired\", \"fraud\", \"paid\"]. Only works in staging",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/payment/simulate",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Simulate a card or other status change. Accepted include [\"failed\", \"expired\", \"fraud\", \"paid\"]. Only works in staging"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

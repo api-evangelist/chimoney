@@ -1,0 +1,18 @@
+generated: '2026-07-12'
+method: derived
+source: openapi/chimoney-openapi.yml
+summary:
+  types:
+  - apiKey
+schemes:
+- name: apiKeyAuth
+  type: apiKey
+  in: header
+  parameterName: X-API-KEY
+  description: 'API key issued self-serve from the Chimoney developer dashboard
+    (https://dash.chimoney.io/developers). Passed on every request in the `X-API-KEY`
+    HTTP header. A separate sandbox key and host (https://api-v2-sandbox.chimoney.io)
+    are available for testing; production is https://api.chimoney.io.'
+  sources:
+  - openapi/chimoney-openapi.yml
+  - https://chimoney.readme.io/reference/authentication

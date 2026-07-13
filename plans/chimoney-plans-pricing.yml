@@ -1,0 +1,121 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: Chimoney
+providerId: chimoney
+created: '2026-07-12'
+modified: '2026-07-12'
+reconciled: false
+tags:
+- Payouts
+- Disbursements
+- Payments
+- Fintech
+- Plans
+description: >-
+  Chimoney is a self-serve developer platform: you sign up at the developer
+  dashboard (dash.chimoney.io/developers), get a sandbox API key immediately for
+  testing against the sandbox host, and enable production access after account
+  verification (KYB / compliance). There is no published subscription price list
+  for API access itself - Chimoney monetizes on a transaction basis. Costs are
+  driven by per-payout fees and FX spread that vary by rail (bank, mobile money,
+  airtime, gift card, Chimoney wallet, Interledger) and by destination country,
+  plus wallet funding. Chimoney-wallet-to-wallet transfers are generally the
+  cheapest / free path, while external rails carry a payout fee. Higher-volume
+  and enterprise arrangements are negotiated with Chimoney sales / via "Book a
+  Demo". Exact per-transaction rates are NOT reconciled here.
+notes: >-
+  No public numeric price table was available at the review date; the pricing
+  page presents Monthly/Yearly toggles and a "Book a Demo" CTA rather than
+  published rates. Chimoney is MSB-licensed and PSP-licensed (Canada). Verify
+  current fees, FX spread, and any minimums directly with Chimoney during
+  reconciliation. Fees for a given payout can be estimated at request time via
+  the Info endpoints (exchange rates and currency conversion) and transfer
+  quotes.
+sources:
+- https://chimoney.io/pricing/
+- https://chimoney.io/developers-api/
+- https://chimoney.readme.io/reference/authentication
+- https://dash.chimoney.io/developers
+plans:
+- id: chimoney-sandbox
+  name: Sandbox (Free)
+  type: free
+  description: >-
+    Free self-serve sandbox environment for building and testing against the
+    full API surface (payouts, wallets, sub-accounts, redeem, info, payments)
+    using test funds on the sandbox host. No live money moves.
+  entries:
+  - label: Sandbox Access
+    name: sandbox_access
+    type: usage
+    metric: requests
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: free (sandbox; test funds only)
+    userMultiplied: false
+  elements:
+  - name: Full API Surface
+  - name: Sandbox Host
+  - name: API Key from Dashboard
+- id: chimoney-production
+  name: Production (Pay-Per-Transaction)
+  type: usage
+  description: >-
+    Live production access enabled after account verification. Billed on a
+    transaction basis - per-payout fees plus FX spread that vary by rail and
+    destination country - drawn against your funded Chimoney wallet balance.
+    There is no separate published subscription fee for API access.
+  entries:
+  - label: Payout Fee
+    name: payout_fee
+    type: usage
+    metric: transactions
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: per-transaction fee varies by rail and country (not published; see sales)
+    userMultiplied: false
+  - label: FX Spread
+    name: fx_spread
+    type: usage
+    metric: transactions
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: currency-conversion spread applied on cross-currency payouts (not published)
+    userMultiplied: false
+  elements:
+  - name: Live Payouts (130+ countries)
+  - name: Multicurrency Wallets
+  - name: Sub-Accounts
+  - name: Webhooks
+- id: chimoney-enterprise
+  name: Enterprise / Custom
+  type: enterprise
+  description: >-
+    Negotiated pricing for high-volume disbursement, mass payouts, custom rails,
+    dedicated support, and compliance/SLAs. Arranged via Chimoney sales / "Book a
+    Demo".
+  entries:
+  - label: Enterprise Agreement
+    name: enterprise
+    type: flat
+    metric: contract
+    limit: -1
+    timeFrame: year
+    geo: global
+    unit: 1
+    price: contact sales
+    userMultiplied: false
+  elements:
+  - name: Volume Pricing
+  - name: Dedicated Support
+  - name: Custom Rails and SLAs
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com
