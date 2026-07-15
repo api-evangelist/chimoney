@@ -186,6 +186,8 @@ apis:
   description: Initiate inbound payment (collection) requests, verify a payment's status,
     and simulate status changes in the sandbox environment.
 common:
+- type: AgenticAccess
+  url: agentic-access/chimoney-agentic-access.yml
 - type: DomainSecurity
   url: security/chimoney-domain-security.yml
 - type: Authentication
