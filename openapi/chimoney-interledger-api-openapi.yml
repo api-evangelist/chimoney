@@ -1,0 +1,187 @@
+openapi: 3.0.3
+info:
+  title: Chimoney Account Interledger API
+  description: 'Chimoney is a developer-first global payouts and disbursement platform with deep coverage across Africa and 130+ countries. The REST API sends money to bank accounts, mobile money wallets, airtime, gift cards, Chimoney wallets, and Interledger wallet addresses; manages multicurrency wallets and sub-accounts; supports redemption, payment collection, and informational lookups (banks, assets, exchange rates). All requests are authenticated with an API key passed in the X-API-KEY header, issued from the Chimoney developer dashboard (dash.chimoney.io/developers). A separate sandbox host is available for testing. This is a curated, representative subset of the live OpenAPI (source: https://api.chimoney.io/v0.2/swagger.json, spec version 0.2.2); paths, methods, and summaries are grounded in that document. Request-body schemas are representative and simplified for the most common endpoints - consult the official docs for the full field set.'
+  version: 0.2.2
+  contact:
+    name: Chimoney
+    url: https://chimoney.io
+servers:
+- url: https://api.chimoney.io
+  description: Production (v0.2)
+- url: https://api-v2-sandbox.chimoney.io
+  description: Sandbox (v0.2)
+security:
+- apiKeyAuth: []
+tags:
+- name: Interledger
+  description: ''
+paths:
+  /v0.2/payouts/interledger-wallet-address:
+    post:
+      operationId: post_v0.2_payouts_interledger-wallet-address
+      tags:
+      - Interledger
+      summary: Payout to a Interledger Wallet Address.
+      description: Payout to a Interledger Wallet Address.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/multicurrency-wallets/transfer:
+    post:
+      operationId: post_v0.2_multicurrency-wallets_transfer
+      tags:
+      - Interledger
+      summary: Transfer from multicurrency wallet to another wallet, an email or a phone number.
+      description: Transfer from multicurrency wallet to another wallet, an email or a phone number.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                walletID:
+                  type: string
+                receiver:
+                  type: string
+                  description: Destination wallet ID, email, or phone number.
+                amountToSend:
+                  type: number
+                currency:
+                  type: string
+                  example: USD
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/sub-account/create:
+    post:
+      operationId: post_v0.2_sub-account_create
+      tags:
+      - Interledger
+      summary: Create a new sub-account.
+      description: Create a new sub-account.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - name
+              properties:
+                name:
+                  type: string
+                  example: Mide Jones
+                email:
+                  type: string
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                phoneNumber:
+                  type: string
+                  example: '+16471234567'
+                meta:
+                  type: object
+                id:
+                  type: string
+                  description: Optional valid UUID for the user.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/accounts/public-profile:
+    post:
+      operationId: post_v0.2_accounts_public-profile
+      tags:
+      - Interledger
+      summary: Get Public profile of a Chimoney User.
+      description: Get Public profile of a Chimoney User.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/accounts/issue-wallet-address:
+    post:
+      operationId: post_v0.2_accounts_issue-wallet-address
+      tags:
+      - Interledger
+      summary: Issue an Interledger wallet address for a user
+      description: Issue an Interledger wallet address for a user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  schemas:
+    StandardResponse:
+      type: object
+      description: Standard Chimoney response envelope.
+      properties:
+        status:
+          type: string
+          description: '"success" or "error".'
+          example: success
+        message:
+          type: string
+        data:
+          description: Endpoint-specific payload.
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/StandardResponse'
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+      description: API key issued from the Chimoney developer dashboard (https://dash.chimoney.io/developers), passed in the X-API-KEY request header.

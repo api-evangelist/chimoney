@@ -1,0 +1,243 @@
+openapi: 3.0.3
+info:
+  title: Chimoney Account Info API
+  description: 'Chimoney is a developer-first global payouts and disbursement platform with deep coverage across Africa and 130+ countries. The REST API sends money to bank accounts, mobile money wallets, airtime, gift cards, Chimoney wallets, and Interledger wallet addresses; manages multicurrency wallets and sub-accounts; supports redemption, payment collection, and informational lookups (banks, assets, exchange rates). All requests are authenticated with an API key passed in the X-API-KEY header, issued from the Chimoney developer dashboard (dash.chimoney.io/developers). A separate sandbox host is available for testing. This is a curated, representative subset of the live OpenAPI (source: https://api.chimoney.io/v0.2/swagger.json, spec version 0.2.2); paths, methods, and summaries are grounded in that document. Request-body schemas are representative and simplified for the most common endpoints - consult the official docs for the full field set.'
+  version: 0.2.2
+  contact:
+    name: Chimoney
+    url: https://chimoney.io
+servers:
+- url: https://api.chimoney.io
+  description: Production (v0.2)
+- url: https://api-v2-sandbox.chimoney.io
+  description: Sandbox (v0.2)
+security:
+- apiKeyAuth: []
+tags:
+- name: Info
+  description: 'Reference lookups: supported banks, assets, exchange rates, currency conversion, and bank account verification.'
+paths:
+  /v0.2/info/assets:
+    get:
+      operationId: get_v0.2_info_assets
+      tags:
+      - Info
+      summary: Get list of all assests.
+      description: Get list of all assests.
+      parameters:
+      - name: countryCode
+        in: query
+        required: false
+        description: Country code symbol e.g NG, US, GH.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/info/country-banks:
+    get:
+      operationId: get_v0.2_info_country-banks
+      tags:
+      - Info
+      summary: Get list of Supported banks and bank code.
+      description: Get list of Supported banks and bank code.
+      parameters:
+      - name: countryCode
+        in: query
+        required: true
+        description: Country code symbol e.g NG, US, GH.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/info/bank-branches:
+    get:
+      operationId: get_v0.2_info_bank-branches
+      tags:
+      - Info
+      summary: Get list of bank branches and branch code.
+      description: Get list of bank branches and branch code.
+      parameters:
+      - name: bankID
+        in: query
+        required: true
+        description: bankCode id from /info/country-banks
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/info/airtime-countries:
+    get:
+      operationId: get_v0.2_info_airtime-countries
+      tags:
+      - Info
+      summary: Get list of all supported airtime Countries.
+      description: Get list of all supported airtime Countries.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/info/mobile-money-codes:
+    get:
+      operationId: get_v0.2_info_mobile-money-codes
+      tags:
+      - Info
+      summary: Get list of all supported mobile money code.
+      description: Get list of all supported mobile money code.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/info/exchange-rates:
+    get:
+      operationId: get_v0.2_info_exchange-rates
+      tags:
+      - Info
+      summary: get exchange rates.
+      description: get exchange rates.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/info/local-amount-in-usd:
+    get:
+      operationId: get_v0.2_info_local-amount-in-usd
+      tags:
+      - Info
+      summary: convert local currency amount to USD.
+      description: convert local currency amount to USD.
+      parameters:
+      - name: originCurrency
+        in: query
+        required: true
+        description: Currency symbol e.g NGN, USD.
+        schema:
+          type: string
+      - name: amountInOriginCurrency
+        in: query
+        required: true
+        description: amount to be converted.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/info/usd-amount-in-local:
+    get:
+      operationId: get_v0.2_info_usd-amount-in-local
+      tags:
+      - Info
+      summary: Convert USD amount to Local currency amount.
+      description: Convert USD amount to Local currency amount.
+      parameters:
+      - name: destinationCurrency
+        in: query
+        required: true
+        description: currency symbol e.g NGN, KES.
+        schema:
+          type: string
+      - name: amountInUSD
+        in: query
+        required: true
+        description: amount in usd.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/info/verify-bank-account-number:
+    post:
+      operationId: post_v0.2_info_verify-bank-account-number
+      tags:
+      - Info
+      summary: verify a bank account number or multiple bank account numbers.
+      description: verify a bank account number or multiple bank account numbers.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  schemas:
+    StandardResponse:
+      type: object
+      description: Standard Chimoney response envelope.
+      properties:
+        status:
+          type: string
+          description: '"success" or "error".'
+          example: success
+        message:
+          type: string
+        data:
+          description: Endpoint-specific payload.
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/StandardResponse'
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+      description: API key issued from the Chimoney developer dashboard (https://dash.chimoney.io/developers), passed in the X-API-KEY request header.

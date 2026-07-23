@@ -1,0 +1,444 @@
+openapi: 3.0.3
+info:
+  title: Chimoney Account Payouts API
+  description: 'Chimoney is a developer-first global payouts and disbursement platform with deep coverage across Africa and 130+ countries. The REST API sends money to bank accounts, mobile money wallets, airtime, gift cards, Chimoney wallets, and Interledger wallet addresses; manages multicurrency wallets and sub-accounts; supports redemption, payment collection, and informational lookups (banks, assets, exchange rates). All requests are authenticated with an API key passed in the X-API-KEY header, issued from the Chimoney developer dashboard (dash.chimoney.io/developers). A separate sandbox host is available for testing. This is a curated, representative subset of the live OpenAPI (source: https://api.chimoney.io/v0.2/swagger.json, spec version 0.2.2); paths, methods, and summaries are grounded in that document. Request-body schemas are representative and simplified for the most common endpoints - consult the official docs for the full field set.'
+  version: 0.2.2
+  contact:
+    name: Chimoney
+    url: https://chimoney.io
+servers:
+- url: https://api.chimoney.io
+  description: Production (v0.2)
+- url: https://api-v2-sandbox.chimoney.io
+  description: Sandbox (v0.2)
+security:
+- apiKeyAuth: []
+tags:
+- name: Payouts
+  description: Send money to banks, mobile money, airtime, gift cards, Chimoney wallets, Interac, and Interledger wallet addresses.
+paths:
+  /v0.2/payouts/bank:
+    post:
+      operationId: post_v0.2_payouts_bank
+      tags:
+      - Payouts
+      summary: Payout to Bank in a supported Country.
+      description: Payout to Bank in a supported Country.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                subAccount:
+                  type: string
+                  description: Subaccount (wallet account) to payout from, if any.
+                turnOffNotification:
+                  type: boolean
+                  description: Disables email and other notifications from Chimoney.
+                debitCurrency:
+                  type: string
+                  description: Wallet currency to debit from.
+                  example: CAD
+                banks:
+                  type: array
+                  description: Bank payout instructions.
+                  items:
+                    type: object
+                    properties:
+                      countryToSend:
+                        type: string
+                        example: Nigeria
+                      account_bank:
+                        type: string
+                        description: Bank code.
+                        example: '044'
+                      account_number:
+                        type: string
+                        example: 0690000031
+                      valueInUSD:
+                        type: number
+                        example: 10
+                      reference:
+                        type: string
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/payouts/mobile-money:
+    post:
+      operationId: post_v0.2_payouts_mobile-money
+      tags:
+      - Payouts
+      summary: Payout Mobile Money (Momo).
+      description: Payout Mobile Money (Momo).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                subAccount:
+                  type: string
+                turnOffNotification:
+                  type: boolean
+                momos:
+                  type: array
+                  description: Mobile money payout instructions.
+                  items:
+                    type: object
+                    properties:
+                      countryToSend:
+                        type: string
+                        example: Kenya
+                      phoneNumber:
+                        type: string
+                        example: '254710102720'
+                      valueInUSD:
+                        type: number
+                        example: 10
+                      momoCode:
+                        type: string
+                        example: MPS
+                      reference:
+                        type: string
+                      narration:
+                        type: string
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/payouts/airtime:
+    post:
+      operationId: post_v0.2_payouts_airtime
+      tags:
+      - Payouts
+      summary: Payout Airtime to a Phone number.
+      description: Payout Airtime to a Phone number.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                subAccount:
+                  type: string
+                turnOffNotification:
+                  type: boolean
+                airtimes:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      countryToSend:
+                        type: string
+                        example: Nigeria
+                      phoneNumber:
+                        type: string
+                        example: '+2348000000000'
+                      valueInUSD:
+                        type: number
+                        example: 5
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/payouts/gift-card:
+    post:
+      operationId: post_v0.2_payouts_gift-card
+      tags:
+      - Payouts
+      summary: Payout Giftcards to an email.
+      description: Payout Giftcards to an email.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                subAccount:
+                  type: string
+                turnOffNotification:
+                  type: boolean
+                giftcards:
+                  type: array
+                  description: Gift card payout instructions.
+                  items:
+                    type: object
+                    properties:
+                      email:
+                        type: string
+                        example: test@example.com
+                      valueInUSD:
+                        type: number
+                        example: 10
+                      redeemData:
+                        type: object
+                        description: Gift card brand/product selection.
+                      narration:
+                        type: string
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/payouts/chimoney:
+    post:
+      operationId: post_v0.2_payouts_chimoney
+      tags:
+      - Payouts
+      summary: Payout Chimoney.
+      description: Payout Chimoney.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                subAccount:
+                  type: string
+                turnOffNotification:
+                  type: boolean
+                chimoneys:
+                  type: array
+                  description: Chimoney payout instructions.
+                  items:
+                    type: object
+                    properties:
+                      email:
+                        type: string
+                        example: test@example.com
+                      phone:
+                        type: string
+                        example: '+16471112222'
+                      valueInUSD:
+                        type: number
+                        example: 10
+                      amount:
+                        type: number
+                        description: Amount in specified currency. Required if currency is set.
+                      currency:
+                        type: string
+                        description: ISO currency code.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/payouts/wallet:
+    post:
+      operationId: post_v0.2_payouts_wallet
+      tags:
+      - Payouts
+      summary: Payout to a Chimoney Wallet.
+      description: Payout to a Chimoney Wallet.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/payouts/interledger-wallet-address:
+    post:
+      operationId: post_v0.2_payouts_interledger-wallet-address
+      tags:
+      - Payouts
+      summary: Payout to a Interledger Wallet Address.
+      description: Payout to a Interledger Wallet Address.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/payouts/interac:
+    post:
+      operationId: post_v0.2_payouts_interac
+      tags:
+      - Payouts
+      summary: Payout Interac.
+      description: Payout Interac.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/payouts/bills/ca:
+    post:
+      operationId: post_v0.2_payouts_bills_ca
+      tags:
+      - Payouts
+      summary: Payout Canadian Bill payment.
+      description: Payout Canadian Bill payment.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/payouts/initiate-chimoney:
+    post:
+      operationId: post_v0.2_payouts_initiate-chimoney
+      tags:
+      - Payouts
+      summary: Initiate Chimoney transaction.
+      description: Initiate Chimoney transaction.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/payouts/process:
+    post:
+      operationId: post_v0.2_payouts_process
+      tags:
+      - Payouts
+      summary: Debit wallet to process unpaid transaction.
+      description: Debit wallet to process unpaid transaction.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/payouts/status:
+    post:
+      operationId: post_v0.2_payouts_status
+      tags:
+      - Payouts
+      summary: Check Payout status.
+      description: Check Payout status.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - chiRef
+              properties:
+                chiRef:
+                  type: string
+                  description: Chimoney transaction reference (chiRef) to check.
+                subAccount:
+                  type: string
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  schemas:
+    StandardResponse:
+      type: object
+      description: Standard Chimoney response envelope.
+      properties:
+        status:
+          type: string
+          description: '"success" or "error".'
+          example: success
+        message:
+          type: string
+        data:
+          description: Endpoint-specific payload.
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/StandardResponse'
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+      description: API key issued from the Chimoney developer dashboard (https://dash.chimoney.io/developers), passed in the X-API-KEY request header.
