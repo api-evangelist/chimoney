@@ -9,7 +9,20 @@ description: Chimoney is a developer-first global payouts and disbursement platf
   collection, and reference lookups (supported banks, assets, exchange rates). Authentication
   is an API key passed in the X-API-KEY header, issued self-serve from the Chimoney developer
   dashboard, with a separate sandbox host for testing.
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+accessModel:
+  pricing: freemium
+  onboarding: self-serve
+  trial: false
+  try_now: true
+  public: false
+  label: Freemium · Self-serve signup
+  confidence: high
+  source:
+  - plans
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/chimoney.png
 tags:
 - Payouts
 - Disbursements
@@ -25,166 +38,300 @@ created: '2026-07-12'
 modified: '2026-07-12'
 specificationVersion: '0.19'
 apis:
-- aid: chimoney:chimoney-payouts-api
-  name: Chimoney Payouts API
-  tags:
-  - Payouts
-  - Disbursements
-  - Mobile Money
-  - Gift Cards
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+- aid: chimoney:chimoney-account-api
+  name: Chimoney Account API
+  description: >-
+    Retrieve transactions, public profiles, transfer between accounts, and issue wallet addresses.
   humanURL: https://chimoney.readme.io/reference/payouts
   baseURL: https://api.chimoney.io/v0.2
-  properties:
-  - url: https://chimoney.readme.io/reference/payouts
-    type: Documentation
-  - url: https://api.chimoney.io/v0.2/api-docs/
-    type: APIReference
-  - url: openapi/chimoney-openapi.yml
-    type: OpenAPI
-  - url: collections/chimoney.postman_collection.json
-    type: PostmanCollection
-  - url: collections/chimoney.opencollection.json
-    type: OpenCollection
-  description: Send money to beneficiaries across 130+ countries - bank accounts, mobile
-    money wallets, airtime, gift cards, Chimoney wallets, Interac, and Interledger wallet
-    addresses - plus initiate, process, and check the status of payout transactions.
-- aid: chimoney:chimoney-wallets-api
-  name: Chimoney Wallets API
   tags:
-  - Wallets
-  - Transfers
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://chimoney.readme.io/reference/wallets
-  baseURL: https://api.chimoney.io/v0.2
+  - Account
   properties:
-  - url: https://chimoney.readme.io/reference/wallets
-    type: Documentation
-  - url: openapi/chimoney-openapi.yml
-    type: OpenAPI
-  - url: collections/chimoney.postman_collection.json
-    type: PostmanCollection
-  - url: collections/chimoney.opencollection.json
-    type: OpenCollection
-  description: List associated Chimoney wallets, look up a single wallet's details, and
-    transfer value between Chimoney wallets.
-- aid: chimoney:chimoney-multicurrency-wallets-api
-  name: Chimoney Multicurrency Wallets API
-  tags:
-  - Multicurrency
-  - Wallets
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://chimoney.readme.io/reference/multicurrency-wallets
-  baseURL: https://api.chimoney.io/v0.2
-  properties:
-  - url: https://chimoney.readme.io/reference/multicurrency-wallets
-    type: Documentation
-  - url: openapi/chimoney-openapi.yml
-    type: OpenAPI
-  - url: collections/chimoney.postman_collection.json
-    type: PostmanCollection
-  - url: collections/chimoney.opencollection.json
-    type: OpenCollection
-  description: Create, update, retrieve, and list multicurrency wallets, request transfer
-    quotes, and move funds between multicurrency wallets, emails, or phone numbers.
-- aid: chimoney:chimoney-sub-accounts-api
-  name: Chimoney Sub-Accounts API
-  tags:
-  - Sub-Accounts
-  - Accounts
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://chimoney.readme.io/reference/sub-accounts
-  baseURL: https://api.chimoney.io/v0.2
-  properties:
-  - url: https://chimoney.readme.io/reference/sub-accounts
-    type: Documentation
-  - url: openapi/chimoney-openapi.yml
-    type: OpenAPI
-  - url: collections/chimoney.postman_collection.json
-    type: PostmanCollection
-  - url: collections/chimoney.opencollection.json
-    type: OpenCollection
-  description: Create, update, delete, and list sub-accounts (wallet accounts) under your
-    organization, and manage sub-account communities and their members.
-- aid: chimoney:chimoney-redeem-api
-  name: Chimoney Redeem API
-  tags:
-  - Redeem
-  - Payouts
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://chimoney.readme.io/reference/redeem
-  baseURL: https://api.chimoney.io/v0.2
-  properties:
-  - url: https://chimoney.readme.io/reference/redeem
-    type: Documentation
-  - url: openapi/chimoney-openapi.yml
-    type: OpenAPI
-  - url: collections/chimoney.postman_collection.json
-    type: PostmanCollection
-  - url: collections/chimoney.opencollection.json
-    type: OpenCollection
-  description: Redeem issued value - any asset, Chimoney, airtime, gift cards, or mobile
-    money - against a Chimoney transaction reference.
+  - type: OpenAPI
+    url: openapi/chimoney-account-api-openapi.yml
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/payouts
+  - type: APIReference
+    url: https://api.chimoney.io/v0.2/api-docs/
+  - type: PostmanCollection
+    url: collections/chimoney.postman_collection.json
+  - type: OpenCollection
+    url: collections/chimoney.opencollection.json
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/wallets
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/multicurrency-wallets
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/sub-accounts
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/redeem
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/info
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/accounts
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/payments
 - aid: chimoney:chimoney-info-api
   name: Chimoney Info API
-  tags:
-  - Reference Data
-  - Banks
-  - Exchange Rates
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://chimoney.readme.io/reference/info
+  description: >-
+    Reference lookups: supported banks, assets, exchange rates, currency conversion, and bank account
+    verification.
+  humanURL: https://chimoney.readme.io/reference/payouts
   baseURL: https://api.chimoney.io/v0.2
-  properties:
-  - url: https://chimoney.readme.io/reference/info
-    type: Documentation
-  - url: openapi/chimoney-openapi.yml
-    type: OpenAPI
-  - url: collections/chimoney.postman_collection.json
-    type: PostmanCollection
-  - url: collections/chimoney.opencollection.json
-    type: OpenCollection
-  description: Reference lookups powering payouts - supported banks and bank codes, bank
-    branches, assets, airtime countries, mobile money codes, exchange rates, USD/local
-    currency conversion, and bank account verification.
-- aid: chimoney:chimoney-accounts-api
-  name: Chimoney Accounts API
   tags:
-  - Accounts
-  - Transactions
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://chimoney.readme.io/reference/accounts
-  baseURL: https://api.chimoney.io/v0.2
+  - Info
   properties:
-  - url: https://chimoney.readme.io/reference/accounts
-    type: Documentation
-  - url: openapi/chimoney-openapi.yml
-    type: OpenAPI
-  - url: collections/chimoney.postman_collection.json
-    type: PostmanCollection
-  - url: collections/chimoney.opencollection.json
-    type: OpenCollection
-  description: Retrieve all or single transactions, look up transactions by issue ID, fetch
-    public profiles, transfer between accounts, delete unpaid transactions, and issue
-    Interledger wallet addresses for users.
+  - type: OpenAPI
+    url: openapi/chimoney-info-api-openapi.yml
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/payouts
+  - type: APIReference
+    url: https://api.chimoney.io/v0.2/api-docs/
+  - type: PostmanCollection
+    url: collections/chimoney.postman_collection.json
+  - type: OpenCollection
+    url: collections/chimoney.opencollection.json
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/wallets
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/multicurrency-wallets
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/sub-accounts
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/redeem
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/info
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/accounts
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/payments
+- aid: chimoney:chimoney-interledger-api
+  name: Chimoney Interledger API
+  description: The Interledger API from Chimoney — 5 operation(s) for interledger.
+  humanURL: https://chimoney.readme.io/reference/payouts
+  baseURL: https://api.chimoney.io/v0.2
+  tags:
+  - Interledger
+  properties:
+  - type: OpenAPI
+    url: openapi/chimoney-interledger-api-openapi.yml
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/payouts
+  - type: APIReference
+    url: https://api.chimoney.io/v0.2/api-docs/
+  - type: PostmanCollection
+    url: collections/chimoney.postman_collection.json
+  - type: OpenCollection
+    url: collections/chimoney.opencollection.json
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/wallets
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/multicurrency-wallets
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/sub-accounts
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/redeem
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/info
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/accounts
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/payments
+- aid: chimoney:chimoney-multicurrency-wallets-api
+  name: Chimoney MultiCurrency Wallets API
+  description: Create and manage multicurrency wallets and transfer between them.
+  humanURL: https://chimoney.readme.io/reference/payouts
+  baseURL: https://api.chimoney.io/v0.2
+  tags:
+  - MultiCurrency Wallets
+  properties:
+  - type: OpenAPI
+    url: openapi/chimoney-multicurrency-wallets-api-openapi.yml
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/payouts
+  - type: APIReference
+    url: https://api.chimoney.io/v0.2/api-docs/
+  - type: PostmanCollection
+    url: collections/chimoney.postman_collection.json
+  - type: OpenCollection
+    url: collections/chimoney.opencollection.json
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/wallets
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/multicurrency-wallets
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/sub-accounts
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/redeem
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/info
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/accounts
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/payments
 - aid: chimoney:chimoney-payments-api
   name: Chimoney Payments API
+  description: Initiate and verify inbound payment (collection) requests.
+  humanURL: https://chimoney.readme.io/reference/payouts
+  baseURL: https://api.chimoney.io/v0.2
   tags:
   - Payments
-  - Collection
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://chimoney.readme.io/reference/payments
-  baseURL: https://api.chimoney.io/v0.2
   properties:
-  - url: https://chimoney.readme.io/reference/payments
-    type: Documentation
-  - url: openapi/chimoney-openapi.yml
-    type: OpenAPI
-  - url: collections/chimoney.postman_collection.json
-    type: PostmanCollection
-  - url: collections/chimoney.opencollection.json
-    type: OpenCollection
-  description: Initiate inbound payment (collection) requests, verify a payment's status,
-    and simulate status changes in the sandbox environment.
+  - type: OpenAPI
+    url: openapi/chimoney-payments-api-openapi.yml
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/payouts
+  - type: APIReference
+    url: https://api.chimoney.io/v0.2/api-docs/
+  - type: PostmanCollection
+    url: collections/chimoney.postman_collection.json
+  - type: OpenCollection
+    url: collections/chimoney.opencollection.json
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/wallets
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/multicurrency-wallets
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/sub-accounts
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/redeem
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/info
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/accounts
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/payments
+- aid: chimoney:chimoney-payouts-api
+  name: Chimoney Payouts API
+  description: >-
+    Send money to banks, mobile money, airtime, gift cards, Chimoney wallets, Interac, and Interledger
+    wallet addresses.
+  humanURL: https://chimoney.readme.io/reference/payouts
+  baseURL: https://api.chimoney.io/v0.2
+  tags:
+  - Payouts
+  properties:
+  - type: OpenAPI
+    url: openapi/chimoney-payouts-api-openapi.yml
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/payouts
+  - type: APIReference
+    url: https://api.chimoney.io/v0.2/api-docs/
+  - type: PostmanCollection
+    url: collections/chimoney.postman_collection.json
+  - type: OpenCollection
+    url: collections/chimoney.opencollection.json
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/wallets
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/multicurrency-wallets
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/sub-accounts
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/redeem
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/info
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/accounts
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/payments
+- aid: chimoney:chimoney-redeem-api
+  name: Chimoney Redeem API
+  description: Redeem issued Chimoney, airtime, gift cards, and mobile money.
+  humanURL: https://chimoney.readme.io/reference/payouts
+  baseURL: https://api.chimoney.io/v0.2
+  tags:
+  - Redeem
+  properties:
+  - type: OpenAPI
+    url: openapi/chimoney-redeem-api-openapi.yml
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/payouts
+  - type: APIReference
+    url: https://api.chimoney.io/v0.2/api-docs/
+  - type: PostmanCollection
+    url: collections/chimoney.postman_collection.json
+  - type: OpenCollection
+    url: collections/chimoney.opencollection.json
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/wallets
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/multicurrency-wallets
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/sub-accounts
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/redeem
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/info
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/accounts
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/payments
+- aid: chimoney:chimoney-subaccount-api
+  name: Chimoney SubAccount API
+  description: >-
+    Create and manage sub-accounts (wallet accounts) and communities under your organization.
+  humanURL: https://chimoney.readme.io/reference/payouts
+  baseURL: https://api.chimoney.io/v0.2
+  tags:
+  - SubAccount
+  properties:
+  - type: OpenAPI
+    url: openapi/chimoney-subaccount-api-openapi.yml
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/payouts
+  - type: APIReference
+    url: https://api.chimoney.io/v0.2/api-docs/
+  - type: PostmanCollection
+    url: collections/chimoney.postman_collection.json
+  - type: OpenCollection
+    url: collections/chimoney.opencollection.json
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/wallets
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/multicurrency-wallets
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/sub-accounts
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/redeem
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/info
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/accounts
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/payments
+- aid: chimoney:chimoney-wallet-api
+  name: Chimoney Wallet API
+  description: List, look up, and transfer between Chimoney wallets.
+  humanURL: https://chimoney.readme.io/reference/payouts
+  baseURL: https://api.chimoney.io/v0.2
+  tags:
+  - Wallet
+  properties:
+  - type: OpenAPI
+    url: openapi/chimoney-wallet-api-openapi.yml
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/payouts
+  - type: APIReference
+    url: https://api.chimoney.io/v0.2/api-docs/
+  - type: PostmanCollection
+    url: collections/chimoney.postman_collection.json
+  - type: OpenCollection
+    url: collections/chimoney.opencollection.json
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/wallets
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/multicurrency-wallets
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/sub-accounts
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/redeem
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/info
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/accounts
+  - type: Documentation
+    url: https://chimoney.readme.io/reference/payments
 common:
 - type: AgenticAccess
   url: agentic-access/chimoney-agentic-access.yml
