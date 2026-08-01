@@ -1,0 +1,1509 @@
+openapi: 3.0.3
+info:
+  title: Chimoney API
+  description: 'Chimoney is a developer-first global payouts and disbursement platform with deep coverage
+    across Africa and 130+ countries. The REST API sends money to bank accounts, mobile money wallets,
+    airtime, gift cards, Chimoney wallets, and Interledger wallet addresses; manages multicurrency wallets
+    and sub-accounts; supports redemption, payment collection, and informational lookups (banks, assets,
+    exchange rates). All requests are authenticated with an API key passed in the X-API-KEY header, issued
+    from the Chimoney developer dashboard (dash.chimoney.io/developers). A separate sandbox host is available
+    for testing. This is a curated, representative subset of the live OpenAPI (source: https://api.chimoney.io/v0.2/swagger.json,
+    spec version 0.2.2); paths, methods, and summaries are grounded in that document. Request-body schemas
+    are representative and simplified for the most common endpoints - consult the official docs for the
+    full field set.'
+  version: 0.2.2
+  contact:
+    name: Chimoney
+    url: https://chimoney.io
+servers:
+- url: https://api.chimoney.io
+  description: Production (v0.2)
+- url: https://api-v2-sandbox.chimoney.io
+  description: Sandbox (v0.2)
+security:
+- apiKeyAuth: []
+tags:
+- name: Payouts
+  description: Send money to banks, mobile money, airtime, gift cards, Chimoney wallets, Interac, and
+    Interledger wallet addresses.
+- name: Interledger
+  description: ''
+- name: Wallet
+  description: List, look up, and transfer between Chimoney wallets.
+- name: MultiCurrency Wallets
+  description: Create and manage multicurrency wallets and transfer between them.
+- name: SubAccount
+  description: Create and manage sub-accounts (wallet accounts) and communities under your organization.
+- name: Redeem
+  description: Redeem issued Chimoney, airtime, gift cards, and mobile money.
+- name: Info
+  description: 'Reference lookups: supported banks, assets, exchange rates, currency conversion, and bank
+    account verification.'
+- name: Account
+  description: Retrieve transactions, public profiles, transfer between accounts, and issue wallet addresses.
+- name: Payments
+  description: Initiate and verify inbound payment (collection) requests.
+paths:
+  /v0.2/payouts/bank:
+    post:
+      operationId: post_v0.2_payouts_bank
+      tags:
+      - Payouts
+      summary: Payout to Bank in a supported Country.
+      description: Payout to Bank in a supported Country.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                subAccount:
+                  type: string
+                  description: Subaccount (wallet account) to payout from, if any.
+                turnOffNotification:
+                  type: boolean
+                  description: Disables email and other notifications from Chimoney.
+                debitCurrency:
+                  type: string
+                  description: Wallet currency to debit from.
+                  example: CAD
+                banks:
+                  type: array
+                  description: Bank payout instructions.
+                  items:
+                    type: object
+                    properties:
+                      countryToSend:
+                        type: string
+                        example: Nigeria
+                      account_bank:
+                        type: string
+                        description: Bank code.
+                        example: '044'
+                      account_number:
+                        type: string
+                        example: 0690000031
+                      valueInUSD:
+                        type: number
+                        example: 10
+                      reference:
+                        type: string
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/payouts/mobile-money:
+    post:
+      operationId: post_v0.2_payouts_mobile-money
+      tags:
+      - Payouts
+      summary: Payout Mobile Money (Momo).
+      description: Payout Mobile Money (Momo).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                subAccount:
+                  type: string
+                turnOffNotification:
+                  type: boolean
+                momos:
+                  type: array
+                  description: Mobile money payout instructions.
+                  items:
+                    type: object
+                    properties:
+                      countryToSend:
+                        type: string
+                        example: Kenya
+                      phoneNumber:
+                        type: string
+                        example: '254710102720'
+                      valueInUSD:
+                        type: number
+                        example: 10
+                      momoCode:
+                        type: string
+                        example: MPS
+                      reference:
+                        type: string
+                      narration:
+                        type: string
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/payouts/airtime:
+    post:
+      operationId: post_v0.2_payouts_airtime
+      tags:
+      - Payouts
+      summary: Payout Airtime to a Phone number.
+      description: Payout Airtime to a Phone number.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                subAccount:
+                  type: string
+                turnOffNotification:
+                  type: boolean
+                airtimes:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      countryToSend:
+                        type: string
+                        example: Nigeria
+                      phoneNumber:
+                        type: string
+                        example: '+2348000000000'
+                      valueInUSD:
+                        type: number
+                        example: 5
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/payouts/gift-card:
+    post:
+      operationId: post_v0.2_payouts_gift-card
+      tags:
+      - Payouts
+      summary: Payout Giftcards to an email.
+      description: Payout Giftcards to an email.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                subAccount:
+                  type: string
+                turnOffNotification:
+                  type: boolean
+                giftcards:
+                  type: array
+                  description: Gift card payout instructions.
+                  items:
+                    type: object
+                    properties:
+                      email:
+                        type: string
+                        example: test@example.com
+                      valueInUSD:
+                        type: number
+                        example: 10
+                      redeemData:
+                        type: object
+                        description: Gift card brand/product selection.
+                      narration:
+                        type: string
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/payouts/chimoney:
+    post:
+      operationId: post_v0.2_payouts_chimoney
+      tags:
+      - Payouts
+      summary: Payout Chimoney.
+      description: Payout Chimoney.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                subAccount:
+                  type: string
+                turnOffNotification:
+                  type: boolean
+                chimoneys:
+                  type: array
+                  description: Chimoney payout instructions.
+                  items:
+                    type: object
+                    properties:
+                      email:
+                        type: string
+                        example: test@example.com
+                      phone:
+                        type: string
+                        example: '+16471112222'
+                      valueInUSD:
+                        type: number
+                        example: 10
+                      amount:
+                        type: number
+                        description: Amount in specified currency. Required if currency is set.
+                      currency:
+                        type: string
+                        description: ISO currency code.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/payouts/wallet:
+    post:
+      operationId: post_v0.2_payouts_wallet
+      tags:
+      - Payouts
+      summary: Payout to a Chimoney Wallet.
+      description: Payout to a Chimoney Wallet.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/payouts/interledger-wallet-address:
+    post:
+      operationId: post_v0.2_payouts_interledger-wallet-address
+      tags:
+      - Payouts
+      - Interledger
+      summary: Payout to a Interledger Wallet Address.
+      description: Payout to a Interledger Wallet Address.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/payouts/interac:
+    post:
+      operationId: post_v0.2_payouts_interac
+      tags:
+      - Payouts
+      summary: Payout Interac.
+      description: Payout Interac.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/payouts/bills/ca:
+    post:
+      operationId: post_v0.2_payouts_bills_ca
+      tags:
+      - Payouts
+      summary: Payout Canadian Bill payment.
+      description: Payout Canadian Bill payment.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/payouts/initiate-chimoney:
+    post:
+      operationId: post_v0.2_payouts_initiate-chimoney
+      tags:
+      - Payouts
+      summary: Initiate Chimoney transaction.
+      description: Initiate Chimoney transaction.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/payouts/process:
+    post:
+      operationId: post_v0.2_payouts_process
+      tags:
+      - Payouts
+      summary: Debit wallet to process unpaid transaction.
+      description: Debit wallet to process unpaid transaction.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/payouts/status:
+    post:
+      operationId: post_v0.2_payouts_status
+      tags:
+      - Payouts
+      summary: Check Payout status.
+      description: Check Payout status.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - chiRef
+              properties:
+                chiRef:
+                  type: string
+                  description: Chimoney transaction reference (chiRef) to check.
+                subAccount:
+                  type: string
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/wallets/list:
+    post:
+      operationId: post_v0.2_wallets_list
+      tags:
+      - Wallet
+      summary: List associated wallets.
+      description: List associated wallets.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                subAccount:
+                  type: string
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/wallets/lookup:
+    post:
+      operationId: post_v0.2_wallets_lookup
+      tags:
+      - Wallet
+      summary: Get single wallet details.
+      description: Get single wallet details.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - walletID
+              properties:
+                walletID:
+                  type: string
+                subAccount:
+                  type: string
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/wallets/transfer:
+    post:
+      operationId: post_v0.2_wallets_transfer
+      tags:
+      - Wallet
+      summary: Transfer between wallets.
+      description: Transfer between wallets.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - receiver
+              - valueInUSD
+              properties:
+                subAccount:
+                  type: string
+                receiver:
+                  type: string
+                  description: Valid Chimoney user or organization ID.
+                wallet:
+                  type: string
+                  description: Wallet type. One of ["chi","momo","airtime"]. Leave blank unless you understand
+                    wallet types.
+                  example: chi
+                valueInUSD:
+                  type: number
+                  example: 200
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/multicurrency-wallets/create:
+    post:
+      operationId: post_v0.2_multicurrency-wallets_create
+      tags:
+      - MultiCurrency Wallets
+      summary: Create a new Multicurrency Wallet.
+      description: Create a new Multicurrency Wallet.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - name
+              properties:
+                name:
+                  type: string
+                  example: Mide Jones
+                email:
+                  type: string
+                  example: user@example.com
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                phoneNumber:
+                  type: string
+                  example: '+16471234567'
+                meta:
+                  type: object
+                  description: Metadata to store about the account.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/multicurrency-wallets/get:
+    get:
+      operationId: get_v0.2_multicurrency-wallets_get
+      tags:
+      - MultiCurrency Wallets
+      summary: Get details of an existing multicurrency wallet.
+      description: Get details of an existing multicurrency wallet.
+      parameters:
+      - name: id
+        in: query
+        required: true
+        description: Multicurrency wallet ID.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/multicurrency-wallets/list:
+    get:
+      operationId: get_v0.2_multicurrency-wallets_list
+      tags:
+      - MultiCurrency Wallets
+      summary: Get all multicurrency wallets of an organization/account.
+      description: Get all multicurrency wallets of an organization/account.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/multicurrency-wallets/update:
+    post:
+      operationId: post_v0.2_multicurrency-wallets_update
+      tags:
+      - MultiCurrency Wallets
+      summary: Update a multicurrency-wallets.
+      description: Update a multicurrency-wallets.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/multicurrency-wallets/transfer:
+    post:
+      operationId: post_v0.2_multicurrency-wallets_transfer
+      tags:
+      - MultiCurrency Wallets
+      - Interledger
+      summary: Transfer from multicurrency wallet to another wallet, an email or a phone number.
+      description: Transfer from multicurrency wallet to another wallet, an email or a phone number.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                walletID:
+                  type: string
+                receiver:
+                  type: string
+                  description: Destination wallet ID, email, or phone number.
+                amountToSend:
+                  type: number
+                currency:
+                  type: string
+                  example: USD
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/multicurrency-wallets/transfer/quote:
+    post:
+      operationId: post_v0.2_multicurrency-wallets_transfer_quote
+      tags:
+      - MultiCurrency Wallets
+      summary: Get Quote to Transfer between multicurrency wallets.
+      description: Get Quote to Transfer between multicurrency wallets.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/sub-account/create:
+    post:
+      operationId: post_v0.2_sub-account_create
+      tags:
+      - SubAccount
+      - Interledger
+      summary: Create a new sub-account.
+      description: Create a new sub-account.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - name
+              properties:
+                name:
+                  type: string
+                  example: Mide Jones
+                email:
+                  type: string
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                phoneNumber:
+                  type: string
+                  example: '+16471234567'
+                meta:
+                  type: object
+                id:
+                  type: string
+                  description: Optional valid UUID for the user.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/sub-account/get:
+    get:
+      operationId: get_v0.2_sub-account_get
+      tags:
+      - SubAccount
+      summary: Get details of an existing sub account.
+      description: Get details of an existing sub account.
+      parameters:
+      - name: id
+        in: query
+        required: true
+        description: Sub account ID.
+        schema:
+          type: string
+      - name: communityID
+        in: query
+        required: false
+        description: Community ID.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/sub-account/list:
+    get:
+      operationId: get_v0.2_sub-account_list
+      tags:
+      - SubAccount
+      summary: Get all sub-accounts associated with a user.
+      description: Get all sub-accounts associated with a user.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/sub-account/update:
+    post:
+      operationId: post_v0.2_sub-account_update
+      tags:
+      - SubAccount
+      summary: Update a sub-account.
+      description: Update a sub-account.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/sub-account/delete:
+    delete:
+      operationId: delete_v0.2_sub-account_delete
+      tags:
+      - SubAccount
+      summary: Delete an existing sub-account.
+      description: Delete an existing sub-account.
+      parameters:
+      - name: id
+        in: query
+        required: true
+        description: Sub account ID.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/sub-account/community/create:
+    post:
+      operationId: post_v0.2_sub-account_community_create
+      tags:
+      - SubAccount
+      summary: Create a sub-account community associated with a user.
+      description: Create a sub-account community associated with a user.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/sub-account/community/members:
+    get:
+      operationId: get_v0.2_sub-account_community_members
+      tags:
+      - SubAccount
+      summary: Get community members .
+      description: Get community members .
+      parameters:
+      - name: communityID
+        in: query
+        required: false
+        description: Community ID
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        required: false
+        description: maximum number of users to return - default is 50
+        schema:
+          type: integer
+      - name: startAfterId
+        in: query
+        required: false
+        description: ID of the last User Data retrieved - important for retrieivng subsequent pages
+        schema:
+          type: string
+      - name: startBeforeId
+        in: query
+        required: false
+        description: ID of the first User Data retrieved - important for retrieivng previous pages
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/redeem/any:
+    post:
+      operationId: post_v0.2_redeem_any
+      tags:
+      - Redeem
+      summary: Redeem any.
+      description: Redeem any.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/redeem/chimoney:
+    post:
+      operationId: post_v0.2_redeem_chimoney
+      tags:
+      - Redeem
+      summary: Redeem Chimoney.
+      description: Redeem Chimoney.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - chiRef
+              properties:
+                chiRef:
+                  type: string
+                  description: Chimoney reference to redeem.
+                subAccount:
+                  type: string
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/redeem/airtime:
+    post:
+      operationId: post_v0.2_redeem_airtime
+      tags:
+      - Redeem
+      summary: Redeem airtime.
+      description: Redeem airtime.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/redeem/gift-card:
+    post:
+      operationId: post_v0.2_redeem_gift-card
+      tags:
+      - Redeem
+      summary: Redeem giftcard.
+      description: Redeem giftcard.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/redeem/mobile-money:
+    post:
+      operationId: post_v0.2_redeem_mobile-money
+      tags:
+      - Redeem
+      summary: Redeem mobile money.
+      description: Redeem mobile money.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/info/assets:
+    get:
+      operationId: get_v0.2_info_assets
+      tags:
+      - Info
+      summary: Get list of all assests.
+      description: Get list of all assests.
+      parameters:
+      - name: countryCode
+        in: query
+        required: false
+        description: Country code symbol e.g NG, US, GH.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/info/country-banks:
+    get:
+      operationId: get_v0.2_info_country-banks
+      tags:
+      - Info
+      summary: Get list of Supported banks and bank code.
+      description: Get list of Supported banks and bank code.
+      parameters:
+      - name: countryCode
+        in: query
+        required: true
+        description: Country code symbol e.g NG, US, GH.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/info/bank-branches:
+    get:
+      operationId: get_v0.2_info_bank-branches
+      tags:
+      - Info
+      summary: Get list of bank branches and branch code.
+      description: Get list of bank branches and branch code.
+      parameters:
+      - name: bankID
+        in: query
+        required: true
+        description: bankCode id from /info/country-banks
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/info/airtime-countries:
+    get:
+      operationId: get_v0.2_info_airtime-countries
+      tags:
+      - Info
+      summary: Get list of all supported airtime Countries.
+      description: Get list of all supported airtime Countries.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/info/mobile-money-codes:
+    get:
+      operationId: get_v0.2_info_mobile-money-codes
+      tags:
+      - Info
+      summary: Get list of all supported mobile money code.
+      description: Get list of all supported mobile money code.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/info/exchange-rates:
+    get:
+      operationId: get_v0.2_info_exchange-rates
+      tags:
+      - Info
+      summary: get exchange rates.
+      description: get exchange rates.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/info/local-amount-in-usd:
+    get:
+      operationId: get_v0.2_info_local-amount-in-usd
+      tags:
+      - Info
+      summary: convert local currency amount to USD.
+      description: convert local currency amount to USD.
+      parameters:
+      - name: originCurrency
+        in: query
+        required: true
+        description: Currency symbol e.g NGN, USD.
+        schema:
+          type: string
+      - name: amountInOriginCurrency
+        in: query
+        required: true
+        description: amount to be converted.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/info/usd-amount-in-local:
+    get:
+      operationId: get_v0.2_info_usd-amount-in-local
+      tags:
+      - Info
+      summary: Convert USD amount to Local currency amount.
+      description: Convert USD amount to Local currency amount.
+      parameters:
+      - name: destinationCurrency
+        in: query
+        required: true
+        description: currency symbol e.g NGN, KES.
+        schema:
+          type: string
+      - name: amountInUSD
+        in: query
+        required: true
+        description: amount in usd.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/info/verify-bank-account-number:
+    post:
+      operationId: post_v0.2_info_verify-bank-account-number
+      tags:
+      - Info
+      summary: verify a bank account number or multiple bank account numbers.
+      description: verify a bank account number or multiple bank account numbers.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/accounts/transactions:
+    post:
+      operationId: post_v0.2_accounts_transactions
+      tags:
+      - Account
+      summary: Get all transactions by account.
+      description: Get all transactions by account.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                subAccount:
+                  type: string
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/accounts/transaction:
+    post:
+      operationId: post_v0.2_accounts_transaction
+      tags:
+      - Account
+      summary: Get single transaction detail.
+      description: Get single transaction detail.
+      parameters:
+      - name: id
+        in: query
+        required: true
+        description: Transaction id.
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - id
+              properties:
+                id:
+                  type: string
+                  description: Transaction ID.
+                subAccount:
+                  type: string
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/accounts/issue-id-transactions:
+    post:
+      operationId: post_v0.2_accounts_issue-id-transactions
+      tags:
+      - Account
+      summary: Get transaction details by issueID.
+      description: Get transaction details by issueID.
+      parameters:
+      - name: issueID
+        in: query
+        required: true
+        description: IssueID of the transaction.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/accounts/public-profile:
+    post:
+      operationId: post_v0.2_accounts_public-profile
+      tags:
+      - Account
+      - Interledger
+      summary: Get Public profile of a Chimoney User.
+      description: Get Public profile of a Chimoney User.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/accounts/transfer:
+    post:
+      operationId: post_v0.2_accounts_transfer
+      tags:
+      - Account
+      summary: Account Transfer.
+      description: Account Transfer.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/accounts/delete-unpaid-transaction:
+    delete:
+      operationId: delete_v0.2_accounts_delete-unpaid-transaction
+      tags:
+      - Account
+      summary: Deletes an unpaid transaction.
+      description: Deletes an unpaid transaction.
+      parameters:
+      - name: chiRef
+        in: query
+        required: true
+        description: Transaction reference.
+        schema:
+          type: string
+      - name: subAccount
+        in: query
+        required: false
+        description: SubAccount if any.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/accounts/issue-wallet-address:
+    post:
+      operationId: post_v0.2_accounts_issue-wallet-address
+      tags:
+      - Account
+      - Interledger
+      summary: Issue an Interledger wallet address for a user
+      description: Issue an Interledger wallet address for a user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/payment/initiate:
+    post:
+      operationId: post_v0.2_payment_initiate
+      tags:
+      - Payments
+      summary: Initiate a payment request
+      description: Initiate a payment request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - valueInUSD
+              properties:
+                valueInUSD:
+                  type: number
+                  example: 50
+                payerEmail:
+                  type: string
+                redirect_url:
+                  type: string
+                meta:
+                  type: object
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/payment/verify:
+    post:
+      operationId: post_v0.2_payment_verify
+      tags:
+      - Payments
+      summary: verify a payment.
+      description: verify a payment.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - id
+              properties:
+                id:
+                  type: string
+                  description: Payment issue reference to verify.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/payment/simulate:
+    post:
+      operationId: post_v0.2_payment_simulate
+      tags:
+      - Payments
+      summary: Simulate a card or other status change. Accepted include ["failed", "expired", "fraud",
+        "paid"]. Only works in staging
+      description: Simulate a card or other status change. Accepted include ["failed", "expired", "fraud",
+        "paid"]. Only works in staging
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+      description: API key issued from the Chimoney developer dashboard (https://dash.chimoney.io/developers),
+        passed in the X-API-KEY request header.
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/StandardResponse'
+  schemas:
+    StandardResponse:
+      type: object
+      description: Standard Chimoney response envelope.
+      properties:
+        status:
+          type: string
+          description: '"success" or "error".'
+          example: success
+        message:
+          type: string
+        data:
+          description: Endpoint-specific payload.

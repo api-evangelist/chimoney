@@ -1,0 +1,30 @@
+{
+  "provider": "chimoney",
+  "sources": [
+    "chimoney-account-api-openapi.yml",
+    "chimoney-info-api-openapi.yml",
+    "chimoney-interledger-api-openapi.yml",
+    "chimoney-multicurrency-wallets-api-openapi.yml",
+    "chimoney-payments-api-openapi.yml",
+    "chimoney-payouts-api-openapi.yml",
+    "chimoney-redeem-api-openapi.yml",
+    "chimoney-subaccount-api-openapi.yml",
+    "chimoney-wallet-api-openapi.yml"
+  ],
+  "outputs": [
+    "chimoney-account-api-openapi.yml",
+    "chimoney-info-api-openapi.yml",
+    "chimoney-interledger-api-openapi.yml",
+    "chimoney-multicurrency-wallets-api-openapi.yml",
+    "chimoney-payments-api-openapi.yml",
+    "chimoney-payouts-api-openapi.yml",
+    "chimoney-redeem-api-openapi.yml",
+    "chimoney-subaccount-api-openapi.yml",
+    "chimoney-wallet-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
