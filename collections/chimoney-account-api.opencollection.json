@@ -1,0 +1,157 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Chimoney Account API",
+    "version": "0.2.2"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-API-KEY",
+      "value": "{{X-API-KEY}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Account",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get all transactions by account.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/accounts/transactions",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get all transactions by account."
+        },
+        {
+          "info": {
+            "name": "Get single transaction detail.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/accounts/transaction",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "query",
+                "description": "Transaction id."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get single transaction detail."
+        },
+        {
+          "info": {
+            "name": "Get transaction details by issueID.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/accounts/issue-id-transactions",
+            "params": [
+              {
+                "name": "issueID",
+                "value": "",
+                "type": "query",
+                "description": "IssueID of the transaction."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get transaction details by issueID."
+        },
+        {
+          "info": {
+            "name": "Get Public profile of a Chimoney User.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/accounts/public-profile",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get Public profile of a Chimoney User."
+        },
+        {
+          "info": {
+            "name": "Account Transfer.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/accounts/transfer",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Account Transfer."
+        },
+        {
+          "info": {
+            "name": "Deletes an unpaid transaction.",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.chimoney.io/v0.2/accounts/delete-unpaid-transaction",
+            "params": [
+              {
+                "name": "chiRef",
+                "value": "",
+                "type": "query",
+                "description": "Transaction reference."
+              },
+              {
+                "name": "subAccount",
+                "value": "",
+                "type": "query",
+                "description": "SubAccount if any."
+              }
+            ]
+          },
+          "docs": "Deletes an unpaid transaction."
+        },
+        {
+          "info": {
+            "name": "Issue an Interledger wallet address for a user",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/accounts/issue-wallet-address",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Issue an Interledger wallet address for a user"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

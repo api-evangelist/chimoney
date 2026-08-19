@@ -1,0 +1,206 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Chimoney Account Payouts API",
+    "version": "0.2.2"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-API-KEY",
+      "value": "{{X-API-KEY}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Payouts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Payout to Bank in a supported Country.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/payouts/bank",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Payout to Bank in a supported Country."
+        },
+        {
+          "info": {
+            "name": "Payout Mobile Money (Momo).",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/payouts/mobile-money",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Payout Mobile Money (Momo)."
+        },
+        {
+          "info": {
+            "name": "Payout Airtime to a Phone number.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/payouts/airtime",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Payout Airtime to a Phone number."
+        },
+        {
+          "info": {
+            "name": "Payout Giftcards to an email.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/payouts/gift-card",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Payout Giftcards to an email."
+        },
+        {
+          "info": {
+            "name": "Payout Chimoney.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/payouts/chimoney",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Payout Chimoney."
+        },
+        {
+          "info": {
+            "name": "Payout to a Chimoney Wallet.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/payouts/wallet",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Payout to a Chimoney Wallet."
+        },
+        {
+          "info": {
+            "name": "Payout to a Interledger Wallet Address.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/payouts/interledger-wallet-address",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Payout to a Interledger Wallet Address."
+        },
+        {
+          "info": {
+            "name": "Payout Interac.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/payouts/interac",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Payout Interac."
+        },
+        {
+          "info": {
+            "name": "Payout Canadian Bill payment.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/payouts/bills/ca",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Payout Canadian Bill payment."
+        },
+        {
+          "info": {
+            "name": "Initiate Chimoney transaction.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/payouts/initiate-chimoney",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Initiate Chimoney transaction."
+        },
+        {
+          "info": {
+            "name": "Debit wallet to process unpaid transaction.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/payouts/process",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Debit wallet to process unpaid transaction."
+        },
+        {
+          "info": {
+            "name": "Check Payout status.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/payouts/status",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Check Payout status."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

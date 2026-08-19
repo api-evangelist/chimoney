@@ -1,0 +1,101 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Chimoney Account Redeem API",
+    "version": "0.2.2"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-API-KEY",
+      "value": "{{X-API-KEY}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Redeem",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Redeem any.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/redeem/any",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Redeem any."
+        },
+        {
+          "info": {
+            "name": "Redeem Chimoney.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/redeem/chimoney",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Redeem Chimoney."
+        },
+        {
+          "info": {
+            "name": "Redeem airtime.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/redeem/airtime",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Redeem airtime."
+        },
+        {
+          "info": {
+            "name": "Redeem giftcard.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/redeem/gift-card",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Redeem giftcard."
+        },
+        {
+          "info": {
+            "name": "Redeem mobile money.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/redeem/mobile-money",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Redeem mobile money."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,181 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Chimoney Account Info API",
+    "version": "0.2.2"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-API-KEY",
+      "value": "{{X-API-KEY}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Info",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get list of all assests.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.chimoney.io/v0.2/info/assets",
+            "params": [
+              {
+                "name": "countryCode",
+                "value": "",
+                "type": "query",
+                "description": "Country code symbol e.g NG, US, GH."
+              }
+            ]
+          },
+          "docs": "Get list of all assests."
+        },
+        {
+          "info": {
+            "name": "Get list of Supported banks and bank code.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.chimoney.io/v0.2/info/country-banks",
+            "params": [
+              {
+                "name": "countryCode",
+                "value": "",
+                "type": "query",
+                "description": "Country code symbol e.g NG, US, GH."
+              }
+            ]
+          },
+          "docs": "Get list of Supported banks and bank code."
+        },
+        {
+          "info": {
+            "name": "Get list of bank branches and branch code.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.chimoney.io/v0.2/info/bank-branches",
+            "params": [
+              {
+                "name": "bankID",
+                "value": "",
+                "type": "query",
+                "description": "bankCode id from /info/country-banks"
+              }
+            ]
+          },
+          "docs": "Get list of bank branches and branch code."
+        },
+        {
+          "info": {
+            "name": "Get list of all supported airtime Countries.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.chimoney.io/v0.2/info/airtime-countries"
+          },
+          "docs": "Get list of all supported airtime Countries."
+        },
+        {
+          "info": {
+            "name": "Get list of all supported mobile money code.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.chimoney.io/v0.2/info/mobile-money-codes"
+          },
+          "docs": "Get list of all supported mobile money code."
+        },
+        {
+          "info": {
+            "name": "get exchange rates.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.chimoney.io/v0.2/info/exchange-rates"
+          },
+          "docs": "get exchange rates."
+        },
+        {
+          "info": {
+            "name": "convert local currency amount to USD.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.chimoney.io/v0.2/info/local-amount-in-usd",
+            "params": [
+              {
+                "name": "originCurrency",
+                "value": "",
+                "type": "query",
+                "description": "Currency symbol e.g NGN, USD."
+              },
+              {
+                "name": "amountInOriginCurrency",
+                "value": "",
+                "type": "query",
+                "description": "amount to be converted."
+              }
+            ]
+          },
+          "docs": "convert local currency amount to USD."
+        },
+        {
+          "info": {
+            "name": "Convert USD amount to Local currency amount.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.chimoney.io/v0.2/info/usd-amount-in-local",
+            "params": [
+              {
+                "name": "destinationCurrency",
+                "value": "",
+                "type": "query",
+                "description": "currency symbol e.g NGN, KES."
+              },
+              {
+                "name": "amountInUSD",
+                "value": "",
+                "type": "query",
+                "description": "amount in usd."
+              }
+            ]
+          },
+          "docs": "Convert USD amount to Local currency amount."
+        },
+        {
+          "info": {
+            "name": "verify a bank account number or multiple bank account numbers.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/info/verify-bank-account-number",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "verify a bank account number or multiple bank account numbers."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

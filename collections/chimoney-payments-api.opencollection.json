@@ -1,0 +1,71 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Chimoney Account Payments API",
+    "version": "0.2.2"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-API-KEY",
+      "value": "{{X-API-KEY}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Payments",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Initiate a payment request",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/payment/initiate",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Initiate a payment request"
+        },
+        {
+          "info": {
+            "name": "verify a payment.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/payment/verify",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "verify a payment."
+        },
+        {
+          "info": {
+            "name": "Simulate a card or other status change. Accepted include [\"failed\", \"expired\", \"fraud\", \"paid\"]. Only works in staging",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.chimoney.io/v0.2/payment/simulate",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Simulate a card or other status change. Accepted include [\"failed\", \"expired\", \"fraud\", \"paid\"]. Only works in staging"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
