@@ -30,6 +30,17 @@ tags:
 - Africa
 - Global Payouts
 - Wallets
+- Multi-Currency
+- Gift Cards
+- Mobile Money
+- Fintech
+tags_raw:
+- Payouts
+- Disbursements
+- Payments
+- Africa
+- Global Payouts
+- Wallets
 - Multicurrency
 - Gift Cards
 - Mobile Money
@@ -274,6 +285,8 @@ apis:
   humanURL: https://chimoney.readme.io/reference/payouts
   baseURL: https://api.chimoney.io/v0.2
   tags:
+  - Sub-Account
+  tags_raw:
   - SubAccount
   properties:
   - type: OpenAPI
@@ -306,6 +319,8 @@ apis:
   humanURL: https://chimoney.readme.io/reference/payouts
   baseURL: https://api.chimoney.io/v0.2
   tags:
+  - Wallets
+  tags_raw:
   - Wallet
   properties:
   - type: OpenAPI
