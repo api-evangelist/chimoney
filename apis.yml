@@ -9,6 +9,18 @@ description: Chimoney is a developer-first global payouts and disbursement platf
   collection, and reference lookups (supported banks, assets, exchange rates). Authentication
   is an API key passed in the X-API-KEY header, issued self-serve from the Chimoney developer
   dashboard, with a separate sandbox host for testing.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: freemium
   onboarding: self-serve
