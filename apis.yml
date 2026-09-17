@@ -290,19 +290,18 @@ apis:
     url: https://chimoney.readme.io/reference/accounts
   - type: Documentation
     url: https://chimoney.readme.io/reference/payments
-- aid: chimoney:chimoney-subaccount-api
-  name: Chimoney SubAccount API
-  description: >-
-    Create and manage sub-accounts (wallet accounts) and communities under your organization.
+- aid: chimoney:chimoney-wallet-api
+  name: Chimoney Wallet API
+  description: List, look up, and transfer between Chimoney wallets.
   humanURL: https://chimoney.readme.io/reference/payouts
   baseURL: https://api.chimoney.io/v0.2
   tags:
-  - Sub-Account
+  - Wallets
   tags_raw:
-  - SubAccount
+  - Wallet
   properties:
   - type: OpenAPI
-    url: openapi/chimoney-subaccount-api-openapi.yml
+    url: openapi/chimoney-wallet-api-openapi.yml
   - type: Documentation
     url: https://chimoney.readme.io/reference/payouts
   - type: APIReference
@@ -325,18 +324,17 @@ apis:
     url: https://chimoney.readme.io/reference/accounts
   - type: Documentation
     url: https://chimoney.readme.io/reference/payments
-- aid: chimoney:chimoney-wallet-api
-  name: Chimoney Wallet API
-  description: List, look up, and transfer between Chimoney wallets.
+- aid: chimoney:chimoney-sub-account-api
+  name: Chimoney Sub Account API
+  description: >-
+    Create and manage sub-accounts (wallet accounts) and communities under your organization.
   humanURL: https://chimoney.readme.io/reference/payouts
   baseURL: https://api.chimoney.io/v0.2
   tags:
-  - Wallets
-  tags_raw:
-  - Wallet
+  - Sub Account
   properties:
   - type: OpenAPI
-    url: openapi/chimoney-wallet-api-openapi.yml
+    url: openapi/chimoney-sub-account-api-openapi.yml
   - type: Documentation
     url: https://chimoney.readme.io/reference/payouts
   - type: APIReference
