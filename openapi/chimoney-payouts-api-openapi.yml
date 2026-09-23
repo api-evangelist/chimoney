@@ -1,7 +1,7 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: Chimoney Account Payouts API
-  description: 'Chimoney is a developer-first global payouts and disbursement platform with deep coverage across Africa and 130+ countries. The REST API sends money to bank accounts, mobile money wallets, airtime, gift cards, Chimoney wallets, and Interledger wallet addresses; manages multicurrency wallets and sub-accounts; supports redemption, payment collection, and informational lookups (banks, assets, exchange rates). All requests are authenticated with an API key passed in the X-API-KEY header, issued from the Chimoney developer dashboard (dash.chimoney.io/developers). A separate sandbox host is available for testing. This is a curated, representative subset of the live OpenAPI (source: https://api.chimoney.io/v0.2/swagger.json, spec version 0.2.2); paths, methods, and summaries are grounded in that document. Request-body schemas are representative and simplified for the most common endpoints - consult the official docs for the full field set.'
+  title: Chimoney Payouts API
+  description: Chimoney is a developer-first global payouts and disbursement platform with deep coverage across Africa and 130+ countries.
   version: 0.2.2
   contact:
     name: Chimoney
@@ -22,7 +22,7 @@ paths:
       operationId: post_v0.2_payouts_bank
       tags:
       - Payouts
-      summary: Payout to Bank in a supported Country.
+      summary: Payout to Bank in a supported Country
       description: Payout to Bank in a supported Country.
       requestBody:
         required: true
@@ -76,7 +76,7 @@ paths:
       operationId: post_v0.2_payouts_mobile-money
       tags:
       - Payouts
-      summary: Payout Mobile Money (Momo).
+      summary: Payout Mobile Money (Momo)
       description: Payout Mobile Money (Momo).
       requestBody:
         required: true
@@ -125,7 +125,7 @@ paths:
       operationId: post_v0.2_payouts_airtime
       tags:
       - Payouts
-      summary: Payout Airtime to a Phone number.
+      summary: Payout Airtime to a Phone number
       description: Payout Airtime to a Phone number.
       requestBody:
         required: true
@@ -166,7 +166,7 @@ paths:
       operationId: post_v0.2_payouts_gift-card
       tags:
       - Payouts
-      summary: Payout Giftcards to an email.
+      summary: Payout Giftcards to an email
       description: Payout Giftcards to an email.
       requestBody:
         required: true
@@ -210,7 +210,7 @@ paths:
       operationId: post_v0.2_payouts_chimoney
       tags:
       - Payouts
-      summary: Payout Chimoney.
+      summary: Payout Chimoney
       description: Payout Chimoney.
       requestBody:
         required: true
@@ -258,7 +258,7 @@ paths:
       operationId: post_v0.2_payouts_wallet
       tags:
       - Payouts
-      summary: Payout to a Chimoney Wallet.
+      summary: Payout to a Chimoney Wallet
       description: Payout to a Chimoney Wallet.
       requestBody:
         content:
@@ -280,7 +280,7 @@ paths:
       operationId: post_v0.2_payouts_interledger-wallet-address
       tags:
       - Payouts
-      summary: Payout to a Interledger Wallet Address.
+      summary: Payout to a Interledger Wallet Address
       description: Payout to a Interledger Wallet Address.
       requestBody:
         content:
@@ -302,7 +302,7 @@ paths:
       operationId: post_v0.2_payouts_interac
       tags:
       - Payouts
-      summary: Payout Interac.
+      summary: Payout Interac
       description: Payout Interac.
       requestBody:
         content:
@@ -324,7 +324,7 @@ paths:
       operationId: post_v0.2_payouts_bills_ca
       tags:
       - Payouts
-      summary: Payout Canadian Bill payment.
+      summary: Payout Canadian Bill payment
       description: Payout Canadian Bill payment.
       requestBody:
         content:
@@ -346,7 +346,7 @@ paths:
       operationId: post_v0.2_payouts_initiate-chimoney
       tags:
       - Payouts
-      summary: Initiate Chimoney transaction.
+      summary: Initiate Chimoney transaction
       description: Initiate Chimoney transaction.
       requestBody:
         content:
@@ -368,7 +368,7 @@ paths:
       operationId: post_v0.2_payouts_process
       tags:
       - Payouts
-      summary: Debit wallet to process unpaid transaction.
+      summary: Debit wallet to process unpaid transaction
       description: Debit wallet to process unpaid transaction.
       requestBody:
         content:
@@ -390,7 +390,7 @@ paths:
       operationId: post_v0.2_payouts_status
       tags:
       - Payouts
-      summary: Check Payout status.
+      summary: Check Payout status
       description: Check Payout status.
       requestBody:
         required: true
@@ -416,6 +416,13 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/StandardResponse'
   schemas:
     StandardResponse:
       type: object
@@ -429,13 +436,6 @@ components:
           type: string
         data:
           description: Endpoint-specific payload.
-  responses:
-    Unauthorized:
-      description: Missing or invalid API key.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/StandardResponse'
   securitySchemes:
     apiKeyAuth:
       type: apiKey

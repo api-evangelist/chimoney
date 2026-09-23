@@ -1,7 +1,7 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: Chimoney Account SubAccount API
-  description: 'Chimoney is a developer-first global payouts and disbursement platform with deep coverage across Africa and 130+ countries. The REST API sends money to bank accounts, mobile money wallets, airtime, gift cards, Chimoney wallets, and Interledger wallet addresses; manages multicurrency wallets and sub-accounts; supports redemption, payment collection, and informational lookups (banks, assets, exchange rates). All requests are authenticated with an API key passed in the X-API-KEY header, issued from the Chimoney developer dashboard (dash.chimoney.io/developers). A separate sandbox host is available for testing. This is a curated, representative subset of the live OpenAPI (source: https://api.chimoney.io/v0.2/swagger.json, spec version 0.2.2); paths, methods, and summaries are grounded in that document. Request-body schemas are representative and simplified for the most common endpoints - consult the official docs for the full field set.'
+  title: Chimoney Sub Account API
+  description: Chimoney is a developer-first global payouts and disbursement platform with deep coverage across Africa and 130+ countries.
   version: 0.2.2
   contact:
     name: Chimoney
@@ -14,15 +14,15 @@ servers:
 security:
 - apiKeyAuth: []
 tags:
-- name: SubAccount
+- name: Sub Account
   description: Create and manage sub-accounts (wallet accounts) and communities under your organization.
 paths:
   /v0.2/sub-account/create:
     post:
       operationId: post_v0.2_sub-account_create
       tags:
-      - SubAccount
-      summary: Create a new sub-account.
+      - Sub Account
+      summary: Create a new sub-account
       description: Create a new sub-account.
       requestBody:
         required: true
@@ -63,8 +63,8 @@ paths:
     get:
       operationId: get_v0.2_sub-account_get
       tags:
-      - SubAccount
-      summary: Get details of an existing sub account.
+      - Sub Account
+      summary: Get details of an existing sub account
       description: Get details of an existing sub account.
       parameters:
       - name: id
@@ -92,8 +92,8 @@ paths:
     get:
       operationId: get_v0.2_sub-account_list
       tags:
-      - SubAccount
-      summary: Get all sub-accounts associated with a user.
+      - Sub Account
+      summary: Get all sub-accounts associated with a user
       description: Get all sub-accounts associated with a user.
       responses:
         '200':
@@ -108,8 +108,8 @@ paths:
     post:
       operationId: post_v0.2_sub-account_update
       tags:
-      - SubAccount
-      summary: Update a sub-account.
+      - Sub Account
+      summary: Update a sub-account
       description: Update a sub-account.
       requestBody:
         content:
@@ -130,8 +130,8 @@ paths:
     delete:
       operationId: delete_v0.2_sub-account_delete
       tags:
-      - SubAccount
-      summary: Delete an existing sub-account.
+      - Sub Account
+      summary: Delete an existing sub-account
       description: Delete an existing sub-account.
       parameters:
       - name: id
@@ -153,8 +153,8 @@ paths:
     post:
       operationId: post_v0.2_sub-account_community_create
       tags:
-      - SubAccount
-      summary: Create a sub-account community associated with a user.
+      - Sub Account
+      summary: Create a sub-account community associated with a user
       description: Create a sub-account community associated with a user.
       requestBody:
         content:
@@ -175,8 +175,8 @@ paths:
     get:
       operationId: get_v0.2_sub-account_community_members
       tags:
-      - SubAccount
-      summary: Get community members .
+      - Sub Account
+      summary: Get community members
       description: Get community members .
       parameters:
       - name: communityID
@@ -213,6 +213,13 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/StandardResponse'
   schemas:
     StandardResponse:
       type: object
@@ -226,13 +233,6 @@ components:
           type: string
         data:
           description: Endpoint-specific payload.
-  responses:
-    Unauthorized:
-      description: Missing or invalid API key.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/StandardResponse'
   securitySchemes:
     apiKeyAuth:
       type: apiKey

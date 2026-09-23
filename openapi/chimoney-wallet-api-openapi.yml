@@ -1,7 +1,7 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: Chimoney Account Wallet API
-  description: 'Chimoney is a developer-first global payouts and disbursement platform with deep coverage across Africa and 130+ countries. The REST API sends money to bank accounts, mobile money wallets, airtime, gift cards, Chimoney wallets, and Interledger wallet addresses; manages multicurrency wallets and sub-accounts; supports redemption, payment collection, and informational lookups (banks, assets, exchange rates). All requests are authenticated with an API key passed in the X-API-KEY header, issued from the Chimoney developer dashboard (dash.chimoney.io/developers). A separate sandbox host is available for testing. This is a curated, representative subset of the live OpenAPI (source: https://api.chimoney.io/v0.2/swagger.json, spec version 0.2.2); paths, methods, and summaries are grounded in that document. Request-body schemas are representative and simplified for the most common endpoints - consult the official docs for the full field set.'
+  title: Chimoney Wallet API
+  description: Chimoney is a developer-first global payouts and disbursement platform with deep coverage across Africa and 130+ countries.
   version: 0.2.2
   contact:
     name: Chimoney
@@ -22,7 +22,7 @@ paths:
       operationId: post_v0.2_wallets_list
       tags:
       - Wallet
-      summary: List associated wallets.
+      summary: List associated wallets
       description: List associated wallets.
       requestBody:
         required: true
@@ -47,7 +47,7 @@ paths:
       operationId: post_v0.2_wallets_lookup
       tags:
       - Wallet
-      summary: Get single wallet details.
+      summary: Get single wallet details
       description: Get single wallet details.
       requestBody:
         required: true
@@ -76,7 +76,7 @@ paths:
       operationId: post_v0.2_wallets_transfer
       tags:
       - Wallet
-      summary: Transfer between wallets.
+      summary: Transfer between wallets
       description: Transfer between wallets.
       requestBody:
         required: true
@@ -110,6 +110,13 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/StandardResponse'
   schemas:
     StandardResponse:
       type: object
@@ -123,13 +130,6 @@ components:
           type: string
         data:
           description: Endpoint-specific payload.
-  responses:
-    Unauthorized:
-      description: Missing or invalid API key.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/StandardResponse'
   securitySchemes:
     apiKeyAuth:
       type: apiKey

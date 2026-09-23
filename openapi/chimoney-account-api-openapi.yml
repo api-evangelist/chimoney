@@ -1,7 +1,7 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
   title: Chimoney Account API
-  description: 'Chimoney is a developer-first global payouts and disbursement platform with deep coverage across Africa and 130+ countries. The REST API sends money to bank accounts, mobile money wallets, airtime, gift cards, Chimoney wallets, and Interledger wallet addresses; manages multicurrency wallets and sub-accounts; supports redemption, payment collection, and informational lookups (banks, assets, exchange rates). All requests are authenticated with an API key passed in the X-API-KEY header, issued from the Chimoney developer dashboard (dash.chimoney.io/developers). A separate sandbox host is available for testing. This is a curated, representative subset of the live OpenAPI (source: https://api.chimoney.io/v0.2/swagger.json, spec version 0.2.2); paths, methods, and summaries are grounded in that document. Request-body schemas are representative and simplified for the most common endpoints - consult the official docs for the full field set.'
+  description: Chimoney is a developer-first global payouts and disbursement platform with deep coverage across Africa and 130+ countries.
   version: 0.2.2
   contact:
     name: Chimoney
@@ -22,7 +22,7 @@ paths:
       operationId: post_v0.2_accounts_transactions
       tags:
       - Account
-      summary: Get all transactions by account.
+      summary: Get all transactions by account
       description: Get all transactions by account.
       requestBody:
         required: true
@@ -47,7 +47,7 @@ paths:
       operationId: post_v0.2_accounts_transaction
       tags:
       - Account
-      summary: Get single transaction detail.
+      summary: Get single transaction detail
       description: Get single transaction detail.
       parameters:
       - name: id
@@ -84,7 +84,7 @@ paths:
       operationId: post_v0.2_accounts_issue-id-transactions
       tags:
       - Account
-      summary: Get transaction details by issueID.
+      summary: Get transaction details by issueID
       description: Get transaction details by issueID.
       parameters:
       - name: issueID
@@ -113,7 +113,7 @@ paths:
       operationId: post_v0.2_accounts_public-profile
       tags:
       - Account
-      summary: Get Public profile of a Chimoney User.
+      summary: Get Public profile of a Chimoney User
       description: Get Public profile of a Chimoney User.
       requestBody:
         content:
@@ -135,7 +135,7 @@ paths:
       operationId: post_v0.2_accounts_transfer
       tags:
       - Account
-      summary: Account Transfer.
+      summary: Account Transfer
       description: Account Transfer.
       requestBody:
         content:
@@ -157,7 +157,7 @@ paths:
       operationId: delete_v0.2_accounts_delete-unpaid-transaction
       tags:
       - Account
-      summary: Deletes an unpaid transaction.
+      summary: Deletes an unpaid transaction
       description: Deletes an unpaid transaction.
       parameters:
       - name: chiRef
@@ -187,7 +187,6 @@ paths:
       tags:
       - Account
       summary: Issue an Interledger wallet address for a user
-      description: Issue an Interledger wallet address for a user
       requestBody:
         content:
           application/json:
@@ -204,6 +203,13 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/StandardResponse'
   schemas:
     StandardResponse:
       type: object
@@ -217,13 +223,6 @@ components:
           type: string
         data:
           description: Endpoint-specific payload.
-  responses:
-    Unauthorized:
-      description: Missing or invalid API key.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/StandardResponse'
   securitySchemes:
     apiKeyAuth:
       type: apiKey
