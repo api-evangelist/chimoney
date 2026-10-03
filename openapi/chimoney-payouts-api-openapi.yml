@@ -416,6 +416,13 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/StandardResponse'
   schemas:
     StandardResponse:
       type: object
@@ -429,13 +436,6 @@ components:
           type: string
         data:
           description: Endpoint-specific payload.
-  responses:
-    Unauthorized:
-      description: Missing or invalid API key.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/StandardResponse'
   securitySchemes:
     apiKeyAuth:
       type: apiKey
