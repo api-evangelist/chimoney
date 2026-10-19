@@ -1,0 +1,1015 @@
+openapi: 3.2.0
+info:
+  title: Chimoney API Docs Agents API
+  version: 0.2.4
+  description: This is the latest version of the Chimoney API. For deprecated version routes, please refer to /v0.2/api-docs.
+servers:
+- url: https://api.chimoney.io/
+  description: Prod Server
+- url: https://api-v2-sandbox.chimoney.io
+  description: Sandbox API v2 (v0.2.4)
+security:
+- apiKeyAuth: []
+tags:
+- name: Agents
+  description: AI Agent wallet management endpoints
+paths:
+  /v0.2.4/agents/create:
+    post:
+      summary: Create a new AI agent account
+      description: Creates an agent sub-account with APort passport, multicurrency wallet, and payment pointer
+      tags:
+      - Agents
+      security:
+      - apiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - name
+              properties:
+                name:
+                  type: string
+                  description: Agent name
+                  example: PaymentBot
+                description:
+                  type: string
+                  description: Agent description
+                  example: AI Agent for processing payments
+                email:
+                  type: string
+                  format: email
+                  description: Agent email (auto-generated if not provided)
+                  example: agent-123@agents.chimoney.io
+                subAccount:
+                  type: string
+                  description: Sub-account identifier
+                limits:
+                  type: object
+                  description: Transaction limits
+                  properties:
+                    USD:
+                      type: object
+                      properties:
+                        maxPerTx:
+                          type: integer
+                          example: 10000
+                        dailyCap:
+                          type: integer
+                          example: 100000
+                    CAD:
+                      type: object
+                      properties:
+                        maxPerTx:
+                          type: integer
+                          example: 10000
+                        dailyCap:
+                          type: integer
+                          example: 100000
+                    NGN:
+                      type: object
+                      properties:
+                        maxPerTx:
+                          type: integer
+                          example: 10000
+                        dailyCap:
+                          type: integer
+                          example: 100000
+                    MXN:
+                      type: object
+                      properties:
+                        maxPerTx:
+                          type: integer
+                          example: 10000
+                        dailyCap:
+                          type: integer
+                          example: 100000
+                    refundAmountMaxPerTx:
+                      type: integer
+                      description: Maximum refund amount per transaction
+                      example: 5000
+                    refundAmountDailyCap:
+                      type: integer
+                      description: Daily refund cap
+                      example: 50000
+                    approvalRequired:
+                      type: boolean
+                      example: false
+                capabilities:
+                  type: array
+                  description: Agent capabilities (finance.* or wallet.* only)
+                  items:
+                    oneOf:
+                    - type: string
+                      example: finance.payment.charge
+                    - type: object
+                      properties:
+                        id:
+                          type: string
+                          example: finance.payment.payout
+                        params:
+                          type: object
+                regions:
+                  type: array
+                  description: Allowed regions (ISO country codes)
+                  items:
+                    type: string
+                    pattern: ^[A-Z]{2}(-[A-Z]{2})?$
+                    example: US
+                meta:
+                  type: object
+                  description: Additional metadata
+                interledgerWalletAddress:
+                  type: string
+                  description: Custom Interledger wallet address/payment pointer
+                  example: myagent-custom
+                initialFunding:
+                  oneOf:
+                  - type: number
+                    description: Initial funding amount (0-1000000)
+                    example: 100
+                  - type: string
+                    description: Initial funding as string
+                    example: '100.50'
+                  - type: object
+                    properties:
+                      amount:
+                        type: number
+                        example: 100
+                      currency:
+                        type: string
+                        example: USD
+                  description: Initial funding to transfer from parent wallet
+      responses:
+        '200':
+          description: Agent created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    properties:
+                      uid:
+                        type: string
+                      name:
+                        type: string
+                      email:
+                        type: string
+                      paymentPointer:
+                        type: string
+                      aportPassportId:
+                        type: string
+                      aportDID:
+                        type: string
+                      assuranceLevel:
+                        type: string
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: postV024AgentsCreate
+      x-operation-id-source: derived
+  /v0.2.4/agents/list:
+    get:
+      summary: List all agents owned by the authenticated user
+      tags:
+      - Agents
+      security:
+      - apiKeyAuth: []
+      parameters:
+      - in: query
+        name: subAccount
+        required: false
+        schema:
+          type: string
+        description: Sub-account identifier
+      responses:
+        '200':
+          description: List of agents
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type: array
+                    items:
+                      type: object
+                  count:
+                    type: number
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: getV024AgentsList
+      x-operation-id-source: derived
+  /v0.2.4/agents/get:
+    get:
+      summary: Get agent details by ID
+      description: Retrieves agent details including live APort passport information
+      tags:
+      - Agents
+      security:
+      - apiKeyAuth: []
+      parameters:
+      - in: query
+        name: id
+        required: true
+        schema:
+          type: string
+        description: Agent UID
+      - in: query
+        name: subAccount
+        required: false
+        schema:
+          type: string
+        description: Sub-account identifier
+      responses:
+        '200':
+          description: Agent details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: getV024AgentsGet
+      x-operation-id-source: derived
+  /v0.2.4/agents/update-policies:
+    patch:
+      summary: Update agent passport policies
+      description: 'Updates agent APort passport with limits, capabilities, and regions.
+
+        This directly updates the agent''s passport according to Open Agent Passport schema.
+
+        At least one of limits, capabilities, or regions must be provided.'
+      tags:
+      - Agents
+      security:
+      - apiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - id
+              properties:
+                id:
+                  type: string
+                  description: Agent UID
+                subAccount:
+                  type: string
+                  description: Sub-account identifier
+                limits:
+                  type: object
+                  description: Transaction limits
+                  properties:
+                    USD:
+                      type: object
+                      properties:
+                        maxPerTx:
+                          type: integer
+                          description: Maximum USD per transaction
+                          example: 10000
+                        dailyCap:
+                          type: integer
+                          description: Daily USD cap
+                          example: 100000
+                    CAD:
+                      type: object
+                      properties:
+                        maxPerTx:
+                          type: integer
+                          example: 10000
+                        dailyCap:
+                          type: integer
+                          example: 100000
+                    NGN:
+                      type: object
+                      properties:
+                        maxPerTx:
+                          type: integer
+                          example: 10000
+                        dailyCap:
+                          type: integer
+                          example: 100000
+                    MXN:
+                      type: object
+                      properties:
+                        maxPerTx:
+                          type: integer
+                          example: 10000
+                        dailyCap:
+                          type: integer
+                          example: 100000
+                    refundAmountMaxPerTx:
+                      type: integer
+                      description: Maximum refund amount per transaction
+                      example: 5000
+                    refundAmountDailyCap:
+                      type: integer
+                      description: Daily cap for refund transactions
+                      example: 50000
+                    approvalRequired:
+                      type: boolean
+                      description: Whether approval is required for transactions
+                      example: false
+                capabilities:
+                  type: array
+                  description: Agent capabilities (finance.* or wallet.* only)
+                  items:
+                    oneOf:
+                    - type: string
+                      description: Capability ID
+                      example: finance.payment.charge
+                    - type: object
+                      properties:
+                        id:
+                          type: string
+                          description: Capability ID
+                          example: finance.payment.payout
+                        params:
+                          type: object
+                          description: Capability parameters
+                regions:
+                  type: array
+                  description: Allowed regions for agent operations (ISO country codes)
+                  items:
+                    type: string
+                    pattern: ^[A-Z]{2}(-[A-Z]{2})?$
+                    example: US
+      responses:
+        '200':
+          description: Agent passport updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    properties:
+                      passport:
+                        type: object
+                        description: Updated APort passport with new limits/capabilities/regions
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: patchV024AgentsUpdatePolicies
+      x-operation-id-source: derived
+  /v0.2.4/agents/suspend:
+    post:
+      summary: Suspend an agent account
+      description: Archives the APort passport and suspends the agent sub-account
+      tags:
+      - Agents
+      security:
+      - apiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - id
+              properties:
+                id:
+                  type: string
+                  description: Agent UID
+                subAccount:
+                  type: string
+                  description: Sub-account identifier
+      responses:
+        '200':
+          description: Agent suspended successfully
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: postV024AgentsSuspend
+      x-operation-id-source: derived
+  /v0.2.4/agents/reactivate:
+    post:
+      summary: Reactivate a suspended agent account
+      description: Reactivates the APort passport and restores the agent sub-account to active status
+      tags:
+      - Agents
+      security:
+      - apiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - id
+              properties:
+                id:
+                  type: string
+                  description: Agent UID
+                subAccount:
+                  type: string
+                  description: Sub-account identifier
+      responses:
+        '200':
+          description: Agent reactivated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    properties:
+                      success:
+                        type: boolean
+                      message:
+                        type: string
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: postV024AgentsReactivate
+      x-operation-id-source: derived
+  /v0.2.4/agents/update:
+    patch:
+      summary: Update agent details
+      description: 'Updates agent name, description, and metadata. Also updates the agent''s APort passport.
+
+        At least one of name, description, or meta must be provided.'
+      tags:
+      - Agents
+      security:
+      - apiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - id
+              properties:
+                id:
+                  type: string
+                  description: Agent UID
+                subAccount:
+                  type: string
+                  description: Sub-account identifier
+                name:
+                  type: string
+                  description: New agent name
+                  example: UpdatedBot
+                description:
+                  type: string
+                  description: New agent description
+                  example: Updated AI Agent for processing payments
+                meta:
+                  type: object
+                  description: Additional metadata to update
+      responses:
+        '200':
+          description: Agent updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    description: Updated agent details
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: patchV024AgentsUpdate
+      x-operation-id-source: derived
+  /v0.2.4/agents/api-key:
+    get:
+      summary: Get agent API key info
+      description: Retrieves the current API key information for an agent (without exposing the secret)
+      tags:
+      - Agents
+      security:
+      - apiKeyAuth: []
+      parameters:
+      - in: query
+        name: agentId
+        required: true
+        schema:
+          type: string
+        description: Agent UID
+      - in: query
+        name: subAccount
+        required: false
+        schema:
+          type: string
+        description: Sub-account identifier
+      responses:
+        '200':
+          description: API key information
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      id:
+                        type: string
+                      key:
+                        type: string
+                      appName:
+                        type: string
+                      webhookUrl:
+                        type:
+                        - string
+                        - 'null'
+                        description: Webhook URL for agent events
+                      createdAt:
+                        type: string
+                      revoked:
+                        type: boolean
+                      revokedAt:
+                        type:
+                        - string
+                        - 'null'
+                  message:
+                    type: string
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: getV024AgentsApiKey
+      x-operation-id-source: derived
+    post:
+      summary: Manage agent API key
+      description: Create, rotate, revoke, or delete the agent's API key. Each agent can have only one API key at a time.
+      tags:
+      - Agents
+      security:
+      - apiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - agentId
+              - action
+              properties:
+                agentId:
+                  type: string
+                  description: Agent UID
+                  example: abc123-def456-ghi789
+                subAccount:
+                  type: string
+                  description: Sub-account identifier
+                action:
+                  type: string
+                  enum:
+                  - create
+                  - rotate
+                  - revoke
+                  - delete
+                  - update-webhook
+                  description: '- create: Generate initial API key
+
+                    - rotate: Replace existing key with new one
+
+                    - revoke: Mark key as revoked (keeps record, blocks usage)
+
+                    - delete: Permanently remove the key
+
+                    - update-webhook: Update webhook URL only
+
+                    '
+                appName:
+                  type: string
+                  description: Name for the API key (required for create/rotate)
+                  example: My Agent App
+                webhookUrl:
+                  type: string
+                  format: uri
+                  description: Webhook URL for agent events (optional for create/rotate, required for update-webhook)
+                  example: https://example.com/webhook
+      responses:
+        '200':
+          description: Operation successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    description: Returned for create/rotate actions
+                    properties:
+                      id:
+                        type: string
+                      key:
+                        type: string
+                      secret:
+                        type: string
+                        description: API key secret (shown only once)
+                      appName:
+                        type: string
+                      webhookUrl:
+                        type:
+                        - string
+                        - 'null'
+                        description: Webhook URL for agent events
+                      createdAt:
+                        type: string
+                  message:
+                    type: string
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: postV024AgentsApiKey
+      x-operation-id-source: derived
+  /v0.2.4/agents/transactions:
+    post:
+      summary: Get all transactions for an agent
+      description: Retrieve all transactions performed by a specific agent (agent owner only)
+      tags:
+      - Agents
+      security:
+      - apiKeyAuth: []
+      parameters:
+      - in: query
+        name: agentId
+        required: true
+        schema:
+          type: string
+        description: Agent ID
+      - in: query
+        name: subAccount
+        required: false
+        schema:
+          type: string
+        description: Sub-account identifier
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                page:
+                  type: number
+                  description: Page number for pagination
+                limit:
+                  type: number
+                  description: Number of transactions per page
+                filters:
+                  type: object
+                  description: Transaction filters
+                  properties:
+                    startDate:
+                      type: string
+                      format: date
+                      description: Start date for filtering
+                    endDate:
+                      type: string
+                      format: date
+                      description: End date for filtering
+                    status:
+                      type: string
+                      description: Transaction status
+                    currency:
+                      type: string
+                      description: Currency code (USD, CAD, NGN, etc.)
+      responses:
+        '200':
+          description: Transactions retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Agent transactions retrieved successfully
+                  data:
+                    type: array
+                    items:
+                      type: object
+                  totalCount:
+                    type: number
+                  meta:
+                    type: object
+                    properties:
+                      agentId:
+                        type: string
+                      page:
+                        type: number
+                      limit:
+                        type: number
+                  balances:
+                    type: object
+                    description: Period balances (if date filters provided)
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: postV024AgentsTransactions
+      x-operation-id-source: derived
+  /v0.2.4/agents/fund:
+    post:
+      summary: Fund an agent wallet from parent wallet
+      description: Transfer funds from parent wallet to agent wallet (internal transfer, no fees)
+      tags:
+      - Agents
+      security:
+      - apiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - agentId
+              - amount
+              properties:
+                agentId:
+                  type: string
+                  description: Agent ID to fund
+                  example: agent_abc123
+                amount:
+                  type: number
+                  minimum: 1
+                  description: Amount to transfer (minimum $1)
+                  example: 100
+                currency:
+                  type: string
+                  description: Currency code (defaults to USD)
+                  example: USD
+                  default: USD
+      responses:
+        '200':
+          description: Funds transferred successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    description: Transfer details
+        '400':
+          description: Bad request (invalid amount, insufficient balance)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  error:
+                    type: string
+                    example: 'Insufficient balance. Current balance: $50.00'
+        '404':
+          description: Agent not found
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: postV024AgentsFund
+      x-operation-id-source: derived
+  /v0.2.4/agents/capabilities-limits:
+    get:
+      summary: Get agent capabilities, limits, and regions configuration
+      description: Fetches available capabilities, limit definitions, and region configurations from Aport
+      tags:
+      - Agents
+      responses:
+        '200':
+          description: Capabilities and limits configuration retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    properties:
+                      version:
+                        type: string
+                      capabilities:
+                        type: array
+                        items:
+                          type: object
+                      limits:
+                        type: object
+                      regions:
+                        type: object
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: getV024AgentsCapabilitiesLimits
+      x-operation-id-source: derived
+components:
+  schemas:
+    ValidationError:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the validation error.
+          example: error
+        type:
+          type: string
+          description: Type of validation error.
+          example: Validation Error
+        code:
+          type: string
+          description: Error code indicating validation issue.
+          example: INVALID_REQUEST
+        message:
+          type: string
+          description: Detailed validation error message.
+          example: The request parameters are invalid.
+    NotFound:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the error.
+          example: error
+        type:
+          type: string
+          description: Type of error indicating resource not found.
+          example: Resource Not Found
+        code:
+          type: string
+          description: Error code for resource not found.
+          example: NOT_FOUND
+        message:
+          type: string
+          description: Detailed message explaining the resource not found error.
+          example: The requested resource could not be found.
+    Forbidden:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the response.
+          example: error
+        error:
+          type: string
+          description: Error message indicating forbidden access.
+          example: API Access not enabled for account Test. Email support@chimoney.io
+    Unauthorized:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the response.
+          example: error
+        error:
+          type: string
+          description: Error message indicating unauthorized access.
+          example: API key is not defined. Generate a new one from the developer portal.
+    ServerError:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the error.
+          example: error
+        type:
+          type: string
+          description: Type of server error.
+          example: server error
+        code:
+          type: string
+          description: Specific error code for server issues.
+          example: INTERNAL_SERVER_ERROR
+        message:
+          type: string
+          description: Detailed message explaining the issue.
+          example: An internal server error occurred.
+  responses:
+    Forbidden:
+      description: Access to this resource is forbidden.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Forbidden'
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NotFound'
+    ValidationError:
+      description: Validation error in the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ValidationError'
+    ServerError:
+      description: Indicates an internal server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ServerError'
+    Unauthorized:
+      description: Access to this resource is not available for unauthenticated users.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Unauthorized'
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY

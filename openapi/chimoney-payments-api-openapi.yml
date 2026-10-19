@@ -1,129 +1,711 @@
 openapi: 3.2.0
 info:
-  title: Chimoney Payments API
-  description: Chimoney is a developer-first global payouts and disbursement platform with deep coverage across Africa and 130+ countries.
-  version: 0.2.2
-  contact:
-    name: Chimoney
-    url: https://chimoney.io
+  title: Chimoney API Docs Payments API
+  version: 0.2.4
+  description: This is the latest version of the Chimoney API. For deprecated version routes, please refer to /v0.2/api-docs.
 servers:
-- url: https://api.chimoney.io
-  description: Production (v0.2)
+- url: https://api.chimoney.io/
+  description: Prod Server
 - url: https://api-v2-sandbox.chimoney.io
-  description: Sandbox (v0.2)
+  description: Sandbox API v2 (v0.2.4)
 security:
 - apiKeyAuth: []
 tags:
 - name: Payments
-  description: Initiate and verify inbound payment (collection) requests.
+  description: Collect payment from card, crypto and other options.
 paths:
-  /v0.2/payment/initiate:
+  /v0.2.4/payment/initiate:
     post:
-      operationId: post_v0.2_payment_initiate
+      summary: Initiate a payment request
       tags:
       - Payments
-      summary: Initiate a payment request
       requestBody:
-        required: true
         content:
           application/json:
             schema:
               type: object
-              required:
-              - valueInUSD
               properties:
                 valueInUSD:
                   type: number
-                  example: 50
+                  description: Amount in USD to collect.
                 payerEmail:
                   type: string
+                  description: Email of the one making the payment.
+                currency:
+                  type: string
+                  description: ISO Currency String like CAD, USD, NGN etc.
+                  enum:
+                  - USD
+                  - NGN
+                  - CAD
+                amount:
+                  type: string
+                  description: Amount in specified "currency" to collect. Required if currency is set.
                 redirect_url:
                   type: string
+                  description: URL to redirect to after payment is confirmed.
+                  example: https://example.com/confirm
+                walletID:
+                  type: string
+                  description: ID of the wallet to settle the payment to (optional)
+                narration:
+                  type: string
+                  description: Narration for the payment (optional)
+                subAccount:
+                  type: string
+                  description: Subaccount if any.
                 meta:
                   type: object
+                  description: Object containing metadata you want to pass to the request to use later.
+                turnOffNotification:
+                  type: boolean
+                  description: Disables email and other notifications from Chimoney.
+                  example: false
+                redeemData:
+                  type: object
+                  description: Object containing redeem data.
+                  example: '{}'
+                paymentMethod:
+                  type: object
+                  description: Payment method configuration to direct users to specific payment options
+                  oneOf:
+                  - type: object
+                    properties:
+                      type:
+                        type: string
+                        enum:
+                        - card
+                      cardRegion:
+                        type: string
+                        enum:
+                        - Africa
+                        - Americas/Canada
+                        - Europe
+                        - Asia
+                        description: 'Card region (USD: all regions, CAD: all except Africa, NGN: only Africa)'
+                    required:
+                    - type
+                  - type: object
+                    properties:
+                      type:
+                        type: string
+                        enum:
+                        - wallet
+                    required:
+                    - type
+                  - type: object
+                    properties:
+                      type:
+                        type: string
+                        enum:
+                        - interledger
+                      interledgerWalletAddress:
+                        type: string
+                        description: Interledger wallet address (only available for USD)
+                    required:
+                    - type
+                    description: Only available for USD
+                  - type: object
+                    properties:
+                      type:
+                        type: string
+                        enum:
+                        - bank
+                      paymentRail:
+                        type: string
+                        enum:
+                        - ach
+                        - swift
+                        - clabe
+                    required:
+                    - type
+                    description: Available for USD and NGN. paymentRail applies to USD bank funding.
+                  - type: object
+                    properties:
+                      type:
+                        type: string
+                        enum:
+                        - interac
+                      interacOption:
+                        type: string
+                        enum:
+                        - send
+                        - request
+                      fullName:
+                        type: string
+                        description: Full name of the initiator
+                      email:
+                        type: string
+                        description: Email address of the initiator
+                    required:
+                    - type
+                    description: Only available for CAD
+              required:
+              - payerEmail
+            example:
+              valueInUSD: 10
+              payerEmail: devs@chimoney.io
+              redirect_url: https://test.com
+              subAccount: jnirjmt0405jmd
+              currency: CAD
+              amount: 10
+              paymentMethod:
+                type: card
+                cardRegion: Americas/Canada
       responses:
         '200':
-          description: Successful response.
+          description: Success.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StandardResponse'
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the request.
+                    example: success
+                  message:
+                    type: string
+                    example: Payment initiated successfully
+                  data:
+                    type: object
+                    properties:
+                      paymentLink:
+                        type: string
+                        example: https://dash.chimoney.io/pay/?issueID=XQTUvRBntIU3AHgQ3jFuN9ZcHIC3_1_1661120543057
+                      valueInUSD:
+                        type: number
+                        example: 5
+                      chimoney:
+                        type: number
+                        example: 5000
+                      issueID:
+                        type: string
+                        example: dji-29848400404-date
+                      type:
+                        type: string
+                        example: api-payment
+                      issuer:
+                        type: string
+                        example: dji-29848400404
+                      payerEmail:
+                        type: string
+                        example: name@mail.com
+                      initiatedBy:
+                        type: string
+                        example: dji-29848400404
+                      issueDate:
+                        type: string
+                        example: 2024/10/23
+                      status:
+                        type: string
+                        example: unpaid
+                      chiRef:
+                        type: string
+                        example: djeoeuk-mdhhmmr-mdnhe-kei8e
+                      error:
+                        type: string
+                        example: None
+                      data:
+                        type: array
+                        items:
+                          type: object
+                      cryptoPayment:
+                        type: object
+                        properties:
+                          xrpl:
+                            type: object
+                          eth:
+                            type: object
+                          bsc:
+                            type: object
+        '400':
+          $ref: '#/components/responses/ValidationError'
         '401':
           $ref: '#/components/responses/Unauthorized'
-  /v0.2/payment/verify:
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Resource not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  type:
+                    type: string
+                    example: Resource Not Found
+                  code:
+                    type: string
+                    example: WALLET_NOT_FOUND
+                  message:
+                    type: string
+                    example: ' ''AUD'' currency does not exist. Contact support@chimoney.io'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: postV024PaymentInitiate
+      x-operation-id-source: derived
+  /v0.2.4/payment/verify:
     post:
-      operationId: post_v0.2_payment_verify
+      summary: Verify a payment
       tags:
       - Payments
-      summary: verify a payment
-      description: verify a payment.
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required:
-              - id
               properties:
+                subAccount:
+                  type: string
+                  description: Subaccount if any.
                 id:
                   type: string
-                  description: Payment issue reference to verify.
+                  description: The transaction ID (issueID).
+              required:
+              - id
+            example:
+              subAccount: '1234567'
+              id: PaymentId
       responses:
         '200':
-          description: Successful response.
+          description: Success.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StandardResponse'
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the request.
+                    example: success
+                  message:
+                    type: string
+                    example: Payment verified successfully
+                  data:
+                    type: object
+                    properties:
+                      paymentLink:
+                        type: string
+                        example: undefined/pay/?issueID=XQTUvRBntIU3AHgQ3jFuN9ZcHIC3_1_1661120543057
+                      error:
+                        type: string
+                        example: None
+                      data:
+                        type: array
+                        items:
+                          type: object
+                      cryptoPayment:
+                        type: object
+                        properties:
+                          xrpl:
+                            type: object
+                          eth:
+                            type: object
+                          bsc:
+                            type: object
+        '400':
+          $ref: '#/components/responses/ValidationError'
         '401':
           $ref: '#/components/responses/Unauthorized'
-  /v0.2/payment/simulate:
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Resource not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  type:
+                    type: string
+                    example: Resource Not Found
+                  code:
+                    type: string
+                    example: CHIMONEY_NOT_FOUND
+                  message:
+                    type: string
+                    example: Chimoney not found for that id
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: postV024PaymentVerify
+      x-operation-id-source: derived
+  /v0.2.4/payment/simulate:
     post:
-      operationId: post_v0.2_payment_simulate
+      summary: Simulate a card or other status change.
       tags:
       - Payments
-      summary: Simulate a card or other status change.
-      description: Simulate a card or other status change. Accepted include ["failed", "expired", "fraud", "paid"]. Only works in staging
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               type: object
-              additionalProperties: true
+              properties:
+                issueID:
+                  type: string
+                  description: The transaction ID (issueID).
+                status:
+                  type: string
+                  description: Status to change to.
+              required:
+              - issueID
+              - status
+            example:
+              issueID: PaymentId
+              status: failed
+              subAccount: '1234567'
       responses:
         '200':
-          description: Successful response.
+          description: Success.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StandardResponse'
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the request.
+                    example: success
+                  message:
+                    type: string
+                    example: Status change simulated successfully
+                  data:
+                    type: object
+                    properties:
+                      paymentLink:
+                        type: string
+                        example: undefined/pay/?issueID=XQTUvRBntIU3AHgQ3jFuN9ZcHIC3_1_1661120543057
+                      error:
+                        type: string
+                        example: None
+                      data:
+                        type: array
+                        items:
+                          type: object
+                      cryptoPayment:
+                        type: object
+                        properties:
+                          xrpl:
+                            type: object
+                          eth:
+                            type: object
+                          bsc:
+                            type: object
+        '400':
+          $ref: '#/components/responses/ValidationError'
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: postV024PaymentSimulate
+      x-operation-id-source: derived
+  /v0.2.4/payment/simulate-interac-funding:
+    post:
+      summary: Simulate Interac funding. Only works in staging or sandbox
+      description: 'Simulates a complete Interac e-Transfer funding flow.
+
+
+        **Using `reference`:** Pass an issueID, t_id, or p_id as the `reference` field.
+
+        The system auto-detects the type. If it resolves to an existing unpaid CAD transaction,
+
+        it simulates the Pateno webhook completing it. If it resolves to a p_id, provide `amount`
+
+        to simulate a direct auto-deposit for that user/team.
+
+
+        **Using `amount` only:** Creates a new funding transaction for the authenticated user
+
+        and processes it immediately.
+
+
+        At least `reference` or `amount` must be provided.'
+      tags:
+      - Payments
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reference:
+                  oneOf:
+                  - type: string
+                  - type: number
+                  description: An issueID, t_id, or p_id. Auto-detected.
+                  example: userId_100.00_1707000000000
+                amount:
+                  type: number
+                  description: Amount in CAD. The applicable single-transaction limit is resolved from the authenticated account's tier or organization policy. Required with p_id references or for standalone funding.
+                  example: 100
+                senderName:
+                  type: string
+                  description: Name of the simulated sender.
+                  default: Test Sender
+                senderEmail:
+                  type: string
+                  format: email
+                  description: Email of the simulated sender.
+                  default: test@example.com
+            examples:
+              completeByIssueID:
+                summary: Complete existing payment by issueID
+                value:
+                  reference: userId_100.00_1707000000000
+              completeByTId:
+                summary: Complete existing payment by t_id
+                value:
+                  reference: '123456789012345'
+              fundByPId:
+                summary: Direct fund by p_id
+                value:
+                  reference: '12345678'
+                  amount: 100
+              directFunding:
+                summary: Direct funding (no reference)
+                value:
+                  amount: 100
+      responses:
+        '200':
+          description: Interac funding simulated successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Interac funding simulated successfully
+                  data:
+                    type: object
+                    properties:
+                      simulated:
+                        type: boolean
+                        example: true
+                      simulatedAmount:
+                        type: number
+                        example: 100
+                      chiRef:
+                        type: string
+                      status:
+                        type: string
+                        example: paid
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          description: Forbidden - Can only simulate in staging or sandbox environments.
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: postV024PaymentSimulateInteracFunding
+      x-operation-id-source: derived
+  /v0.2.4/payment/simulate-funding:
+    post:
+      summary: Simulate funding via a specified rail. Only works in staging or sandbox
+      description: 'General-purpose funding simulation endpoint. Use the `rail` field to select the funding rail.
+
+
+        **Supported rails:**
+
+        - `interac` — Simulates Interac e-Transfer (CAD). Supports `reference` (issueID/t_id/p_id) and/or `amount`.
+
+        - `spei` — Simulates SPEI deposit (MXN) via Bitso test endpoint. Pass `reference` (issueID or chiRef) to fund an existing transaction, or pass `clabe` + `amount` directly.'
+      tags:
+      - Payments
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                rail:
+                  type: string
+                  enum:
+                  - interac
+                  - spei
+                  description: The funding rail to simulate.
+                reference:
+                  oneOf:
+                  - type: string
+                  - type: number
+                  description: Transaction reference (issueID, chiRef, t_id, or p_id).
+                amount:
+                  type: number
+                  description: Funding amount in the rail's currency.
+                clabe:
+                  type: string
+                  description: CLABE account number (for SPEI direct simulation without a pre-existing transaction).
+                senderName:
+                  type: string
+                  default: Test Sender
+                senderEmail:
+                  type: string
+                  format: email
+                  default: test@example.com
+                receiverName:
+                  type: string
+                  default: Test Sender
+                  description: Receiver name (used for SPEI simulation).
+              required:
+              - rail
+            examples:
+              interacByReference:
+                summary: Interac — complete by issueID
+                value:
+                  rail: interac
+                  reference: userId_100.00_1707000000000
+              interacDirect:
+                summary: Interac — direct funding
+                value:
+                  rail: interac
+                  amount: 100
+              speiByReference:
+                summary: SPEI — fund existing MXN transaction
+                value:
+                  rail: spei
+                  reference: userId_2000_1707000000000
+              speiDirect:
+                summary: SPEI — direct deposit to CLABE
+                value:
+                  rail: spei
+                  clabe: '710969000000564317'
+                  amount: 2000
+      responses:
+        '200':
+          description: Funding simulation completed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    properties:
+                      simulated:
+                        type: boolean
+                        example: true
+                      simulatedAmount:
+                        type: number
+                      rail:
+                        type: string
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          description: Forbidden — only available in staging or sandbox.
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: postV024PaymentSimulateFunding
+      x-operation-id-source: derived
 components:
   schemas:
-    StandardResponse:
+    ValidationError:
       type: object
-      description: Standard Chimoney response envelope.
       properties:
         status:
           type: string
-          description: '"success" or "error".'
-          example: success
+          description: Status of the validation error.
+          example: error
+        type:
+          type: string
+          description: Type of validation error.
+          example: Validation Error
+        code:
+          type: string
+          description: Error code indicating validation issue.
+          example: INVALID_REQUEST
         message:
           type: string
-        data:
-          description: Endpoint-specific payload.
-  responses:
+          description: Detailed validation error message.
+          example: The request parameters are invalid.
+    Forbidden:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the response.
+          example: error
+        error:
+          type: string
+          description: Error message indicating forbidden access.
+          example: API Access not enabled for account Test. Email support@chimoney.io
     Unauthorized:
-      description: Missing or invalid API key.
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the response.
+          example: error
+        error:
+          type: string
+          description: Error message indicating unauthorized access.
+          example: API key is not defined. Generate a new one from the developer portal.
+    ServerError:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the error.
+          example: error
+        type:
+          type: string
+          description: Type of server error.
+          example: server error
+        code:
+          type: string
+          description: Specific error code for server issues.
+          example: INTERNAL_SERVER_ERROR
+        message:
+          type: string
+          description: Detailed message explaining the issue.
+          example: An internal server error occurred.
+  responses:
+    Forbidden:
+      description: Access to this resource is forbidden.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/StandardResponse'
+            $ref: '#/components/schemas/Forbidden'
+    ValidationError:
+      description: Validation error in the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ValidationError'
+    ServerError:
+      description: Indicates an internal server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ServerError'
+    Unauthorized:
+      description: Access to this resource is not available for unauthenticated users.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Unauthorized'
   securitySchemes:
     apiKeyAuth:
       type: apiKey
       in: header
       name: X-API-KEY
-      description: API key issued from the Chimoney developer dashboard (https://dash.chimoney.io/developers), passed in the X-API-KEY request header.

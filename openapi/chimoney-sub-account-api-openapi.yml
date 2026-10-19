@@ -1,29 +1,1162 @@
 openapi: 3.2.0
 info:
-  title: Chimoney Sub Account API
-  description: Chimoney is a developer-first global payouts and disbursement platform with deep coverage across Africa and 130+ countries.
-  version: 0.2.2
-  contact:
-    name: Chimoney
-    url: https://chimoney.io
+  title: Chimoney API Docs Sub Account API
+  version: 0.2.4
+  description: This is the latest version of the Chimoney API. For deprecated version routes, please refer to /v0.2/api-docs.
 servers:
-- url: https://api.chimoney.io
-  description: Production (v0.2)
+- url: https://api.chimoney.io/
+  description: Prod Server
 - url: https://api-v2-sandbox.chimoney.io
-  description: Sandbox (v0.2)
+  description: Sandbox API v2 (v0.2.4)
 security:
 - apiKeyAuth: []
 tags:
 - name: Sub Account
-  description: Create and manage sub-accounts (wallet accounts) and communities under your organization.
+  description: All sub-account related endpoints.
 paths:
-  /v0.2/sub-account/create:
+  /v0.2.4/sub-account/create:
     post:
-      operationId: post_v0.2_sub-account_create
+      description: Production KYC follows organization settings and ignores requireKyc or requireKYC when supplied. In sandbox only, false skips KYC for this test account; omitted follows organization policy.
+      summary: Create a new sub-account
       tags:
       - Sub Account
-      summary: Create a new sub-account
-      description: Create a new sub-account.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Name of owner of Wallet.
+                  example: Mide Jones
+                email:
+                  type: string
+                  description: Email of owner of Wallet.
+                  example: user@mail.com
+                firstName:
+                  type: string
+                  description: First Name of owner.
+                  example: Mide
+                lastName:
+                  type: string
+                  description: Last Name of owner.
+                  example: Jones
+                phoneNumber:
+                  type: string
+                  description: Phone Number with country code starting with a +.
+                  example: '+16471234567'
+                requireKyc:
+                  type: boolean
+                  description: In production this deprecated input is ignored. In sandbox, false skips KYC for this account and true requires KYC. Omit to follow organization policy. Cannot be combined with requireKYC in sandbox.
+                requireKYC:
+                  type: boolean
+                  description: Legacy spelling of requireKyc. Ignored in production; uses the same override rules in sandbox. Send at most one spelling in sandbox.
+                country:
+                  type: object
+                  description: Optional declared legal residence used for product capability resolution before KYC.
+                  required:
+                  - code
+                  - name
+                  properties:
+                    code:
+                      type: string
+                      minLength: 2
+                      maxLength: 2
+                      example: GB
+                    name:
+                      type: string
+                      example: United Kingdom
+                meta:
+                  type: object
+                  description: Metadata to store about the account.
+              required:
+              - name
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    description: Message indicating the result of the operation.
+                    example: Sub-account created successfully
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: Unique identifier for the created sub-account.
+                        example: 907b90ef-d723-4b07-9f74-480afb5f09ef
+                      lastName:
+                        type: string
+                        description: Last name of the sub-account owner.
+                        example: Okeeke
+                      parent:
+                        type: string
+                        description: Parent account ID.
+                        example: qP3P6bjbjLZUMxVfxgEqzOF0hNM2
+                      feePercent:
+                        type: number
+                        description: Fee percentage for the sub-account.
+                        example: 0
+                      accountSecondCurrencies:
+                        type: array
+                        description: List of secondary currencies associated with the account.
+                        items:
+                          type: string
+                      verified:
+                        type: boolean
+                        description: Whether the sub-account is verified.
+                        example: true
+                      subscription:
+                        type: object
+                        properties:
+                          subscription_end_timestamp:
+                            type: object
+                            properties:
+                              _seconds:
+                                type: integer
+                                example: 1883676344
+                              _nanoseconds:
+                                type: integer
+                                example: 773000000
+                          subscription_start_timestamp:
+                            type: object
+                            properties:
+                              _seconds:
+                                type: integer
+                                example: 1725909944
+                              _nanoseconds:
+                                type: integer
+                                example: 773000000
+                          id:
+                            type: string
+                            example: partner-white-glove
+                      isScrimUser:
+                        type: boolean
+                        example: false
+                      subAccount:
+                        type: boolean
+                        example: true
+                      firstName:
+                        type: string
+                        example: Madueke
+                      preferredExchangeRate:
+                        type: boolean
+                        example: false
+                      uid:
+                        type: string
+                        example: 907b90ef-d723-4b07-9f74-480afb5f09ef
+                      approved:
+                        type: boolean
+                        example: true
+                      createdDate:
+                        type: string
+                        example: '2024-09-09T19:25:44.773Z'
+                      joinDate:
+                        type: string
+                        example: '2024-09-09T19:25:44.773Z'
+                      phoneNumber:
+                        type: string
+                        example: '+2348139955333'
+                      tier:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            example: tier-3
+                      meta:
+                        type: object
+                        properties:
+                          email:
+                            type: string
+                            example: Okyson@mail.com
+                      approvals:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            changedFields:
+                              type: array
+                              items:
+                                type: string
+                              example:
+                              - all
+                            deviceTime:
+                              type: string
+                              example: 9/9/2024
+                            timestamp:
+                              type: string
+                              example: '2024-09-09T19:25:33.918Z'
+                      name:
+                        type: string
+                        example: Madueke Okeeke
+                      apiUseEnabled:
+                        type: boolean
+                        example: true
+                      email:
+                        type: string
+                        example: Okyson@mail.com
+                      p_id:
+                        type: number
+                        example: 60250680
+                      verification:
+                        type: object
+                        properties:
+                          status:
+                            type: string
+                            example: completed
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: postV024SubAccountCreate
+      x-operation-id-source: derived
+  /v0.2.4/sub-account/update:
+    post:
+      summary: Update a sub-account
+      tags:
+      - Sub Account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: Sub Account ID.
+                  example: 3c7b4a2a-dc67-439e-bde1-f5b30fb36bb7
+                meta:
+                  type: object
+                  description: meta to store any number of user information.
+                firstName:
+                  type: string
+                  description: First Name of user.
+                  example: Mide
+                lastName:
+                  type: string
+                  description: Last Name of user.
+                  example: Jones
+                phoneNumber:
+                  type: string
+                  description: Phone Number with country code starting with a +.
+                  example: '+16471234567'
+                country:
+                  type: object
+                  description: Declared legal residence. Cannot conflict with provider-verified KYC.
+                  required:
+                  - code
+                  - name
+                  properties:
+                    code:
+                      type: string
+                      minLength: 2
+                      maxLength: 2
+                      example: GB
+                    name:
+                      type: string
+                      example: United Kingdom
+              required:
+              - id
+              - meta
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    description: A message indicating that the sub-account has been updated.
+                    example: Sub-account updated successfully
+                  data:
+                    type: object
+                    properties:
+                      _writeTime:
+                        type: object
+                        description: The timestamp indicating when the update occurred.
+                        properties:
+                          _seconds:
+                            type: integer
+                            description: The seconds part of the timestamp.
+                            example: 1725912009
+                          _nanoseconds:
+                            type: integer
+                            description: The nanoseconds part of the timestamp.
+                            example: 13040000
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: postV024SubAccountUpdate
+      x-operation-id-source: derived
+  /v0.2.4/sub-account/delete:
+    delete:
+      summary: Delete an existing sub-account
+      description: Sandbox permits deleting owned accounts including verified and KYC-exempt accounts. Delete child accounts first. The deleted ID stays reserved to protect transaction history; the email can be reused with a new ID. Production retains its restriction on deleting accounts with verification data.
+      tags:
+      - Sub Account
+      parameters:
+      - in: query
+        name: id
+        schema:
+          type: string
+        description: Sub account ID.
+        required: true
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    description: A message indicating that the sub-account has been updated.
+                    example: Sub-account deleted successfully
+                  data:
+                    type: object
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Resource not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  type:
+                    type: string
+                    example: Resource Not Found
+                  code:
+                    type: string
+                    example: SUBACCOUNT_NOT_FOUND
+                  message:
+                    type: string
+                    example: Account with id 7fQ5Rrtl4iL1gmONEE5m not found
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: deleteV024SubAccountDelete
+      x-operation-id-source: derived
+  /v0.2.4/sub-account/get:
+    get:
+      summary: Get details of an existing sub account
+      description: Returns fresh account state, wallets, and verificationProgress using the Account Verification page's section visibility and order, derived from the active verification's pinned KYC requirements and current account state. Address review is nested within the address section. No new verification or provider session is created by this read.
+      tags:
+      - Sub Account
+      parameters:
+      - in: query
+        name: id
+        schema:
+          type: string
+        description: Sub account ID.
+        required: true
+      - in: query
+        name: communityID
+        schema:
+          type: string
+        description: Community ID.
+        required: false
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Sub-account details fetched successfully
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: 907b90ef-d723-4b07-9f74-480afb5f09ef
+                      verificationProgress:
+                        $ref: '#/components/schemas/SubAccountVerificationProgress'
+                      lastName:
+                        type: string
+                        example: Okeeke
+                      parent:
+                        type: string
+                        example: qP3P6bjbjLZUMxVfxgEqzOF0hNM2
+                      feePercent:
+                        type: integer
+                        example: 0
+                      accountSecondCurrencies:
+                        type: array
+                        items:
+                          type: string
+                        example: []
+                      verified:
+                        type: boolean
+                        example: true
+                      subscription:
+                        type: object
+                        properties:
+                          subscription_end_timestamp:
+                            type: object
+                            properties:
+                              _seconds:
+                                type: integer
+                                example: 1883676344
+                              _nanoseconds:
+                                type: integer
+                                example: 773000000
+                          subscription_start_timestamp:
+                            type: object
+                            properties:
+                              _seconds:
+                                type: integer
+                                example: 1725909944
+                              _nanoseconds:
+                                type: integer
+                                example: 773000000
+                          id:
+                            type: string
+                            example: partner-white-glove
+                      firstName:
+                        type: string
+                        example: Madueke
+                      phoneNumber:
+                        type: string
+                        example: '+2348139955333'
+                      tier:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            example: tier-3
+                      wallets:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              example: kmgq3kE1nUN5krrR3RcV
+                            owner:
+                              type: string
+                              example: 907b90ef-d723-4b07-9f74-480afb5f09ef
+                            balance:
+                              type: integer
+                              example: 1000
+                            type:
+                              type: string
+                              example: momo
+                            transactions:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  amount:
+                                    type: integer
+                                    example: 0
+                                  balanceBefore:
+                                    type: integer
+                                    example: 1000
+                                  meta:
+                                    type: object
+                                    properties:
+                                      date:
+                                        type: object
+                                        properties:
+                                          _seconds:
+                                            type: integer
+                                            example: 1725909944
+                                          _nanoseconds:
+                                            type: integer
+                                            example: 768000000
+                                  newBalance:
+                                    type: integer
+                                    example: 1000
+                                  description:
+                                    type: string
+                                    example: new wallet creation transaction
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Resource not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  type:
+                    type: string
+                    example: Resource Not Found
+                  code:
+                    type: string
+                    example: SUBACCOUNT_NOT_FOUND
+                  message:
+                    type: string
+                    example: Account with id 7fQ5Rrtl4iL1gmONEE5m not found
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: getV024SubAccountGet
+      x-operation-id-source: derived
+  /v0.2.4/sub-account/get-by-email:
+    get:
+      summary: Look up a sub-account by email, scoped to the caller's organization
+      tags:
+      - Sub Account
+      parameters:
+      - in: query
+        name: email
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Sub-account found.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: No sub-account with that email under this organization.
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: getV024SubAccountGetByEmail
+      x-operation-id-source: derived
+  /v0.2.4/sub-account/list:
+    get:
+      summary: Get all sub-accounts associated with a user
+      tags:
+      - Sub Account
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Sub-accounts listed successfully
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: 0c136fa6-84bc-49f0-a767-0804c1fd33f6
+                        lastName:
+                          type: string
+                          example: Jones
+                        parent:
+                          type: string
+                          example: qP3P6bjbjLZUMxVfxgEqzOF0hNM2
+                        feePercent:
+                          type: integer
+                          example: 0
+                        accountSecondCurrencies:
+                          type: array
+                          items:
+                            type: string
+                          example: []
+                        verified:
+                          type: boolean
+                          example: true
+                        subscription:
+                          type: object
+                          properties:
+                            subscription_end_timestamp:
+                              type: object
+                              properties:
+                                _seconds:
+                                  type: integer
+                                  example: 1879866561
+                                _nanoseconds:
+                                  type: integer
+                                  example: 554000000
+                            subscription_start_timestamp:
+                              type: object
+                              properties:
+                                _seconds:
+                                  type: integer
+                                  example: 1722100161
+                                _nanoseconds:
+                                  type: integer
+                                  example: 554000000
+                            id:
+                              type: string
+                              example: partner-white-glove
+                        isScrimUser:
+                          type: boolean
+                          example: false
+                        subAccount:
+                          type: boolean
+                          example: true
+                        firstName:
+                          type: string
+                          example: Mide
+                        preferredExchangeRate:
+                          type: boolean
+                          example: false
+                        uid:
+                          type: string
+                          example: 0c136fa6-84bc-49f0-a767-0804c1fd33f6
+                        approved:
+                          type: boolean
+                          example: true
+                        createdDate:
+                          type: string
+                          example: '2024-07-27T17:09:21.554Z'
+                        joinDate:
+                          type: string
+                          example: '2024-07-27T17:09:21.554Z'
+                        phoneNumber:
+                          type: string
+                          example: '+919647234567'
+                        meta:
+                          type: object
+                          properties:
+                            email:
+                              type: string
+                              example: oge@mail.com
+                        name:
+                          type: string
+                          example: Mide Jones
+                        apiUseEnabled:
+                          type: boolean
+                          example: true
+                        email:
+                          type: string
+                          example: oge@mail.com
+                        p_id:
+                          type: integer
+                          example: 23573993
+                        verification:
+                          type: object
+                          properties:
+                            status:
+                              type: string
+                              example: completed
+                        wallets:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                example: 2RjeBb1BQuNGpg40dVFo
+                              owner:
+                                type: string
+                                example: 0c136fa6-84bc-49f0-a767-0804c1fd33f6
+                              balance:
+                                type: integer
+                                example: 1000
+                              type:
+                                type: string
+                                example: momo
+                              transactions:
+                                type: array
+                                items:
+                                  type: object
+                                  properties:
+                                    amount:
+                                      type: integer
+                                      example: 0
+                                    balanceBefore:
+                                      type: integer
+                                      example: 1000
+                                    meta:
+                                      type: object
+                                      properties:
+                                        date:
+                                          type: object
+                                          properties:
+                                            _seconds:
+                                              type: integer
+                                              example: 1722100161
+                                            _nanoseconds:
+                                              type: integer
+                                              example: 553000000
+                                    newBalance:
+                                      type: integer
+                                      example: 1000
+                                    description:
+                                      type: string
+                                      example: new wallet creation transaction
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: getV024SubAccountList
+      x-operation-id-source: derived
+  /v0.2.4/sub-account/community/create:
+    post:
+      summary: Create a sub-account community associated with a user
+      tags:
+      - Sub Account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: SubAccount ID.
+                  example: 8b8522d0-fe5f-4813-a5cf-e45e8be10905
+                community:
+                  type: object
+                  description: Community payload.
+                  properties:
+                    communityID:
+                      type: integer
+                      example: 1
+                    name:
+                      type: string
+                      example: Test Community
+                    membershipID:
+                      type: string
+                      example: '23232323'
+                    memberName:
+                      type: string
+                      example: Test Test Chimoney
+                    voucherCode:
+                      type:
+                      - string
+                      - 'null'
+                      example: null
+                    communityType:
+                      type: string
+                      example: paid
+                  required:
+                  - communityID
+                  - name
+                  - membershipID
+                  - memberName
+                  - communityType
+              required:
+              - id
+              - community
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: SubAccount added to 'Chimoney Community!' successfully
+                  data:
+                    type: object
+                    example: {}
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: postV024SubAccountCommunityCreate
+      x-operation-id-source: derived
+  /v0.2.4/sub-account/community/update:
+    post:
+      summary: Update a sub-account community associated with a user
+      tags:
+      - Sub Account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: SubAccount ID.
+                  example: 8b8522d0-fe5f-4813-a5cf-e45e8be10905
+                community:
+                  type: object
+                  properties:
+                    communityID:
+                      type: integer
+                      example: 1
+                    membershipID:
+                      type: string
+                      example: '23232323'
+                    memberName:
+                      type: string
+                      example: Test Test Chimoney
+              required:
+              - id
+              - community
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Community 'Chimoney Community' updated successfully
+                  data:
+                    type: object
+                    example: {}
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Resource not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  error:
+                    type: string
+                    example: Resource Not Found
+                  code:
+                    type: string
+                    example: SUBACCOUNT_NOT_FOUND
+                  message:
+                    type: string
+                    example: Account with id 7fQ5Rrtl4iL1gmONEE5m not found
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: postV024SubAccountCommunityUpdate
+      x-operation-id-source: derived
+  /v0.2.4/sub-account/community/members:
+    get:
+      summary: Get community members
+      tags:
+      - Sub Account
+      parameters:
+      - in: query
+        name: communityID
+        schema:
+          type: integer
+        description: Community ID
+        example: 1
+      - in: query
+        name: limit
+        schema:
+          type: integer
+        description: maximum number of users to return - default is 50
+        example: 50
+      - in: query
+        name: startAfterId
+        schema:
+          type: string
+        description: ID of the last User Data retrieved - important for retrieivng subsequent pages
+      - in: query
+        name: startBeforeId
+        schema:
+          type: string
+        description: ID of the first User Data retrieved - important for retrieivng previous pages
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Community members retrieved successfully
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        parent:
+                          type: string
+                          example: qP3P6bjbjLZUMxVfxgEqzOF0hNM2
+                        feePercent:
+                          type: number
+                          example: 0
+                        accountSecondCurrencies:
+                          type: array
+                          items:
+                            type: string
+                          example: []
+                        verified:
+                          type: boolean
+                          example: true
+                        subscription:
+                          type: object
+                          properties:
+                            subscription_end_timestamp:
+                              type: object
+                              properties:
+                                _seconds:
+                                  type: number
+                                  example: 1878974727
+                                _nanoseconds:
+                                  type: number
+                                  example: 543000000
+                            subscription_start_timestamp:
+                              type: object
+                              properties:
+                                _seconds:
+                                  type: number
+                                  example: 1721208327
+                                _nanoseconds:
+                                  type: number
+                                  example: 543000000
+                            id:
+                              type: string
+                              example: partner-white-glove
+                        isScrimUser:
+                          type: boolean
+                          example: false
+                        subAccount:
+                          type: boolean
+                          example: true
+                        preferredExchangeRate:
+                          type: boolean
+                          example: false
+                        uid:
+                          type: string
+                          example: 1f8581c9-98f4-49a0-82f9-2a27fb27bbf5
+                        approved:
+                          type: boolean
+                          example: true
+                        createdDate:
+                          type: string
+                          example: '2024-07-17T09:25:27.543Z'
+                        joinDate:
+                          type: string
+                          example: '2024-07-17T09:25:27.543Z'
+                        meta:
+                          type: object
+                          example: {}
+                        approvals:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              changedFields:
+                                type: array
+                                items:
+                                  type: string
+                                example:
+                                - all
+                              deviceTime:
+                                type: string
+                                example: 7/17/2024
+                              timestamp:
+                                type: string
+                                example: '2024-07-17T09:25:27.265Z'
+                        name:
+                          type: string
+                          example: Michael
+                        apiUseEnabled:
+                          type: boolean
+                          example: true
+                        p_id:
+                          type: number
+                          example: 3797254
+                        verification:
+                          type: object
+                          properties:
+                            status:
+                              type: string
+                              example: completed
+                        points:
+                          type: number
+                          example: 250
+                        badges:
+                          type: array
+                          items:
+                            type: string
+                          example:
+                          - payment-innovator
+                          - first-payout
+                        firstName:
+                          type: string
+                          example: Mide
+                        lastName:
+                          type: string
+                          example: Jones
+                        id:
+                          type: string
+                          example: 1f8581c9-98f4-49a0-82f9-2a27fb27bbf5
+                        communities:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              communityType:
+                                type: string
+                                example: free
+                              name:
+                                type: string
+                                example: Chimoney Ambassadors
+                              memberName:
+                                type: string
+                                example: checkout Chimoney
+                              id:
+                                type: number
+                                example: 5
+                              membershipID:
+                                type: string
+                                example: '23232323'
+                              hasClaimedVoucher:
+                                type: boolean
+                                example: true
+                              voucherCode:
+                                type: string
+                                example: CHIMER_X24
+                        phoneNumber:
+                          type: string
+                          example: '+2348130099444'
+                        phone:
+                          type: string
+                          example: '+2348130099444'
+                        updatedDate:
+                          type: string
+                          example: '2024-09-09T20:00:07.485Z'
+                    example:
+                    - parent: qP3P6bjbjLZUMxVfxgEqzOF0hNM2
+                      feePercent: 0
+                      accountSecondCurrencies: []
+                      verified: true
+                      subscription:
+                        subscription_end_timestamp:
+                          _seconds: 1878974727
+                          _nanoseconds: 543000000
+                        subscription_start_timestamp:
+                          _seconds: 1721208327
+                          _nanoseconds: 543000000
+                        id: partner-white-glove
+                      isScrimUser: false
+                      subAccount: true
+                      preferredExchangeRate: false
+                      uid: 1f8581c9-98f4-49a0-82f9-2a27fb27bbf5
+                      approved: true
+                      createdDate: '2024-07-17T09:25:27.543Z'
+                      joinDate: '2024-07-17T09:25:27.543Z'
+                      meta: {}
+                      approvals:
+                      - changedFields:
+                        - all
+                        deviceTime: 7/17/2024
+                        timestamp: '2024-07-17T09:25:27.265Z'
+                      name: Michael
+                      apiUseEnabled: true
+                      p_id: 3797254
+                      verification:
+                        status: completed
+                      points: 250
+                      badges:
+                      - payment-innovator
+                      - first-payout
+                      firstName: Mide
+                      lastName: Jones
+                      id: 1f8581c9-98f4-49a0-82f9-2a27fb27bbf5
+                      communities:
+                      - communityType: free
+                        name: Chimoney Ambassadors
+                        memberName: checkout Chimoney
+                        id: 5
+                        membershipID: '23232323'
+                        hasClaimedVoucher: true
+                        voucherCode: CHIMER_X24
+                      - communityType: free
+                        name: Chimoney Community
+                        memberName: checkout Chimoney
+                        id: 4
+                        membershipID: '23232323'
+                        hasClaimedVoucher: true
+                        voucherCode: CHISQUAD-003
+                      phoneNumber: '+2348130099444'
+                      phone: '+2348130099444'
+                      updatedDate: '2024-09-09T20:00:07.485Z'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: getV024SubAccountCommunityMembers
+      x-operation-id-source: derived
+  /v0.2.4/sub-account/onboarding/send-otp:
+    post:
+      summary: Send an OTP before a sub-account exists (pre-signup onboarding)
+      tags:
+      - Sub Account
       requestBody:
         required: true
         content:
@@ -31,211 +1164,572 @@ paths:
             schema:
               type: object
               required:
-              - name
+              - channel
+              - owner
               properties:
-                name:
+                channel:
                   type: string
-                  example: Mide Jones
-                email:
+                  enum:
+                  - phone
+                  - email
+                  description: Delivery channel for the OTP.
+                  example: phone
+                owner:
                   type: string
-                firstName:
+                  description: Destination phone number (international format) or email address.
+                  example: '+447441408666'
+                phoneChannel:
                   type: string
-                lastName:
-                  type: string
-                phoneNumber:
-                  type: string
-                  example: '+16471234567'
-                meta:
-                  type: object
-                id:
-                  type: string
-                  description: Optional valid UUID for the user.
+                  enum:
+                  - sms
+                  - whatsapp
+                  description: Overrides the SMS-first default for phone OTPs. Only relevant when channel is "phone".
+                  example: sms
       responses:
         '200':
-          description: Successful response.
+          description: Success.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StandardResponse'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-  /v0.2/sub-account/get:
-    get:
-      operationId: get_v0.2_sub-account_get
-      tags:
-      - Sub Account
-      summary: Get details of an existing sub account
-      description: Get details of an existing sub account.
-      parameters:
-      - name: id
-        in: query
-        required: true
-        description: Sub account ID.
-        schema:
-          type: string
-      - name: communityID
-        in: query
-        required: false
-        description: Community ID.
-        schema:
-          type: integer
-      responses:
-        '200':
-          description: Successful response.
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: OTP sent successfully.
+                  data:
+                    type: object
+                    properties:
+                      uid:
+                        type: string
+                        example: x6YlKJaoqmkZCJzhf40s
+                      owner:
+                        type: string
+                        example: '+447441408666'
+                      channel:
+                        type: string
+                        example: phone
+        '400':
+          description: Error.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StandardResponse'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-  /v0.2/sub-account/list:
-    get:
-      operationId: get_v0.2_sub-account_list
-      tags:
-      - Sub Account
-      summary: Get all sub-accounts associated with a user
-      description: Get all sub-accounts associated with a user.
-      responses:
-        '200':
-          description: Successful response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/StandardResponse'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-  /v0.2/sub-account/update:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  error:
+                    type: string
+                    example: channel and owner are required.
+      operationId: postV024SubAccountOnboardingSendOtp
+      x-operation-id-source: derived
+  /v0.2.4/sub-account/onboarding/verify-otp:
     post:
-      operationId: post_v0.2_sub-account_update
+      summary: Verify a pre-signup OTP and mint a single use verification token
       tags:
       - Sub Account
-      summary: Update a sub-account
-      description: Update a sub-account.
+      operationId: postV024SubAccountOnboardingVerifyOtp
+      x-operation-id-source: derived
+  /v0.2.4/sub-account/kyc/initiate:
+    post:
+      summary: Start or resume KYC verification for a sub-account
+      description: Creates or retrieves a verification link for a sub-account. Open the returned kycUrl for the end user, and read the sub-account profile for subsequent status updates. This POST endpoint is the canonical initiation contract; the two GET endpoints below are compatibility aliases for existing integrations.
+      tags:
+      - Sub Account
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               type: object
-              additionalProperties: true
+              required:
+              - subAccountID
+              properties:
+                subAccountID:
+                  type: string
+                  description: Sub-account ID
+                  example: 907b90ef-d723-4b07-9f74-480afb5f09ef
+                redirectUrl:
+                  type: string
+                  format: uri
+                  description: Optional allowlisted HTTPS browser return URL after identity capture. Refresh the sub-account profile after return because final verification state is asynchronous.
+                  example: https://example.com/kyc-complete
+                task:
+                  type: string
+                  description: Optional verification action to open. Omit this field to continue the account's normal onboarding flow.
+                  example: onboarding
       responses:
         '200':
-          description: Successful response.
+          description: Verification link initialized or retrieved successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StandardResponse'
+                $ref: '#/components/schemas/SubAccountKYCInitiationResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
         '401':
           $ref: '#/components/responses/Unauthorized'
-  /v0.2/sub-account/delete:
-    delete:
-      operationId: delete_v0.2_sub-account_delete
-      tags:
-      - Sub Account
-      summary: Delete an existing sub-account
-      description: Delete an existing sub-account.
-      parameters:
-      - name: id
-        in: query
-        required: true
-        description: Sub account ID.
-        schema:
-          type: string
-      responses:
-        '200':
-          description: Successful response.
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Resource not found.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StandardResponse'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-  /v0.2/sub-account/community/create:
-    post:
-      operationId: post_v0.2_sub-account_community_create
-      tags:
-      - Sub Account
-      summary: Create a sub-account community associated with a user
-      description: Create a sub-account community associated with a user.
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              additionalProperties: true
-      responses:
-        '200':
-          description: Successful response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/StandardResponse'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-  /v0.2/sub-account/community/members:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  type:
+                    type: string
+                    example: Resource Not Found
+                  code:
+                    type: string
+                    example: SUBACCOUNT_NOT_FOUND
+                  message:
+                    type: string
+                    example: Account with id 907b90ef-d723-4b07-9f74-480afb5f09ef not found
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: postV024SubAccountKycInitiate
+      x-operation-id-source: derived
+  /v0.2.4/sub-account/kyc/link:
     get:
-      operationId: get_v0.2_sub-account_community_members
+      summary: Get a verification link for a sub-account
+      description: Compatibility alias for POST /v0.2.4/sub-account/kyc/initiate. New integrations should use the canonical POST endpoint.
+      deprecated: true
       tags:
       - Sub Account
-      summary: Get community members
-      description: Get community members .
       parameters:
-      - name: communityID
-        in: query
-        required: false
-        description: Community ID
-        schema:
-          type: integer
-      - name: limit
-        in: query
-        required: false
-        description: maximum number of users to return - default is 50
-        schema:
-          type: integer
-      - name: startAfterId
-        in: query
-        required: false
-        description: ID of the last User Data retrieved - important for retrieivng subsequent pages
+      - in: query
+        name: subAccountID
         schema:
           type: string
-      - name: startBeforeId
-        in: query
-        required: false
-        description: ID of the first User Data retrieved - important for retrieivng previous pages
+        description: Sub-account ID
+        required: true
+        example: 907b90ef-d723-4b07-9f74-480afb5f09ef
+      - in: query
+        name: redirectUrl
         schema:
           type: string
+          format: uri
+        description: Optional allowlisted HTTPS browser return URL after identity capture. Refresh the sub-account profile after return because final verification state is asynchronous.
+        required: false
+        example: https://example.com/kyc-complete
+      - in: query
+        name: task
+        schema:
+          type: string
+        description: Optional verification action to open. Omit this field to continue the account's normal onboarding flow.
+        required: false
+        example: onboarding
       responses:
         '200':
-          description: Successful response.
+          description: Verification link initialized or retrieved successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StandardResponse'
+                $ref: '#/components/schemas/SubAccountKYCInitiationResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Resource not found.
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: getV024SubAccountKycLink
+      x-operation-id-source: derived
+  /v0.2.4/sub-account/kyc/verification/init:
+    get:
+      summary: Get a verification link for a sub-account
+      description: Compatibility alias for POST /v0.2.4/sub-account/kyc/initiate. New integrations should use the canonical POST endpoint.
+      deprecated: true
+      tags:
+      - Sub Account
+      parameters:
+      - in: query
+        name: subAccountID
+        schema:
+          type: string
+        description: Sub-account ID
+        required: true
+        example: 907b90ef-d723-4b07-9f74-480afb5f09ef
+      - in: query
+        name: redirectUrl
+        schema:
+          type: string
+          format: uri
+        description: Optional allowlisted HTTPS browser return URL after identity capture. Refresh the sub-account profile after return because final verification state is asynchronous.
+        required: false
+        example: https://example.com/kyc-complete
+      - in: query
+        name: task
+        schema:
+          type: string
+        description: Optional verification action to open. Omit this field to continue the account's normal onboarding flow.
+        required: false
+        example: onboarding
+      responses:
+        '200':
+          description: Verification link initialized or retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubAccountKYCInitiationResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Resource not found.
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: getV024SubAccountKycVerificationInit
+      x-operation-id-source: derived
 components:
   schemas:
-    StandardResponse:
+    ValidationError:
       type: object
-      description: Standard Chimoney response envelope.
       properties:
         status:
           type: string
-          description: '"success" or "error".'
+          description: Status of the validation error.
+          example: error
+        type:
+          type: string
+          description: Type of validation error.
+          example: Validation Error
+        code:
+          type: string
+          description: Error code indicating validation issue.
+          example: INVALID_REQUEST
+        message:
+          type: string
+          description: Detailed validation error message.
+          example: The request parameters are invalid.
+    SubAccountKYCInitiationResponse:
+      type: object
+      properties:
+        status:
+          type: string
           example: success
         message:
           type: string
+          example: Verification initialized successfully
         data:
-          description: Endpoint-specific payload.
-  responses:
+          type: object
+          properties:
+            kycUrl:
+              type: string
+              format: uri
+              description: URL to open for the end user
+              example: https://dash.chimoney.io/verify/kyc/907b90ef-d723-4b07-9f74-480afb5f09ef
+            formUrl:
+              type: string
+              format: uri
+              deprecated: true
+              description: Legacy alias of kycUrl for existing integrations
+              example: https://dash.chimoney.io/verify/kyc/907b90ef-d723-4b07-9f74-480afb5f09ef
+            verificationId:
+              type: string
+              description: Verification ID
+              example: verif_123456789
+            subAccountID:
+              type: string
+              description: Sub-account ID
+              example: 907b90ef-d723-4b07-9f74-480afb5f09ef
+            kycStatus:
+              type: string
+              description: Current account verification status
+              example: pending
+            verificationStatus:
+              type: string
+              description: Current verification session status
+              example: pending
+            redirectUrl:
+              type:
+              - string
+              - 'null'
+              format: uri
+              description: Return URL supplied at initiation, or null when omitted
+              example: https://example.com/kyc-complete
+    Forbidden:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the response.
+          example: error
+        error:
+          type: string
+          description: Error message indicating forbidden access.
+          example: API Access not enabled for account Test. Email support@chimoney.io
     Unauthorized:
-      description: Missing or invalid API key.
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the response.
+          example: error
+        error:
+          type: string
+          description: Error message indicating unauthorized access.
+          example: API key is not defined. Generate a new one from the developer portal.
+    SubAccountVerificationProgress:
+      type: object
+      required:
+      - verificationId
+      - requirementsStatus
+      - requirements
+      - status
+      - canTransact
+      - progress
+      - currentStep
+      - nextAction
+      - steps
+      - updatedAt
+      properties:
+        verificationId:
+          type:
+          - string
+          - 'null'
+        requirementsStatus:
+          type: string
+          enum:
+          - pinned
+          - not_initialized
+          - not_pinned
+          - unavailable
+          - exempt
+          - not_required
+          description: Pinned uses the active verification policy. Exempt means organization KYC exemption; not_required means an explicit sandbox bypass. Both have an empty checklist.
+        requirements:
+          type:
+          - object
+          - 'null'
+          properties:
+            version:
+              type:
+              - string
+              - 'null'
+            country:
+              type:
+              - string
+              - 'null'
+            profile:
+              type:
+              - string
+              - 'null'
+            task:
+              type:
+              - string
+              - 'null'
+        status:
+          $ref: '#/components/schemas/SubAccountVerificationStepStatus'
+        canTransact:
+          type: boolean
+          description: Account approval and KYC compliance gate snapshot. Individual transactions remain subject to their own authorization, limits and screening.
+        progress:
+          type: object
+          required:
+          - completedSteps
+          - requiredSteps
+          properties:
+            completedSteps:
+              type: integer
+              minimum: 0
+            requiredSteps:
+              type: integer
+              minimum: 0
+          description: Counts visible required Account Verification sections. Excludes hidden, optional and skipped sections; completion count alone does not authorize an account.
+        currentStep:
+          type:
+          - string
+          - 'null'
+        nextAction:
+          type:
+          - object
+          - 'null'
+          properties:
+            step:
+              type:
+              - string
+              - 'null'
+            type:
+              type: string
+              enum:
+              - submit
+              - start
+              - resume
+              - retry
+              - upload
+            label:
+              type: string
+          description: Next available user action. Use POST /v0.2.4/sub-account/kyc/initiate with subAccountID to open the hosted flow; refresh get-subaccount after returning. Action availability is advisory and mutation endpoints revalidate access.
+        steps:
+          type: array
+          items:
+            type: object
+            required:
+            - key
+            - label
+            - required
+            - status
+            - completedAt
+            - action
+            - details
+            properties:
+              key:
+                type: string
+                example: identity_liveness
+                description: Stable step key. Clients should tolerate unknown future keys.
+              label:
+                type: string
+              required:
+                type: boolean
+              status:
+                $ref: '#/components/schemas/SubAccountVerificationStepStatus'
+              completedAt:
+                type:
+                - string
+                - 'null'
+                format: date-time
+                description: Null when no completion timestamp was recorded.
+              action:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    enum:
+                    - none
+                    - submit
+                    - start
+                    - resume
+                    - retry
+                    - upload
+                  available:
+                    type: boolean
+              details:
+                type: object
+                description: Public details vary by step; never includes tokens, raw provider results, document contents or internal review notes.
+                properties:
+                  missingFields:
+                    type: array
+                    items:
+                      type: string
+                  documentStatus:
+                    $ref: '#/components/schemas/SubAccountVerificationStepStatus'
+                  livenessStatus:
+                    $ref: '#/components/schemas/SubAccountVerificationStepStatus'
+                  inputValidationStatus:
+                    $ref: '#/components/schemas/SubAccountVerificationStepStatus'
+                  verificationRequired:
+                    type: boolean
+                    description: Whether the address section requires address verification.
+                  verificationStatus:
+                    $ref: '#/components/schemas/SubAccountVerificationStepStatus'
+                  attemptsUsed:
+                    type: integer
+                    minimum: 0
+                  attemptsRemaining:
+                    type: integer
+                    minimum: 0
+                  canRetry:
+                    type: boolean
+                  initiatedAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  expiresAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  documents:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        documentType:
+                          type: string
+                        status:
+                          $ref: '#/components/schemas/SubAccountVerificationStepStatus'
+                  documentsComplete:
+                    type: boolean
+                    description: False if the bounded document summary is incomplete. Do not interpret absent document types as missing uploads in this case.
+        updatedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: Latest recorded timestamp among the state used to build progress, not the response generation time.
+    SubAccountVerificationStepStatus:
+      type: string
+      enum:
+      - not_started
+      - pending
+      - action_required
+      - in_progress
+      - under_review
+      - completed
+      - failed
+      - skipped
+    ServerError:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the error.
+          example: error
+        type:
+          type: string
+          description: Type of server error.
+          example: server error
+        code:
+          type: string
+          description: Specific error code for server issues.
+          example: INTERNAL_SERVER_ERROR
+        message:
+          type: string
+          description: Detailed message explaining the issue.
+          example: An internal server error occurred.
+  responses:
+    Forbidden:
+      description: Access to this resource is forbidden.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/StandardResponse'
+            $ref: '#/components/schemas/Forbidden'
+    ValidationError:
+      description: Validation error in the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ValidationError'
+    ServerError:
+      description: Indicates an internal server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ServerError'
+    Unauthorized:
+      description: Access to this resource is not available for unauthenticated users.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Unauthorized'
   securitySchemes:
     apiKeyAuth:
       type: apiKey
       in: header
       name: X-API-KEY
-      description: API key issued from the Chimoney developer dashboard (https://dash.chimoney.io/developers), passed in the X-API-KEY request header.

@@ -1,0 +1,173 @@
+openapi: 3.2.0
+info:
+  title: Chimoney API Docs AI API
+  version: 0.2.4
+  description: This is the latest version of the Chimoney API. For deprecated version routes, please refer to /v0.2/api-docs.
+servers:
+- url: https://api.chimoney.io/
+  description: Prod Server
+- url: https://api-v2-sandbox.chimoney.io
+  description: Sandbox API v2 (v0.2.4)
+security:
+- apiKeyAuth: []
+tags:
+- name: AI
+  description: All AI Related Endpoints
+paths:
+  /v0.2.4/ai/invoice/generate:
+    post:
+      summary: AI Invoice Data generator
+      tags:
+      - AI
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                instruction:
+                  type: string
+                  description: An intruction to generate an Invoice.
+              required:
+              - instruction
+            example:
+              instruction: Create an invoice from Jane Doe to Chimoney Incorporated for Web Dev Service which I provided for 4 months at $5/month and for Project Management cost of $100 with tax rate of 5%.
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the request.
+                    example: success
+                  message:
+                    type: string
+                    description: Success message.
+                    example: Invoice generated sucessfully
+                  data:
+                    type: object
+                    properties:
+                      downloadURL:
+                        type: string
+                        example: https://
+                      chimoneyPaymentRequestCreateURL:
+                        type: string
+                        example: https://
+                      chimoneyAPIEndpoint:
+                        type: string
+                        example: https://
+                      json:
+                        type: object
+                        properties:
+                          invoiceDate:
+                            type: string
+                          invoiceNumber:
+                            type: number
+                          dueDate:
+                            type: string
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: postV024AiInvoiceGenerate
+      x-operation-id-source: derived
+components:
+  schemas:
+    ValidationError:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the validation error.
+          example: error
+        type:
+          type: string
+          description: Type of validation error.
+          example: Validation Error
+        code:
+          type: string
+          description: Error code indicating validation issue.
+          example: INVALID_REQUEST
+        message:
+          type: string
+          description: Detailed validation error message.
+          example: The request parameters are invalid.
+    Forbidden:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the response.
+          example: error
+        error:
+          type: string
+          description: Error message indicating forbidden access.
+          example: API Access not enabled for account Test. Email support@chimoney.io
+    Unauthorized:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the response.
+          example: error
+        error:
+          type: string
+          description: Error message indicating unauthorized access.
+          example: API key is not defined. Generate a new one from the developer portal.
+    ServerError:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the error.
+          example: error
+        type:
+          type: string
+          description: Type of server error.
+          example: server error
+        code:
+          type: string
+          description: Specific error code for server issues.
+          example: INTERNAL_SERVER_ERROR
+        message:
+          type: string
+          description: Detailed message explaining the issue.
+          example: An internal server error occurred.
+  responses:
+    Forbidden:
+      description: Access to this resource is forbidden.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Forbidden'
+    ValidationError:
+      description: Validation error in the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ValidationError'
+    ServerError:
+      description: Indicates an internal server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ServerError'
+    Unauthorized:
+      description: Access to this resource is not available for unauthenticated users.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Unauthorized'
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY

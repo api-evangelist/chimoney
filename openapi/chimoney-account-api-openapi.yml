@@ -1,31 +1,32 @@
 openapi: 3.2.0
 info:
-  title: Chimoney Account API
-  description: Chimoney is a developer-first global payouts and disbursement platform with deep coverage across Africa and 130+ countries.
-  version: 0.2.2
-  contact:
-    name: Chimoney
-    url: https://chimoney.io
+  title: Chimoney API Docs Account API
+  version: 0.2.4
+  description: This is the latest version of the Chimoney API. For deprecated version routes, please refer to /v0.2/api-docs.
 servers:
-- url: https://api.chimoney.io
-  description: Production (v0.2)
+- url: https://api.chimoney.io/
+  description: Prod Server
 - url: https://api-v2-sandbox.chimoney.io
-  description: Sandbox (v0.2)
+  description: Sandbox API v2 (v0.2.4)
 security:
 - apiKeyAuth: []
 tags:
 - name: Account
-  description: Retrieve transactions, public profiles, transfer between accounts, and issue wallet addresses.
+  description: All account related endpoints.
 paths:
-  /v0.2/accounts/transactions:
+  /v0.2.4/accounts/issue-id-transactions:
     post:
-      operationId: post_v0.2_accounts_transactions
+      summary: Get transaction details by issueID
       tags:
       - Account
-      summary: Get all transactions by account
-      description: Get all transactions by account.
-      requestBody:
+      parameters:
+      - in: query
+        name: issueID
+        schema:
+          type: string
+        description: IssueID of the transaction.
         required: true
+      requestBody:
         content:
           application/json:
             schema:
@@ -33,29 +34,1025 @@ paths:
               properties:
                 subAccount:
                   type: string
+                  description: Subaccount if any.
+            example:
+              subAccount: '1234567'
       responses:
         '200':
-          description: Successful response.
+          description: Success.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StandardResponse'
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the request.
+                    example: success
+                  message:
+                    type: string
+                    description: Success message.
+                    example: Transaction found
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        account_number:
+                          type: string
+                        issueID:
+                          type: string
+                        fee:
+                          type: number
+                        account_bank:
+                          type: string
+                        type:
+                          type: string
+                          example: bank
+                        issuer:
+                          type: string
+                        enabledToRedeem:
+                          type: array
+                          items:
+                            type: string
+                          example:
+                          - bank
+                        reference:
+                          type: string
+                        quote:
+                          type: object
+                          properties:
+                            receiver:
+                              type: string
+                            rate:
+                              type: number
+                            sender:
+                              type: string
+                            originCurrency:
+                              type: string
+                              example: USD
+                            destinationCurrency:
+                              type: string
+                              example: NGN
+                            expiresAtTimestamp:
+                              type: integer
+                              example: 1721566800000
+                            originCurrencyDebitAmount:
+                              type: number
+                            markups:
+                              type: object
+                              example: {}
+                            expiresAt:
+                              type: string
+                            destinationCurrencyCreditAmount:
+                              type: number
+                        chiRef:
+                          type: string
+                        issueDate:
+                          type: string
+                          format: date-time
+                        initiatedBy:
+                          type: string
+                        redeemData:
+                          type: object
+                          example: {}
+                        valueInUSD:
+                          type: number
+                        chimoney:
+                          type: number
+                        countryToSend:
+                          type: string
+                          example: Nigeria
+                        amount:
+                          type: number
+                        personalizedMessage:
+                          type: string
+                        branch_code:
+                          type: string
+                        t_id:
+                          type: integer
+                        collectionPaymentIssueID:
+                          type: string
+                        narration:
+                          type: string
+                        integration:
+                          type: object
+                          properties:
+                            reference:
+                              type: string
+                            appID:
+                              type: string
+                        fullname:
+                          type: string
+                        paymentDate:
+                          type: string
+                          format: date-time
+                        redeemDate:
+                          type: string
+                          format: date-time
+                        meta:
+                          type: object
+                          properties:
+                            amount:
+                              type: number
+                            currency:
+                              type: string
+                              example: USD
+                            payer:
+                              type: string
+                        payout:
+                          type: object
+                          properties:
+                            account_number:
+                              type: string
+                            bank_code:
+                              type: string
+                            amount:
+                              type: number
+                            created_at:
+                              type: string
+                              format: date-time
+                            error:
+                              type: string
+                              example: None
+                            reference:
+                              type: string
+                            requires_approval:
+                              type: integer
+                              example: 0
+                            full_name:
+                              type: string
+                            meta:
+                              type: object
+                              properties:
+                                payer:
+                                  type: string
+                            narration:
+                              type: string
+                            bank_name:
+                              type: string
+                            is_approved:
+                              type: integer
+                              example: 1
+                            currency:
+                              type: string
+                              example: NGN
+                            complete_message:
+                              type: string
+                            id:
+                              type: integer
+                            payoutLink:
+                              type: string
+                              example: http://localhost:4000/pay/?issueID=4cddf021
+                            debit_currency:
+                              type: string
+                              example: NGN
+                            status:
+                              type: string
+                              example: NEW
+                        updatedDate:
+                          type: string
+                          format: date-time
+                        status:
+                          type: string
+                        deliveryStatus:
+                          type: string
+                          example: pending
+        '400':
+          $ref: '#/components/responses/ValidationError'
         '401':
           $ref: '#/components/responses/Unauthorized'
-  /v0.2/accounts/transaction:
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/TransactionNotFoundError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: postV024AccountsIssueIdTransactions
+      x-operation-id-source: derived
+  /v0.2.4/accounts/public-profile:
     post:
-      operationId: post_v0.2_accounts_transaction
+      summary: Get Public profile of a Chimoney User
       tags:
       - Account
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userID:
+                  type: string
+                  description: User ID of Chimoney user. Must provide one of userID, linkCode, p_id, or interledgerWalletAddress.
+                p_id:
+                  type: string
+                  description: User Public profile ID of Chimoney user. Must provide one of userID, linkCode, p_id, or interledgerWalletAddress.
+                linkCode:
+                  type: string
+                  description: NFC Link Code. Must provide one of userID, linkCode, p_id, or interledgerWalletAddress.
+                interledgerWalletAddress:
+                  type: string
+                  description: Interledger wallet address (Payment Pointer) in format $ilp.chimoney.io/username or https://ilp.chimoney.io/username. Must provide one of userID, linkCode, p_id, or interledgerWalletAddress.
+                  example: $ilp.chimoney.io/alice
+            example:
+              userID: x2Zfuf0ZHBWOqlgzlpEK3Z3TVkw2
+              linkCode: '202310001'
+              p_id: '9876543'
+              interledgerWalletAddress: $ilp.chimoney.io/alice
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the request.
+                    example: success
+                  message:
+                    type: string
+                    description: Success message.
+                    example: User profile retrieved successfully
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: User's unique identifier.
+                      accountSecondCurrencies:
+                        type: array
+                        description: Array of secondary currencies linked to the account.
+                        items:
+                          type: string
+                        example: []
+                      preferredExchangeRate:
+                        type: boolean
+                        description: Whether the user has set a preferred exchange rate.
+                      createdDate:
+                        type: string
+                        format: date-time
+                        description: The date and time when the user account was created.
+                      joinDate:
+                        type: string
+                        format: date-time
+                        description: The date and time when the user joined.
+                      email:
+                        type: string
+                        description: The user's email address.
+                      verification:
+                        type: object
+                        description: User's verification status.
+                        properties:
+                          status:
+                            type: string
+                            description: Verification status of the user.
+                            example: completed
+                      firstName:
+                        type: string
+                        description: The user's first name.
+                      lastName:
+                        type: string
+                        description: The user's last name.
+                      career:
+                        type: string
+                        description: The user's career field.
+                      purposeOfChimoney:
+                        type: string
+                        description: The user's reason for using Chimoney.
+                      socials:
+                        type: object
+                        properties:
+                          links:
+                            type: array
+                            description: Links to the user's social profiles.
+                            items:
+                              type: object
+                      updatedDate:
+                        type: string
+                        format: date-time
+                        description: The last date the user's profile was updated.
+                      p_id:
+                        type: integer
+                        description: User's profile ID.
+                      points:
+                        type: integer
+                        description: The user's accumulated points.
+                      badges:
+                        type: array
+                        description: User's earned badges.
+                        items:
+                          type: string
+                      paymentData:
+                        type: object
+                        description: User's payment information.
+                        properties:
+                          interledgerWalletAddress:
+                            type: string
+                            description: The user's interledger wallet address.
+                            example: https://ilp-sandbox.chimoney.com/4252496
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Error related to resource not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the error
+                    example: error
+                  type:
+                    type: string
+                    description: Type of error
+                    example: Resource Not Found
+                  code:
+                    type: string
+                    description: Error code
+                    example: USER_NOT_FOUND
+                  message:
+                    type: string
+                    description: Detailed error message
+                    example: User not found for the provided ID
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: postV024AccountsPublicProfile
+      x-operation-id-source: derived
+  /v0.2.4/accounts/transactions:
+    post:
+      summary: Get all transactions by account
+      tags:
+      - Account
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                subAccount:
+                  type: string
+                  description: Subaccount if any.
+                limit:
+                  type: number
+                  description: Limit the number of transactions to return.
+                page:
+                  type: number
+                  description: Page number to return.
+                filters:
+                  type: object
+                  description: Filters to apply to the transactions.
+                  properties:
+                    currency:
+                      type: string
+                      description: Currency to filter by.
+                    debitCurrency:
+                      type: string
+                      description: Debit currency to filter by.
+                    status:
+                      type: string
+                      description: Status to filter by.
+            example:
+              subAccount: '1234567'
+              limit: 10
+              page: 1
+              filters:
+                currency: USD
+                debitCurrency: USD
+                status: paid
+                startDate: '2024-06-01'
+                endDate: '2024-11-28'
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the request.
+                    example: success
+                  message:
+                    type: string
+                    description: Success message.
+                    example: Transactions retrieved successfully
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: 1W31C2JLyOcOdeOMzr45
+                        issueDate:
+                          type: string
+                          example: '2022-08-17T21:47:58.156Z'
+                        issueID:
+                          type: string
+                          example: XQTUvRBntIU3AHgQ3jFuN9ZcHIC31660772876526
+                        chiRef:
+                          type: string
+                          example: 2ea04d0e-73a2-41a1-ac5c-582d1870f768
+                        status:
+                          type: string
+                          example: paid
+                        initiatedBy:
+                          type: string
+                          example: XQTUvRBntIU3AHgQ3jFuN9ZcHIC3
+                        issuer:
+                          type: string
+                          example: x2Zfuf0ZHBWOqlgzlpEK3Z3TVkw2
+                        email:
+                          type: string
+                          example: mide@test.com
+                        chimoney:
+                          type: number
+                          example: 1000
+                        valueInUSD:
+                          type: number
+                          example: 1
+                        productId:
+                          type: number
+                          example: 1
+                        valueInLocalCurrency:
+                          type: number
+                          example: 1
+                        twitter:
+                          type: string
+                          example: ''
+                        countryCode:
+                          type: string
+                          example: US
+                        type:
+                          type: string
+                          example: giftcard
+                        redeemData:
+                          type: object
+                        payout:
+                          type: object
+                        integration:
+                          type: object
+                        enabledToRedeem:
+                          type: array
+                          items:
+                            type: string
+                            example:
+                            - Wallet
+                            - Mobile and Internet
+                            - Bank
+                            - Digital Currencies
+                            - Products
+                            - Gift Cards
+                        pagination:
+                          type: object
+                          description: Pagination object.
+                          properties:
+                            page:
+                              type: number
+                              example: 1
+                            limit:
+                              type: number
+                              example: 10
+                            totalCount:
+                              type: number
+                              example: 100
+                            totalPages:
+                              type: number
+                              example: 10
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: postV024AccountsTransactions
+      x-operation-id-source: derived
+  /v0.2.4/accounts/transaction:
+    post:
       summary: Get single transaction detail
-      description: Get single transaction detail.
+      tags:
+      - Account
       parameters:
-      - name: id
-        in: query
-        required: true
-        description: Transaction id.
+      - in: query
+        name: id
         schema:
           type: string
+        description: Transaction id.
+        required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                subAccount:
+                  type: string
+                  description: Subaccount if any.
+            example:
+              subAccount: '1234567'
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the request.
+                    example: success
+                  message:
+                    type: string
+                    description: Success message.
+                    example: Transaction retrieved successfully
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: 1W31C2JLyOcOdeOMzr45
+                      issueDate:
+                        type: string
+                        example: '2022-08-17T21:47:58.156Z'
+                      issueID:
+                        type: string
+                        example: XQTUvRBntIU3AHgQ3jFuN9ZcHIC31660772876526
+                      chiRef:
+                        type: string
+                        example: 2ea04d0e-73a2-41a1-ac5c-582d1870f768
+                      status:
+                        type: string
+                        example: paid
+                      initiatedBy:
+                        type: string
+                        example: XQTUvRBntIU3AHgQ3jFuN9ZcHIC3
+                      issuer:
+                        type: string
+                        example: x2Zfuf0ZHBWOqlgzlpEK3Z3TVkw2
+                      email:
+                        type: string
+                        example: mide@test.com
+                      chimoney:
+                        type: number
+                        example: 100
+                      valueInUSD:
+                        type: string
+                        example: '0.1'
+                      enabledToRedeem:
+                        type: array
+                        items:
+                          type: string
+                          example:
+                          - Wallet
+                          - Mobile and Internet
+                          - Bank
+                          - Digital Currencies
+                          - Products
+                          - Gift Cards
+                    description: Data returned.
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: postV024AccountsTransaction
+      x-operation-id-source: derived
+  /v0.2.4/accounts/transfer:
+    post:
+      summary: Account Transfer
+      tags:
+      - Account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                receiver:
+                  type: string
+                  description: Receiver ID.
+                valueInUSD:
+                  type: number
+                  description: Amount to transfer.
+                wallet:
+                  type: string
+                  description: Wallet type.
+                subAccount:
+                  type: string
+                  description: Sub/Multi-currency Account if any.
+              required:
+              - receiver
+              - valueInUSD
+            example:
+              subAccount: '1234567'
+              receiver: '1234567'
+              valueInUSD: 1234567
+              wallet: chi
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the request.
+                    example: success
+                  message:
+                    type: string
+                    description: Message describing the request result.
+                    example: Payout to Chimoney wallets completed successfully.
+                  data:
+                    type: object
+                    properties:
+                      paymentLink:
+                        type: string
+                        example: http://localhost:4000/pay/?issueID=1f8581c9-98f4-49a0-82f9-2a27fb27bbf5_2_1725617735856
+                      data:
+                        type: array
+                        description: List of payout data (only one object allowed).
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              example: QgUllnYdW8awPZmI2GKm
+                            valueInUSD:
+                              type: string
+                              example: '2'
+                            chimoney:
+                              type: number
+                              example: 2000
+                            issueID:
+                              type: string
+                              example: 1f8581c9-98f4-49a0-82f9-2a27fb27bbf5_2_1725617735856
+                            wallet:
+                              type: string
+                              example: chi
+                            receiver:
+                              type: string
+                              example: 35290d7c-535c-4451-bcba-af7f42761ae7
+                            personalizedMessage:
+                              type: string
+                              example: ''
+                            fee:
+                              type: number
+                              example: 1
+                            type:
+                              type: string
+                              example: chimoney
+                            issuer:
+                              type: string
+                              example: 1f8581c9-98f4-49a0-82f9-2a27fb27bbf5
+                            t_id:
+                              type: number
+                              example: 703009
+                            chiRef:
+                              type: string
+                              example: ecfae784-bed1-4458-bcf1-e046b868a525
+                            narration:
+                              type: string
+                              example: ''
+                            issueDate:
+                              type: string
+                              example: '2024-09-06T10:15:38.375Z'
+                            paymentDate:
+                              type: string
+                              example: '2024-09-06T10:15:45.334Z'
+                            redeemLink:
+                              type: string
+                              example: http://localhost:4000/redeem/?chi=ecfae784-bed1-4458-bcf1-e046b868a525
+                      chimoneys:
+                        type: array
+                        description: List of Chimoney payout objects (only one object allowed).
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              example: idQ2LoTX7Byte4JQMrJb
+                            valueInUSD:
+                              type: number
+                              example: 1
+                            chimoney:
+                              type: number
+                              example: 1000
+                            issueID:
+                              type: string
+                              example: 1f8581c9-98f4-49a0-82f9-2a27fb27bbf5_2_1725617735856
+                            fee:
+                              type: number
+                              example: 0
+                            type:
+                              type: string
+                              example: fee-collection
+                            issuer:
+                              type: string
+                              example: 1f8581c9-98f4-49a0-82f9-2a27fb27bbf5
+                            twitter:
+                              type: string
+                              example: Chimoney Fee
+                            chiRef:
+                              type: string
+                              example: 4d11fcdf-4e3c-44f5-8cf1-0801a4bc51b0
+                            issueDate:
+                              type: string
+                              example: '2024-09-06T10:15:46.703Z'
+                            redeemLink:
+                              type: string
+                              example: http://localhost:4000/redeem/?chi=4d11fcdf-4e3c-44f5-8cf1-0801a4bc51b0
+                      payouts:
+                        type: object
+                        additionalProperties:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              example: QgUllnYdW8awPZmI2GKm
+                            valueInUSD:
+                              type: string
+                              example: '2'
+                            chimoney:
+                              type: number
+                              example: 2000
+                            issueID:
+                              type: string
+                              example: 1f8581c9-98f4-49a0-82f9-2a27fb27bbf5_2_1725617735856
+                            wallet:
+                              type: string
+                              example: chi
+                            receiver:
+                              type: string
+                              example: 35290d7c-535c-4451-bcba-af7f42761ae7
+                            personalizedMessage:
+                              type: string
+                              example: ''
+                            fee:
+                              type: number
+                              example: 1
+                            type:
+                              type: string
+                              example: chimoney
+                            issuer:
+                              type: string
+                              example: 1f8581c9-98f4-49a0-82f9-2a27fb27bbf5
+                            t_id:
+                              type: number
+                              example: 703009
+                            chiRef:
+                              type: string
+                              example: ecfae784-bed1-4458-bcf1-e046b868a525
+                            narration:
+                              type: string
+                              example: ''
+                            issueDate:
+                              type: string
+                              example: '2024-09-06T10:15:38.375Z'
+                            paymentDate:
+                              type: string
+                              example: '2024-09-06T10:15:45.334Z'
+                            status:
+                              type: string
+                              example: paid
+                      error:
+                        type: string
+                        example: None
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: postV024AccountsTransfer
+      x-operation-id-source: derived
+  /v0.2.4/accounts/delete-unpaid-transaction:
+    delete:
+      summary: Deletes an unpaid transaction
+      tags:
+      - Account
+      parameters:
+      - in: query
+        name: chiRef
+        schema:
+          type: string
+        example: 9ae90e01-6609-453c-b4af-8ae230fafc5a
+        description: Transaction reference.
+        required: true
+      - in: query
+        name: subAccount
+        schema:
+          type: string
+        description: SubAccount if any.
+        example: '123456789'
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the request.
+                    example: success
+                  message:
+                    type: string
+                    description: Success message.
+                    example: Transaction deleted successfully
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: FnR3rnUd1kxQlbeZ98mM
+                      issueDate:
+                        type: string
+                        example: '2022-08-17T21:47:58.156Z'
+                      issueID:
+                        type: string
+                        example: XQTUvRBntIU3AHgQ3jFuN9ZcHIC31660772876526
+                      chiRef:
+                        type: string
+                        example: 9ae90e01-6609-453c-b4af-8ae230fafc5a
+                      status:
+                        type: string
+                        example: unpaid
+                      issuer:
+                        type: string
+                        example: XQTUvRBntIU3AHgQ3jFuN9ZcHIC3
+                    description: Data returned.
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: deleteV024AccountsDeleteUnpaidTransaction
+      x-operation-id-source: derived
+  /v0.2.4/accounts/capabilities:
+    get:
+      summary: Get the resolved capabilities for the authenticated account
+      description: Returns what the account may do, derived server-side from its organisation and its country of legal residence. Clients should render from this response rather than deciding by country themselves. Accounts belonging to an organisation with no product configuration resolve to unrestricted platform defaults.
+      tags:
+      - Account
+      security:
+      - apiKeyAuth: []
+      responses:
+        '200':
+          description: Capabilities retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Account capabilities retrieved successfully
+                  data:
+                    type: object
+                    properties:
+                      productId:
+                        type:
+                        - string
+                        - 'null'
+                        example: tiki
+                      country:
+                        type:
+                        - string
+                        - 'null'
+                        example: GB
+                      countrySource:
+                        type: string
+                        enum:
+                        - verified
+                        - declared
+                        - unknown
+                        example: verified
+                      wallets:
+                        type: object
+                        properties:
+                          currencies:
+                            type:
+                            - array
+                            - 'null'
+                            description: Visible currencies, or null when unrestricted
+                            items:
+                              type: string
+                            example: []
+                          hiddenCurrencies:
+                            type: array
+                            items:
+                              type: string
+                            example:
+                            - GBP
+                          provisioningEnabled:
+                            type: boolean
+                            example: false
+                      actions:
+                        type: object
+                        example:
+                          send: true
+                          fund: false
+                          convert: false
+                          withdraw: false
+                          receiveCrypto: false
+                          history: true
+                      disabledReasons:
+                        type: object
+                        example:
+                          fund: wallet_not_available_in_country
+                      kyc:
+                        type: object
+                        properties:
+                          mode:
+                            type: string
+                            enum:
+                            - provider
+                            - external
+                            - none
+                            example: provider
+                          provider:
+                            type: string
+                            example: veriff
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: getV024AccountsCapabilities
+      x-operation-id-source: derived
+  /v0.2.4/accounts/issue-wallet-address:
+    post:
+      summary: Issue an Interledger wallet address for a user
+      tags:
+      - Account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userID:
+                  type: string
+                  example: user123
+                ilpUsername:
+                  type: string
+                  example: chimoney_user123
+      responses:
+        '200':
+          description: Successfully issued wallet address
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    description: Success message.
+                    example: Wallet Address issued succesfully
+                  data:
+                    type: string
+                    example: walletAddress123
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: postV024AccountsIssueWalletAddress
+      x-operation-id-source: derived
+  /v0.2.4/accounts/claim-reward:
+    post:
+      summary: Claim community membership reward
+      tags:
+      - Account
+      description: Claims reward for community membership if eligible
       requestBody:
         required: true
         content:
@@ -63,169 +1060,204 @@ paths:
             schema:
               type: object
               required:
-              - id
+              - userID
+              - community
               properties:
-                id:
+                userID:
                   type: string
-                  description: Transaction ID.
-                subAccount:
-                  type: string
+                  description: The userID claiming the reward
+                  example: user123
+                community:
+                  type: object
+                  required:
+                  - communityID
+                  properties:
+                    communityID:
+                      type: string
+                      description: Unique identifier for the community
+                      example: premium-123
+                    membershipID:
+                      type: string
+                      description: Unique identifier for the membership
+                      example: premium-123
+                    voucherCode:
+                      type: string
+                      description: Optional voucher code for the membership
+                      example: WELCOME2024
+                    name:
+                      type: string
+                      description: Name of the community
+                      example: Premium Community
+                    memberName:
+                      type: string
+                      description: Name of the member in the community
+                      example: John Doe
+                    communityType:
+                      type: string
+                      enum:
+                      - free
+                      - paid
+                      description: Type of community membership
+                      example: paid
+                    expiryDate:
+                      type: string
+                      format: date-time
+                      description: Optional expiry date for the membership
+                      example: '2024-12-31T23:59:59Z'
       responses:
         '200':
-          description: Successful response.
+          description: Reward claim processed successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StandardResponse'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-  /v0.2/accounts/issue-id-transactions:
-    post:
-      operationId: post_v0.2_accounts_issue-id-transactions
-      tags:
-      - Account
-      summary: Get transaction details by issueID
-      description: Get transaction details by issueID.
-      parameters:
-      - name: issueID
-        in: query
-        required: true
-        description: IssueID of the transaction.
-        schema:
-          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              additionalProperties: true
-      responses:
-        '200':
-          description: Successful response.
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum:
+                    - success
+                    example: success
+                  message:
+                    type: string
+                    example: Reward claimed successfully
+                  data:
+                    type: object
+                    description: Additional data about the claim
+        '400':
+          description: Invalid request parameters
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StandardResponse'
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum:
+                    - error
+                    example: error
+                  error:
+                    type: string
+                    example: Invalid membership details
         '401':
           $ref: '#/components/responses/Unauthorized'
-  /v0.2/accounts/public-profile:
-    post:
-      operationId: post_v0.2_accounts_public-profile
-      tags:
-      - Account
-      summary: Get Public profile of a Chimoney User
-      description: Get Public profile of a Chimoney User.
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              additionalProperties: true
-      responses:
-        '200':
-          description: Successful response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/StandardResponse'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-  /v0.2/accounts/transfer:
-    post:
-      operationId: post_v0.2_accounts_transfer
-      tags:
-      - Account
-      summary: Account Transfer
-      description: Account Transfer.
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              additionalProperties: true
-      responses:
-        '200':
-          description: Successful response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/StandardResponse'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-  /v0.2/accounts/delete-unpaid-transaction:
-    delete:
-      operationId: delete_v0.2_accounts_delete-unpaid-transaction
-      tags:
-      - Account
-      summary: Deletes an unpaid transaction
-      description: Deletes an unpaid transaction.
-      parameters:
-      - name: chiRef
-        in: query
-        required: true
-        description: Transaction reference.
-        schema:
-          type: string
-      - name: subAccount
-        in: query
-        required: false
-        description: SubAccount if any.
-        schema:
-          type: string
-      responses:
-        '200':
-          description: Successful response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/StandardResponse'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-  /v0.2/accounts/issue-wallet-address:
-    post:
-      operationId: post_v0.2_accounts_issue-wallet-address
-      tags:
-      - Account
-      summary: Issue an Interledger wallet address for a user
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              additionalProperties: true
-      responses:
-        '200':
-          description: Successful response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/StandardResponse'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      operationId: postV024AccountsClaimReward
+      x-operation-id-source: derived
 components:
   schemas:
-    StandardResponse:
+    ValidationError:
       type: object
-      description: Standard Chimoney response envelope.
       properties:
         status:
           type: string
-          description: '"success" or "error".'
-          example: success
+          description: Status of the validation error.
+          example: error
+        type:
+          type: string
+          description: Type of validation error.
+          example: Validation Error
+        code:
+          type: string
+          description: Error code indicating validation issue.
+          example: INVALID_REQUEST
         message:
           type: string
-        data:
-          description: Endpoint-specific payload.
-  responses:
+          description: Detailed validation error message.
+          example: The request parameters are invalid.
+    TransactionNotFoundError:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the error.
+          example: error
+        type:
+          type: string
+          description: Type of error indicating transaction not found.
+          example: Resource Not Found
+        code:
+          type: string
+          description: Error code for transaction not found.
+          example: TRANSACTION_NOT_FOUND
+        message:
+          type: string
+          description: Detailed message explaining the transaction not found error.
+          example: The transaction with the provided ID could not be found.
+    Forbidden:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the response.
+          example: error
+        error:
+          type: string
+          description: Error message indicating forbidden access.
+          example: API Access not enabled for account Test. Email support@chimoney.io
     Unauthorized:
-      description: Missing or invalid API key.
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the response.
+          example: error
+        error:
+          type: string
+          description: Error message indicating unauthorized access.
+          example: API key is not defined. Generate a new one from the developer portal.
+    ServerError:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the error.
+          example: error
+        type:
+          type: string
+          description: Type of server error.
+          example: server error
+        code:
+          type: string
+          description: Specific error code for server issues.
+          example: INTERNAL_SERVER_ERROR
+        message:
+          type: string
+          description: Detailed message explaining the issue.
+          example: An internal server error occurred.
+  responses:
+    Forbidden:
+      description: Access to this resource is forbidden.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/StandardResponse'
+            $ref: '#/components/schemas/Forbidden'
+    TransactionNotFoundError:
+      description: Error indicating that the transaction was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TransactionNotFoundError'
+    ValidationError:
+      description: Validation error in the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ValidationError'
+    ServerError:
+      description: Indicates an internal server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ServerError'
+    Unauthorized:
+      description: Access to this resource is not available for unauthenticated users.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Unauthorized'
   securitySchemes:
     apiKeyAuth:
       type: apiKey
       in: header
       name: X-API-KEY
-      description: API key issued from the Chimoney developer dashboard (https://dash.chimoney.io/developers), passed in the X-API-KEY request header.

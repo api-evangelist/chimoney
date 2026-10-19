@@ -1,0 +1,129 @@
+openapi: 3.2.0
+info:
+  title: Chimoney Payments API
+  description: Chimoney is a developer-first global payouts and disbursement platform with deep coverage across Africa and 130+ countries.
+  version: 0.2.2
+  contact:
+    name: Chimoney
+    url: https://chimoney.io
+servers:
+- url: https://api.chimoney.io
+  description: Production (v0.2)
+- url: https://api-v2-sandbox.chimoney.io
+  description: Sandbox (v0.2)
+security:
+- apiKeyAuth: []
+tags:
+- name: Payments
+  description: Initiate and verify inbound payment (collection) requests.
+paths:
+  /v0.2/payment/initiate:
+    post:
+      operationId: post_v0.2_payment_initiate
+      tags:
+      - Payments
+      summary: Initiate a payment request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - valueInUSD
+              properties:
+                valueInUSD:
+                  type: number
+                  example: 50
+                payerEmail:
+                  type: string
+                redirect_url:
+                  type: string
+                meta:
+                  type: object
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/payment/verify:
+    post:
+      operationId: post_v0.2_payment_verify
+      tags:
+      - Payments
+      summary: verify a payment
+      description: verify a payment.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - id
+              properties:
+                id:
+                  type: string
+                  description: Payment issue reference to verify.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v0.2/payment/simulate:
+    post:
+      operationId: post_v0.2_payment_simulate
+      tags:
+      - Payments
+      summary: Simulate a card or other status change.
+      description: Simulate a card or other status change. Accepted include ["failed", "expired", "fraud", "paid"]. Only works in staging
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  schemas:
+    StandardResponse:
+      type: object
+      description: Standard Chimoney response envelope.
+      properties:
+        status:
+          type: string
+          description: '"success" or "error".'
+          example: success
+        message:
+          type: string
+        data:
+          description: Endpoint-specific payload.
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/StandardResponse'
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+      description: API key issued from the Chimoney developer dashboard (https://dash.chimoney.io/developers), passed in the X-API-KEY request header.

@@ -1,0 +1,409 @@
+openapi: 3.2.0
+info:
+  title: Chimoney API Docs Beneficiary API
+  version: 0.2.4
+  description: This is the latest version of the Chimoney API. For deprecated version routes, please refer to /v0.2/api-docs.
+servers:
+- url: https://api.chimoney.io/
+  description: Prod Server
+- url: https://api-v2-sandbox.chimoney.io
+  description: Sandbox API v2 (v0.2.4)
+security:
+- apiKeyAuth: []
+tags:
+- name: Beneficiary
+  description: Beneficiary management endpoints
+paths:
+  /v0.2.4/beneficiary:
+    post:
+      summary: Create a beneficiary
+      description: Creates a saved beneficiary. International payout routing is controlled by Chimoney configuration.
+      tags:
+      - Beneficiary
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - beneficiaryData
+              properties:
+                subAccount:
+                  type: string
+                  description: Sub-account that will own and use the beneficiary.
+                beneficiaryData:
+                  type: object
+                  required:
+                  - channel
+                  - accountNumber
+                  - bankCurrency
+                  properties:
+                    action:
+                      type: string
+                      enum:
+                      - create
+                      - update
+                      example: create
+                    channel:
+                      type: string
+                      example: bank
+                    accountNumber:
+                      type: string
+                    accountHolderName:
+                      type: string
+                    bankCurrency:
+                      type: object
+                      required:
+                      - curr
+                      properties:
+                        curr:
+                          type: string
+                          example: GBP
+                  additionalProperties: true
+      responses:
+        '200':
+          description: Beneficiary created or an existing beneficiary returned.
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: postV024Beneficiary
+      x-operation-id-source: derived
+    get:
+      summary: Get beneficiaries for an account
+      tags:
+      - Beneficiary
+      parameters:
+      - in: query
+        name: subAccount
+        schema:
+          type: string
+        description: Optional subaccount ID
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Beneficiaries retrieved successfully
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        accountNumber:
+                          type: string
+                        bankCurrency:
+                          type: object
+                          properties:
+                            curr:
+                              type: string
+                        channel:
+                          type: string
+                        createdDate:
+                          type: string
+                          format: date-time
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: getV024Beneficiary
+      x-operation-id-source: derived
+  /v0.2.4/beneficiary/bank:
+    post:
+      summary: Create a new bank beneficiary
+      tags:
+      - Beneficiary
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - beneficiaryData
+              properties:
+                beneficiaryData:
+                  type: object
+                  required:
+                  - accountHolderName
+                  - accountHolderAddress1
+                  - accountHolderCity
+                  - bankName
+                  - bankCity
+                  - bankAddressLine1
+                  - accountNumber
+                  - routingCode
+                  - currency
+                  - country
+                  properties:
+                    accountHolderName:
+                      type: string
+                      description: Name of the account holder (3-100 characters)
+                      example: John Doe
+                    accountHolderAddress1:
+                      type: string
+                      description: Primary address of the account holder
+                      example: 123 Main St
+                    accountHolderAddress2:
+                      type: string
+                      description: Address line 2 of the account holder (optional)
+                      example: Apt 4B
+                    accountHolderCity:
+                      type: string
+                      description: City of the account holder
+                      example: New York
+                    accountHolderRegion:
+                      type: string
+                      description: Region/State of the account holder (optional)
+                      example: NEW YORK
+                    accountHolderPostal:
+                      type: string
+                      description: Postal code of the account holder (optional)
+                      example: '10001'
+                    bankName:
+                      type: string
+                      description: Name of the bank
+                      example: Test Bank
+                    bankCity:
+                      type: string
+                      description: City where the bank is located
+                      example: New York
+                    bankAddressLine1:
+                      type: string
+                      description: Primary address of the bank
+                      example: 456 Bank St
+                    bankRegion:
+                      type: string
+                      description: Region/State where the bank is located (optional)
+                      example: NEW YORK
+                    bankPostal:
+                      type: string
+                      description: Postal code of the bank (optional)
+                      example: '10001'
+                    accountNumber:
+                      type: string
+                      description: 8-digit account number
+                      example: '12345678'
+                    routingCode:
+                      type: string
+                      description: 6-digit routing code
+                      example: '123456789'
+                    classification:
+                      type: string
+                      enum:
+                      - Individual
+                      - Business
+                      default: Individual
+                      description: Type of beneficiary (optional)
+                      example: Individual
+                    preferredMethod:
+                      type: string
+                      enum:
+                      - W
+                      - E
+                      default: W
+                      description: Preferred payment method Wire or iACH (optional)
+                      example: W
+                    currency:
+                      type: string
+                      description: Currency code (e.g., USD)
+                      example: USD
+                    country:
+                      type: string
+                      description: Country code (e.g., US)
+                      example: US
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Beneficiary created successfully
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: '12345'
+                      beneID:
+                        type: string
+                        example: BENE12345
+                      templateId:
+                        type: string
+                        example: TEMPLATE12345
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: postV024BeneficiaryBank
+      x-operation-id-source: derived
+  /v0.2.4/beneficiary/preview:
+    post:
+      summary: Preview beneficiary transfer (supports PIX and other methods)
+      tags:
+      - Beneficiary
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - method
+              - country
+              - currency
+              properties:
+                method:
+                  type: string
+                  description: Payment method
+                  example: pix_ind
+                country:
+                  type: string
+                  description: Country code
+                  example: BR
+                currency:
+                  type: string
+                  description: Currency code
+                  example: BRL
+                pixKey:
+                  type: string
+                  description: PIX key (required for PIX transfers)
+                  example: 1a717532-2ae7-4b11-b1bd-2ff5559f4d52
+                pixKeyType:
+                  type: string
+                  enum:
+                  - CPF
+                  - CNPJ
+                  - PHONE
+                  - EMAIL
+                  - EVP
+                  description: Type of PIX key (optional for PIX)
+                  example: EVP
+                protocol:
+                  type: string
+                  enum:
+                  - pix_ind
+                  default: pix_ind
+                  description: Transfer protocol (for PIX)
+      responses:
+        '200':
+          description: Transfer preview retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: PIX transfer preview retrieved successfully
+                  data:
+                    type: object
+                    description: Preview data varies by payment method
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: postV024BeneficiaryPreview
+      x-operation-id-source: derived
+components:
+  schemas:
+    ValidationError:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the validation error.
+          example: error
+        type:
+          type: string
+          description: Type of validation error.
+          example: Validation Error
+        code:
+          type: string
+          description: Error code indicating validation issue.
+          example: INVALID_REQUEST
+        message:
+          type: string
+          description: Detailed validation error message.
+          example: The request parameters are invalid.
+    Unauthorized:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the response.
+          example: error
+        error:
+          type: string
+          description: Error message indicating unauthorized access.
+          example: API key is not defined. Generate a new one from the developer portal.
+    ServerError:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the error.
+          example: error
+        type:
+          type: string
+          description: Type of server error.
+          example: server error
+        code:
+          type: string
+          description: Specific error code for server issues.
+          example: INTERNAL_SERVER_ERROR
+        message:
+          type: string
+          description: Detailed message explaining the issue.
+          example: An internal server error occurred.
+  responses:
+    ValidationError:
+      description: Validation error in the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ValidationError'
+    ServerError:
+      description: Indicates an internal server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ServerError'
+    Unauthorized:
+      description: Access to this resource is not available for unauthenticated users.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Unauthorized'
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY

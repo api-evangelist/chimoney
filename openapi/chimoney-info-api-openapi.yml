@@ -1,243 +1,1630 @@
 openapi: 3.2.0
 info:
-  title: Chimoney Info API
-  description: Chimoney is a developer-first global payouts and disbursement platform with deep coverage across Africa and 130+ countries.
-  version: 0.2.2
-  contact:
-    name: Chimoney
-    url: https://chimoney.io
+  title: Chimoney API Docs Info API
+  version: 0.2.4
+  description: This is the latest version of the Chimoney API. For deprecated version routes, please refer to /v0.2/api-docs.
 servers:
-- url: https://api.chimoney.io
-  description: Production (v0.2)
+- url: https://api.chimoney.io/
+  description: Prod Server
 - url: https://api-v2-sandbox.chimoney.io
-  description: Sandbox (v0.2)
+  description: Sandbox API v2 (v0.2.4)
 security:
 - apiKeyAuth: []
 tags:
 - name: Info
-  description: 'Reference lookups: supported banks, assets, exchange rates, currency conversion, and bank account verification.'
+  description: All info related endpoints.
 paths:
-  /v0.2/info/assets:
+  /v0.2.4/info/airtime-countries:
     get:
-      operationId: get_v0.2_info_assets
-      tags:
-      - Info
-      summary: Get list of all assests
-      description: Get list of all assests.
-      parameters:
-      - name: countryCode
-        in: query
-        required: false
-        description: Country code symbol e.g NG, US, GH.
-        schema:
-          type: string
-      responses:
-        '200':
-          description: Successful response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/StandardResponse'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-  /v0.2/info/country-banks:
-    get:
-      operationId: get_v0.2_info_country-banks
-      tags:
-      - Info
-      summary: Get list of Supported banks and bank code
-      description: Get list of Supported banks and bank code.
-      parameters:
-      - name: countryCode
-        in: query
-        required: true
-        description: Country code symbol e.g NG, US, GH.
-        schema:
-          type: string
-      responses:
-        '200':
-          description: Successful response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/StandardResponse'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-  /v0.2/info/bank-branches:
-    get:
-      operationId: get_v0.2_info_bank-branches
-      tags:
-      - Info
-      summary: Get list of bank branches and branch code
-      description: Get list of bank branches and branch code.
-      parameters:
-      - name: bankID
-        in: query
-        required: true
-        description: bankCode id from /info/country-banks
-        schema:
-          type: string
-      responses:
-        '200':
-          description: Successful response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/StandardResponse'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-  /v0.2/info/airtime-countries:
-    get:
-      operationId: get_v0.2_info_airtime-countries
-      tags:
-      - Info
       summary: Get list of all supported airtime Countries
-      description: Get list of all supported airtime Countries.
+      tags:
+      - Info
       responses:
         '200':
-          description: Successful response.
+          description: Success.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StandardResponse'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-  /v0.2/info/mobile-money-codes:
-    get:
-      operationId: get_v0.2_info_mobile-money-codes
-      tags:
-      - Info
-      summary: Get list of all supported mobile money code
-      description: Get list of all supported mobile money code.
-      responses:
-        '200':
-          description: Successful response.
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the request.
+                    example: success
+                  message:
+                    type: string
+                    description: Success message.
+                    example: Supported airtime country retrieved successfully
+                  data:
+                    description: Data returned.
+                    type: array
+                    items:
+                      type: string
+                      example:
+                      - Nigeria
+                      - Ghana
+                      - Kenya
+                      - South Africa
+                      - Uganda
+        '400':
+          description: Airtime supported countries retrieval failed.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StandardResponse'
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the error.
+                    example: error
+                  type:
+                    type: string
+                    description: Type of error.
+                    example: Airtime error
+                  code:
+                    type: string
+                    description: Error code.
+                    example: AIRTIME_NOT_SUPPORTED
+                  message:
+                    type: string
+                    description: Detailed error message.
+                    example: Failed to retrieve airtime supported countries.
         '401':
           $ref: '#/components/responses/Unauthorized'
-  /v0.2/info/exchange-rates:
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: getV024InfoAirtimeCountries
+      x-operation-id-source: derived
+  /v0.2.4/info/country-states-regions:
     get:
-      operationId: get_v0.2_info_exchange-rates
+      summary: Get list of states/regions for a specific country
       tags:
       - Info
-      summary: get exchange rates
-      description: get exchange rates.
-      responses:
-        '200':
-          description: Successful response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/StandardResponse'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-  /v0.2/info/local-amount-in-usd:
-    get:
-      operationId: get_v0.2_info_local-amount-in-usd
-      tags:
-      - Info
-      summary: convert local currency amount to USD
-      description: convert local currency amount to USD.
       parameters:
-      - name: originCurrency
-        in: query
+      - in: query
+        name: countryCode
+        schema:
+          type: string
+        description: Two-letter country code (ISO 3166-1 alpha-2).
         required: true
+        example: US
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the request.
+                    example: success
+                  message:
+                    type: string
+                    description: Success message.
+                    example: Country states retrieved successfully
+                  data:
+                    type: array
+                    description: List of regions/states for the country.
+                    items:
+                      type: object
+                      properties:
+                        code:
+                          type: string
+                          description: Region/state code.
+                          example: CA
+                        name:
+                          type: string
+                          description: Region/state name.
+                          example: California
+        '400':
+          description: Bad request - Missing or invalid country code.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the error.
+                    example: error
+                  type:
+                    type: string
+                    description: Type of error.
+                    example: Bank error
+                  code:
+                    type: string
+                    description: Error code.
+                    example: BANK_LOOKUP_FAILED
+                  message:
+                    type: string
+                    description: Detailed error message.
+                    example: Country code is required
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: getV024InfoCountryStatesRegions
+      x-operation-id-source: derived
+  /v0.2.4/info/assets:
+    get:
+      summary: Get list of all assests
+      tags:
+      - Info
+      parameters:
+      - in: query
+        name: countryCode
+        schema:
+          type: string
+        description: Country code symbol e.g NG, US, GH.
+        example: NG
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the request.
+                    example: success
+                  message:
+                    type: string
+                    description: Success message.
+                    example: Assets retrieved successfully
+                  data:
+                    type: object
+                    properties:
+                      benefitsList:
+                        type: array
+                        description: List of benefits.
+                        items:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                              example: Save in Chimoney Wallet
+                            img:
+                              type: string
+                              example: https://res.cloudinary.com/africahacks/image/upload/v1606074022/chimoney/Purple-100_z05fgn.jpg
+                            description:
+                              type: string
+                              example: Redeem to your wallet and spend anytime.
+                            code:
+                              type: string
+                              example: airtime
+                            type:
+                              type: string
+                              example: Mobile and Internet
+                            available:
+                              type: boolean
+                              example: true
+                      supportedCountriesAirtime:
+                        type: array
+                        description: List of supported countries for airtime.
+                        items:
+                          type: string
+                          example: Nigeria
+                      momoRedeemOptions:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                              example: Cameroon YUP
+                            country:
+                              type: string
+                              example: Cameroon
+                            code:
+                              type: string
+                              example: YUP
+                            provider:
+                              type: string
+                              example: flw
+                            manual:
+                              type: boolean
+                              example: true
+                      acceptedTokens:
+                        type: object
+                        description: List of accepted tokens.
+                        properties:
+                          xrpl:
+                            type: array
+                            items:
+                              type: string
+                            example:
+                            - BTC
+                            - ETH
+                      giftCardsRLD:
+                        type: array
+                        description: Gift cards redeemable list.
+                        items:
+                          type: string
+                          example: Amazon Gift Card
+                      crytoFacts:
+                        type: array
+                        description: List of crypto facts.
+                        items:
+                          type: string
+                          example: Bitcoin is the first cryptocurrency.
+                      celoWalletAddress:
+                        type: string
+                        example: '0x123456789abcdef123456789abcdef123456789a'
+                      contests:
+                        type: array
+                        description: List of ongoing contests.
+                        items:
+                          type: object
+                          properties:
+                            title:
+                              type: string
+                              example: Chimoney Giveaway
+                            description:
+                              type: string
+                              example: Enter to win Chimoney credits.
+                      fees:
+                        type: object
+                        properties:
+                          virtualCardIssuanceFee:
+                            type: object
+                            properties:
+                              value:
+                                type: number
+                                example: 3
+                              currency:
+                                type: string
+                                example: USD
+                          giftCardIssuanceFee:
+                            type: object
+                            properties:
+                              value:
+                                type: number
+                                example: 1
+                              percent:
+                                type: boolean
+                                example: true
+                          mobileMoneyFee:
+                            type: object
+                            properties:
+                              value:
+                                type: number
+                                example: 5
+                              percent:
+                                type: boolean
+                                example: true
+                      validity:
+                        type: object
+                        properties:
+                          virtualCardValidity:
+                            type: object
+                            properties:
+                              value:
+                                type: number
+                                example: 30
+                              unit:
+                                type: string
+                                example: days
+                      subscriptionPlans:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            planName:
+                              type: string
+                              example: Gold
+                            price:
+                              type: number
+                              example: 50
+                            currency:
+                              type: string
+                              example: USD
+                      giftCardsWG:
+                        type: array
+                        description: Gift cards for WG.
+                        items:
+                          type: string
+                          example: Apple Gift Card
+                      ecommerce:
+                        type: array
+                        description: E-commerce platforms.
+                        items:
+                          type: string
+                          example: Amazon
+                      featuredProducts:
+                        type: array
+                        description: List of featured products.
+                        items:
+                          type: object
+                          properties:
+                            url:
+                              type: string
+                              example: /Beauty%20&%20Personal%20Care/B014S847QM
+                            img:
+                              type: string
+                              example: https://images.unsplash.com/photo-1661956600655-e772b2b97db4
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: getV024InfoAssets
+      x-operation-id-source: derived
+  /v0.2.4/info/country-banks:
+    get:
+      summary: Get list of Supported banks and bank code
+      tags:
+      - Info
+      parameters:
+      - in: query
+        name: countryCode
+        schema:
+          type: string
+        description: Country code symbol e.g NG, US, GH.
+        required: true
+        example: NG
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the request.
+                    example: success
+                  message:
+                    type: string
+                    description: Success message.
+                    example: Supported country banks retrieved successfully.
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: number
+                          example: 191
+                        code:
+                          type: string
+                          example: '044'
+                        name:
+                          type: string
+                          example: Access Bank
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          description: Supported Bank list and bankcode retrieval failed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the error.
+                    example: error
+                  type:
+                    type: string
+                    description: Type of error.
+                    example: Bank error
+                  code:
+                    type: string
+                    description: Error code.
+                    example: BANK_LOOKUP_FAILED
+                  message:
+                    type: string
+                    description: Detailed error message.
+                    example: Failed to retrieve supported banks.
+      operationId: getV024InfoCountryBanks
+      x-operation-id-source: derived
+  /v0.2.4/info/bank-branches:
+    get:
+      summary: Get list of bank branches and branch code
+      tags:
+      - Info
+      parameters:
+      - in: query
+        name: bankID
+        schema:
+          type: string
+        description: bankCode id from /info/country-banks
+        required: true
+        example: '280'
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the request.
+                    example: success
+                  message:
+                    type: string
+                    description: Message indicating the result of the operation.
+                    example: Operation successful
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: number
+                          description: Unique identifier for the bank branch.
+                          example: 1014
+                        branch_code:
+                          type: string
+                          description: Code of the bank branch.
+                          example: GH190603
+                        branch_name:
+                          type: string
+                          description: Name of the bank branch.
+                          example: STABIC BANK GHANA LIMITED - ADUM
+                        swift_code:
+                          type: string
+                          description: SWIFT code of the bank branch.
+                          example: SBICGHAC
+                        bic:
+                          type: string
+                          description: Bank Identifier Code (BIC) of the branch.
+                          example: SBICGHAC
+                        bank_id:
+                          type: number
+                          description: Unique identifier of the bank.
+                          example: 280
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          description: Bank branch retrieval failed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the error.
+                    example: error
+                  type:
+                    type: string
+                    description: Type of error.
+                    example: Bank error
+                  code:
+                    type: string
+                    description: Error code.
+                    example: BANK_LOOKUP_FAILED
+                  message:
+                    type: string
+                    description: Detailed error message.
+                    example: Failed to retrieve bank branches
+      operationId: getV024InfoBankBranches
+      x-operation-id-source: derived
+  /v0.2.4/info/bank-search:
+    get:
+      summary: Search for banks in a specific country (Support for international banks)
+      tags:
+      - Info
+      parameters:
+      - in: query
+        name: country
+        schema:
+          type: string
+        description: Two-letter country code (ISO 3166-1 alpha-2).
+        required: true
+        example: US
+      - in: query
+        name: search
+        schema:
+          type: string
+        description: Search query for bank name (minimum 2 characters).
+        required: true
+        example: Chase
+      - in: query
+        name: skip
+        schema:
+          type: integer
+        description: Number of records to skip for pagination.
+        required: false
+        example: 0
+      - in: query
+        name: take
+        schema:
+          type: integer
+        description: Number of records to take (page size).
+        required: false
+        example: 100
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the request.
+                    example: success
+                  message:
+                    type: string
+                    description: Success message.
+                    example: Banks retrieved successfully
+                  data:
+                    type: array
+                    description: List of banks matching the search criteria.
+                    items:
+                      type: object
+                      properties:
+                        primaryKey:
+                          type: string
+                          description: Unique identifier for the bank
+                          example: '000000000371330'
+                        institutionName:
+                          type: string
+                          description: Name of the banking institution
+                          example: DISTRICT 58 FEDERAL CREDIT UNION
+                        address1:
+                          type: string
+                          description: Primary address line
+                          example: 6217 HWY 15
+                        address2:
+                          type: string
+                          description: Secondary address line
+                          example: ''
+                        city:
+                          type: string
+                          description: City location
+                          example: CHASE
+                        region:
+                          type: string
+                          description: State or region
+                          example: LOUISIANA
+                        country:
+                          type: string
+                          description: Full country name
+                          example: UNITED STATES
+                        countryISO:
+                          type: string
+                          description: ISO country code
+                          example: US
+                        postalCode:
+                          type: string
+                          description: Postal/ZIP code
+                          example: '71324'
+                        swiftBIC:
+                          type: string
+                          description: SWIFT/BIC code if available
+                          example: ''
+                        nationalBankCode:
+                          type: string
+                          description: National bank identifier
+                          example: '311175158'
+                        nationalBankCodeType:
+                          type: string
+                          description: Type of national bank code
+                          example: USBC
+                        officeType:
+                          type: string
+                          description: Type of banking office
+                          example: Head Office
+                        branchName:
+                          type: string
+                          description: Branch name if applicable
+                          example: ''
+                        phone:
+                          type: string
+                          description: Contact phone number
+                          example: ''
+                        fax:
+                          type: string
+                          description: Fax number
+                          example: ''
+                  pagination:
+                    type: object
+                    properties:
+                      total:
+                        type: integer
+                        description: Total number of records available
+                        example: 1984
+                      skip:
+                        type: integer
+                        description: Number of records skipped
+                        example: 0
+                      take:
+                        type: integer
+                        description: Number of records returned
+                        example: 100
+        '400':
+          description: Bad request - Missing or invalid parameters.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the error.
+                    example: error
+                  type:
+                    type: string
+                    description: Type of error.
+                    example: Bank error
+                  code:
+                    type: string
+                    description: Error code.
+                    example: BANK_LOOKUP_FAILED
+                  message:
+                    type: string
+                    description: Detailed error message.
+                    example: Country code is required
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: getV024InfoBankSearch
+      x-operation-id-source: derived
+  /v0.2.4/info/exchange-rates:
+    get:
+      summary: Get exchange rates
+      tags:
+      - Info
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the request.
+                    example: success
+                  message:
+                    type: string
+                    description: Message indicating the result of the operation.
+                    example: Exchange rates retrieved successfully
+                  data:
+                    type: object
+                    properties:
+                      USDAED:
+                        type: number
+                        description: Exchange rate from USD to AED.
+                        example: 2.634
+                      NGNUSD:
+                        type: number
+                        description: Exchange rate from NGN to USD.
+                        example: 0.0006
+                      NGNSTN:
+                        type: number
+                        description: Exchange rate from NGN to STN.
+                        example: 0.0511
+                      validUntil:
+                        type: string
+                        description: Date and time when the exchange rates are valid until (UTC).
+                        example: 9/9/2024, 8:00:00 AM UTC
+                      expiresAt:
+                        type: string
+                        description: Expiration date and time for the exchange rates (UTC).
+                        example: 9/9/2024, 8:00:00 AM UTC
+                      expiresAtTimestamp:
+                        type: integer
+                        description: Unix timestamp when the exchange rates expire.
+                        example: 1725868800000
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          description: Exchange rate retrieval failed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the error.
+                    example: error
+                  type:
+                    type: string
+                    description: Type of error.
+                    example: Exchange Rate Error
+                  code:
+                    type: string
+                    description: Error code.
+                    example: EXCHANGE_RATE_FETCH_FAILED,
+                  message:
+                    type: string
+                    description: Detailed error message.
+                    example: Failed to retrieve exchange rates.
+      operationId: getV024InfoExchangeRates
+      x-operation-id-source: derived
+  /v0.2.4/info/local-amount-in-usd:
+    get:
+      summary: Convert local currency amount to USD
+      tags:
+      - Info
+      parameters:
+      - in: query
+        name: originCurrency
+        schema:
+          type: string
         description: Currency symbol e.g NGN, USD.
-        schema:
-          type: string
-      - name: amountInOriginCurrency
-        in: query
         required: true
-        description: amount to be converted.
+      - in: query
+        name: amountInOriginCurrency
         schema:
           type: integer
+        description: amount to be converted.
+        required: true
       responses:
         '200':
-          description: Successful response.
+          description: Success.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StandardResponse'
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the request.
+                    example: success
+                  message:
+                    type: string
+                    description: Message indicating the result of the operation.
+                    example: Amount converted to USD successfully
+                  data:
+                    type: object
+                    properties:
+                      amountInOriginCurrency:
+                        type: string
+                        example: '20'
+                      originCurrency:
+                        type: string
+                        example: NGN
+                      amountInUSD:
+                        type: number
+                        example: 0.2
+                      validUntil:
+                        type: string
+                        example: '2022-08-21T20:05:50.474Z'
+        '400':
+          $ref: '#/components/responses/ValidationError'
         '401':
           $ref: '#/components/responses/Unauthorized'
-  /v0.2/info/usd-amount-in-local:
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: getV024InfoLocalAmountInUsd
+      x-operation-id-source: derived
+  /v0.2.4/info/convert/local-amount-to-usd:
     get:
-      operationId: get_v0.2_info_usd-amount-in-local
+      summary: Convert currency amount to USD
       tags:
       - Info
-      summary: Convert USD amount to Local currency amount
-      description: Convert USD amount to Local currency amount.
       parameters:
-      - name: destinationCurrency
-        in: query
-        required: true
-        description: currency symbol e.g NGN, KES.
+      - in: query
+        name: originCurrency
         schema:
           type: string
-      - name: amountInUSD
-        in: query
+        description: Currency symbol e.g NGN, USD.
         required: true
-        description: amount in usd.
+      - in: query
+        name: amountInOriginCurrency
         schema:
           type: integer
+        description: amount to be converted.
+        required: true
       responses:
         '200':
-          description: Successful response.
+          description: Success.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StandardResponse'
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the request.
+                    example: success
+                  message:
+                    type: string
+                    description: Message indicating the result of the operation.
+                    example: Amount converted to USD successfully
+                  data:
+                    type: object
+                    properties:
+                      amountInOriginCurrency:
+                        type: string
+                        example: '20'
+                      originCurrency:
+                        type: string
+                        example: NGN
+                      amountInUSD:
+                        type: number
+                        example: 0.2
+                      validUntil:
+                        type: string
+                        example: '2022-08-21T20:05:50.474Z'
+        '400':
+          $ref: '#/components/responses/ValidationError'
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: getV024InfoConvertLocalAmountToUsd
+      x-operation-id-source: derived
+  /v0.2.4/info/usd-amount-in-local:
+    get:
+      summary: Convert USD amount to Local currency amount
+      tags:
+      - Info
+      parameters:
+      - in: query
+        name: destinationCurrency
+        schema:
+          type: string
+        description: currency symbol e.g NGN, KES.
+        required: true
+      - in: query
+        name: amountInUSD
+        schema:
+          type: integer
+        description: amount in usd.
+        required: true
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the request.
+                    example: success
+                  message:
+                    type: string
+                    description: Message indicating the result of the operation.
+                    example: USD converted to local amount successfully
+                  data:
+                    type: object
+                    properties:
+                      amountInUSD:
+                        type: string
+                        example: '100'
+                      destinationCurrency:
+                        type: string
+                        example: NGN
+                      amountInDestinationCurrency:
+                        type: number
+                        example: 1000
+                      validUntil:
+                        type: string
+                        example: '2022-08-21T20:05:50.474Z'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: getV024InfoUsdAmountInLocal
+      x-operation-id-source: derived
+  /v0.2.4/info/convert/usd-to-local-amount:
+    get:
+      summary: Convert USD to Local currency amount
+      tags:
+      - Info
+      parameters:
+      - in: query
+        name: destinationCurrency
+        schema:
+          type: string
+        description: currency symbol e.g NGN, KES.
+        required: true
+      - in: query
+        name: amountInUSD
+        schema:
+          type: integer
+        description: amount in usd.
+        required: true
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the request.
+                    example: success
+                  message:
+                    type: string
+                    description: Message indicating the result of the operation.
+                    example: USD converted to local amount successfully
+                  data:
+                    type: object
+                    properties:
+                      amountInUSD:
+                        type: string
+                        example: '100'
+                      destinationCurrency:
+                        type: string
+                        example: NGN
+                      amountInDestinationCurrency:
+                        type: number
+                        example: 1000
+                      validUntil:
+                        type: string
+                        example: '2022-08-21T20:05:50.474Z'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: getV024InfoConvertUsdToLocalAmount
+      x-operation-id-source: derived
+  /v0.2.4/info/mobile-money-codes:
+    get:
+      summary: Get list of all supported mobile money codes
+      tags:
+      - Info
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the request.
+                    example: success
+                  message:
+                    type: string
+                    description: Message indicating the result of the operation.
+                    example: Supported mobile money code retrieved successfully
+                  data:
+                    type: array
+                    description: List of supported mobile money codes.
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: Name of the mobile money service.
+                          example: Cameroon Mobile Money
+                        country:
+                          type: string
+                          description: Country where the mobile money service is supported.
+                          example: Cameroon
+                        code:
+                          type: string
+                          description: Mobile money code.
+                          example: FMM-XAF
+                        provider:
+                          type: string
+                          description: Mobile money provider.
+                          example: flw
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: getV024InfoMobileMoneyCodes
+      x-operation-id-source: derived
   /v0.2/info/verify-bank-account-number:
     post:
-      operationId: post_v0.2_info_verify-bank-account-number
+      summary: Verify a bank account number or multiple bank account numbers
       tags:
       - Info
-      summary: verify a bank account number or multiple bank account numbers
-      description: verify a bank account number or multiple bank account numbers.
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               type: object
-              additionalProperties: true
+              properties:
+                verifyAccountNumbers:
+                  type: array
+                  description: Array of bank accounts to verify.
+                  items:
+                    type: object
+                    properties:
+                      countryCode:
+                        type: string
+                        description: Country code for the bank to verify.
+                        example: NG
+                      account_bank:
+                        type: string
+                        description: Bank code.
+                        example: '044'
+                      account_number:
+                        type: string
+                        description: Bank account number.
+                        example: 0690000031
+                    required:
+                    - countryCode
+                    - account_bank
+                    - account_number
+              required:
+              - verifyAccountNumbers
       responses:
         '200':
-          description: Successful response.
+          description: Success.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StandardResponse'
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the request.
+                    example: success
+                  message:
+                    type: string
+                    description: Message indicating the result of the operation.
+                    example: Bank account numbers verified successfully
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        account_name:
+                          type: string
+                          description: The name of the account holder.
+                          example: Forrest Green
+                        account_number:
+                          type: string
+                          description: The verified account number.
+                          example: 0690000031
+        '400':
+          $ref: '#/components/responses/ValidationError'
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: postV02InfoVerifyBankAccountNumber
+      x-operation-id-source: derived
+  /v0.2.4/info/communities/verify-code:
+    post:
+      summary: Validate a Chimoney issued voucher code
+      tags:
+      - Info
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                code:
+                  type: string
+                  description: Chimoney issued voucher code.
+                  example: CHIMONEY0141A89A
+              required:
+              - code
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the request.
+                    example: success
+                  message:
+                    type: string
+                    description: Message indicating the result of the operation.
+                    example: Chimoney voucher code validated successfully
+                  data:
+                    type: object
+                    properties:
+                      Code:
+                        type: string
+                        description: The validated Chimoney voucher code.
+                        example: CHIMONEY0141A89A
+                      Created Date:
+                        type: string
+                        description: The date the Chimoney voucher was created.
+                        example: Mar 14, 2024
+                      Delivery Date:
+                        type: string
+                        description: The date the Chimoney voucher was delivered.
+                        example: Apr 29, 2024
+                      Expiry Date:
+                        type: string
+                        description: The expiry date of the Chimoney voucher.
+                        example: Dec 31, 2025
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: postV024InfoCommunitiesVerifyCode
+      x-operation-id-source: derived
+  /v0.2.4/info/bill-merchants/ca:
+    post:
+      summary: Payee/Merchant search Information
+      tags:
+      - Info
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                search:
+                  type: string
+                  description: Search Name of the Payee/merchant.
+                  example: Visa
+              required:
+              - name
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the request.
+                    example: success
+                  message:
+                    type: string
+                    description: Message indicating the result of the operation.
+                    example: Payee search successful
+                  data:
+                    type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          type: object
+        '400':
+          description: Payee Search Error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the error.
+                    example: error
+                  type:
+                    type: string
+                    description: Type of error.
+                    example: Search error
+                  code:
+                    type: string
+                    description: Error code.
+                    example: INVALID_SEARCH
+                  message:
+                    type: string
+                    description: Detailed error message.
+                    example: Name search is not formatted correctly. Must be a string with at least 3 characters.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: postV024InfoBillMerchantsCa
+      x-operation-id-source: derived
+  /v0.2.4/info/beneficiary-rules/{countryCode}:
+    get:
+      summary: Get beneficiary validation rules for a specific country
+      description: Retrieves validation rules and field requirements for beneficiary information based on country code.
+      tags:
+      - Info
+      parameters:
+      - in: path
+        name: countryCode
+        schema:
+          type: string
+        required: true
+        description: Two-letter destination country code (ISO 3166-1 alpha-2, e.g. CN, US, PE, MX, BR)
+      - in: query
+        name: method
+        schema:
+          type: string
+          enum:
+          - ''
+          - clabe
+          - phonenum
+          - debitcard
+          - pix_ind
+        required: false
+        description: Get rules for specific payment method. Defaults to Bank. Options include clabe, phonenum, debitcard.
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Beneficiary rules retrieved successfully
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: Field identifier/key
+                          example: accountNumber
+                        label:
+                          type: string
+                          description: Human-readable field label
+                          example: Account Number
+                        regexPattern:
+                          type: string
+                          description: Regular expression pattern for validation
+                          example: ^[0-9]{10}$
+                        validValues:
+                          type: array
+                          description: List of valid values for enumerated fields
+                          items:
+                            type: string
+                          example:
+                          - Savings
+                          - Checking
+                        defaultValue:
+                          type: string
+                          description: Default value for the field if any
+                          example: Savings
+                        inputType:
+                          type: string
+                          description: Type of input field (text, select, number, etc)
+                          example: text
+                        required:
+                          type: boolean
+                          description: Whether the field is required
+                          example: true
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: getV024InfoBeneficiaryRulesByCountryCode
+      x-operation-id-source: derived
+  /v0.2.4/info/identification-types:
+    get:
+      summary: Get list of identification types and their codes
+      tags:
+      - Info
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the request.
+                    example: success
+                  message:
+                    type: string
+                    description: Success message.
+                    example: Identification types retrieved successfully
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          description: Type of identification document.
+                          example: International Passport
+                        code:
+                          type: string
+                          description: Code associated with the identification type.
+                          example: '01'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: getV024InfoIdentificationTypes
+      x-operation-id-source: derived
+  /v0.2.4/info/fee-estimate:
+    post:
+      summary: Estimate fees for a transaction before executing it
+      description: Returns estimated fees for a given amount and optional rail. When rail is omitted, assumes a standard chimoney payout and currency must be USD.
+      tags:
+      - Info
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - amount
+              properties:
+                amount:
+                  type: number
+                  description: The transaction amount.
+                  example: 100
+                currency:
+                  type: string
+                  description: Three-letter currency code (defaults to USD). Must be USD when rail is not specified.
+                  example: CAD
+                rail:
+                  type: string
+                  description: The payment rail. Optional — when omitted, assumes a standard chimoney payout.
+                  enum:
+                  - bank
+                  - airtime
+                  - mobile-money
+                  - interac
+                  - spei
+                  - wallet
+                  - gift-card
+                  - chimoney
+                  - interledger
+                  example: interac
+                direction:
+                  type: string
+                  description: Transaction direction (defaults to payout).
+                  enum:
+                  - payout
+                  - funding
+                  example: payout
+      responses:
+        '200':
+          description: Fee estimate retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Fee estimate retrieved successfully
+                  data:
+                    type: object
+                    properties:
+                      amount:
+                        type: number
+                        example: 100
+                      currency:
+                        type: string
+                        example: CAD
+                      rail:
+                        type: string
+                        example: interac
+                      direction:
+                        type: string
+                        example: payout
+                      platformFee:
+                        type: number
+                        description: Chimoney platform fee.
+                        example: 2
+                      railFee:
+                        type: number
+                        description: Rail-specific fee (e.g. Interac transfer fee).
+                        example: 2.5
+                      totalFee:
+                        type: number
+                        description: Sum of platformFee and railFee.
+                        example: 4.5
+                      netAmount:
+                        type: number
+                        description: Amount after deducting totalFee.
+                        example: 95.5
+                      breakdown:
+                        type: object
+                        properties:
+                          platformFee:
+                            type: object
+                            properties:
+                              amount:
+                                type: number
+                              description:
+                                type: string
+                          railFee:
+                            type: object
+                            properties:
+                              amount:
+                                type: number
+                              description:
+                                type: string
+                      note:
+                        type: string
+                        description: Disclaimer that fees are estimates.
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: postV024InfoFeeEstimate
+      x-operation-id-source: derived
+  /v0.2.4/info/kyc-states:
+    get:
+      summary: Get KYC states with UI rendering metadata
+      description: Returns KYC state definitions with title, description, icon, color, and action metadata for UI rendering.
+      tags:
+      - Info
+      parameters:
+      - in: query
+        name: category
+        schema:
+          type: string
+          enum:
+          - kycStatus
+          - identityStatus
+          - addressStatus
+          - sanctionStatus
+          - shareCodeStatus
+          - tierRequestStatus
+          - eddStatus
+        description: Optional - Filter by specific state category
+        required: false
+      responses:
+        '200':
+          description: Success.
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: getV024InfoKycStates
+      x-operation-id-source: derived
 components:
   schemas:
-    StandardResponse:
+    ValidationError:
       type: object
-      description: Standard Chimoney response envelope.
       properties:
         status:
           type: string
-          description: '"success" or "error".'
-          example: success
+          description: Status of the validation error.
+          example: error
+        type:
+          type: string
+          description: Type of validation error.
+          example: Validation Error
+        code:
+          type: string
+          description: Error code indicating validation issue.
+          example: INVALID_REQUEST
         message:
           type: string
-        data:
-          description: Endpoint-specific payload.
-  responses:
+          description: Detailed validation error message.
+          example: The request parameters are invalid.
+    Forbidden:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the response.
+          example: error
+        error:
+          type: string
+          description: Error message indicating forbidden access.
+          example: API Access not enabled for account Test. Email support@chimoney.io
     Unauthorized:
-      description: Missing or invalid API key.
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the response.
+          example: error
+        error:
+          type: string
+          description: Error message indicating unauthorized access.
+          example: API key is not defined. Generate a new one from the developer portal.
+    ServerError:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the error.
+          example: error
+        type:
+          type: string
+          description: Type of server error.
+          example: server error
+        code:
+          type: string
+          description: Specific error code for server issues.
+          example: INTERNAL_SERVER_ERROR
+        message:
+          type: string
+          description: Detailed message explaining the issue.
+          example: An internal server error occurred.
+  responses:
+    Forbidden:
+      description: Access to this resource is forbidden.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/StandardResponse'
+            $ref: '#/components/schemas/Forbidden'
+    ValidationError:
+      description: Validation error in the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ValidationError'
+    ServerError:
+      description: Indicates an internal server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ServerError'
+    Unauthorized:
+      description: Access to this resource is not available for unauthenticated users.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Unauthorized'
   securitySchemes:
     apiKeyAuth:
       type: apiKey
       in: header
       name: X-API-KEY
-      description: API key issued from the Chimoney developer dashboard (https://dash.chimoney.io/developers), passed in the X-API-KEY request header.

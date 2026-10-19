@@ -1,0 +1,185 @@
+openapi: 3.2.0
+info:
+  title: Chimoney API Docs Passport API
+  version: 0.2.4
+  description: This is the latest version of the Chimoney API. For deprecated version routes, please refer to /v0.2/api-docs.
+servers:
+- url: https://api.chimoney.io/
+  description: Prod Server
+- url: https://api-v2-sandbox.chimoney.io
+  description: Sandbox API v2 (v0.2.4)
+security:
+- apiKeyAuth: []
+tags:
+- name: Passport
+  description: APort passport management endpoints
+paths:
+  /v0.2.4/passport:
+    post:
+      summary: Manage APort passport
+      description: Check status, create, or resend claim email for APort passport
+      tags:
+      - Passport
+      security:
+      - apiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - action
+              properties:
+                action:
+                  type: string
+                  enum:
+                  - check
+                  - create
+                  - resend
+                  description: Action to perform
+                  example: check
+                accountId:
+                  type: string
+                  description: Account ID (user or team), defaults to authenticated user
+      responses:
+        '200':
+          description: Operation successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    properties:
+                      passportStatus:
+                        type: string
+                        enum:
+                        - missing
+                        - unclaimed
+                        - claimed
+                        example: claimed
+                      aportPassportId:
+                        type:
+                        - string
+                        - 'null'
+                      claimed:
+                        type: boolean
+                      passport:
+                        type: object
+                      claimEmailResent:
+                        type: boolean
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: postV024Passport
+      x-operation-id-source: derived
+components:
+  schemas:
+    ValidationError:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the validation error.
+          example: error
+        type:
+          type: string
+          description: Type of validation error.
+          example: Validation Error
+        code:
+          type: string
+          description: Error code indicating validation issue.
+          example: INVALID_REQUEST
+        message:
+          type: string
+          description: Detailed validation error message.
+          example: The request parameters are invalid.
+    NotFound:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the error.
+          example: error
+        type:
+          type: string
+          description: Type of error indicating resource not found.
+          example: Resource Not Found
+        code:
+          type: string
+          description: Error code for resource not found.
+          example: NOT_FOUND
+        message:
+          type: string
+          description: Detailed message explaining the resource not found error.
+          example: The requested resource could not be found.
+    Unauthorized:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the response.
+          example: error
+        error:
+          type: string
+          description: Error message indicating unauthorized access.
+          example: API key is not defined. Generate a new one from the developer portal.
+    ServerError:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the error.
+          example: error
+        type:
+          type: string
+          description: Type of server error.
+          example: server error
+        code:
+          type: string
+          description: Specific error code for server issues.
+          example: INTERNAL_SERVER_ERROR
+        message:
+          type: string
+          description: Detailed message explaining the issue.
+          example: An internal server error occurred.
+  responses:
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NotFound'
+    ValidationError:
+      description: Validation error in the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ValidationError'
+    ServerError:
+      description: Indicates an internal server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ServerError'
+    Unauthorized:
+      description: Access to this resource is not available for unauthenticated users.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Unauthorized'
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY

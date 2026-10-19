@@ -1,131 +1,208 @@
 openapi: 3.2.0
 info:
-  title: Chimoney MultiCurrency Wallets API
-  description: Chimoney is a developer-first global payouts and disbursement platform with deep coverage across Africa and 130+ countries.
-  version: 0.2.2
-  contact:
-    name: Chimoney
-    url: https://chimoney.io
+  title: Chimoney API Docs MultiCurrency Wallets API
+  version: 0.2.4
+  description: This is the latest version of the Chimoney API. For deprecated version routes, please refer to /v0.2/api-docs.
 servers:
-- url: https://api.chimoney.io
-  description: Production (v0.2)
+- url: https://api.chimoney.io/
+  description: Prod Server
 - url: https://api-v2-sandbox.chimoney.io
-  description: Sandbox (v0.2)
+  description: Sandbox API v2 (v0.2.4)
 security:
 - apiKeyAuth: []
 tags:
 - name: MultiCurrency Wallets
-  description: Create and manage multicurrency wallets and transfer between them.
+  description: All Multicurrency Wallet related endpoints.
 paths:
-  /v0.2/multicurrency-wallets/create:
+  /v0.2.4/multicurrency-wallets/create:
     post:
-      operationId: post_v0.2_multicurrency-wallets_create
+      description: Production KYC follows organization settings and ignores requireKyc or requireKYC when supplied. Sandbox supports an explicit false to skip KYC for this test account; omitted follows organization policy.
+      summary: Create a new Multicurrency Wallet
       tags:
       - MultiCurrency Wallets
-      summary: Create a new Multicurrency Wallet
-      description: Create a new Multicurrency Wallet.
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required:
-              - name
               properties:
                 name:
                   type: string
+                  description: Name of owner of Wallet.
                   example: Mide Jones
                 email:
                   type: string
-                  example: user@example.com
+                  description: Email of owner of Wallet.
+                  example: user@mail.com
                 firstName:
                   type: string
+                  description: First Name of owner.
+                  example: Mide
                 lastName:
                   type: string
+                  description: Last Name of owner.
+                  example: Jones
                 phoneNumber:
                   type: string
+                  description: Phone Number with country code starting with a +.
                   example: '+16471234567'
+                requireKyc:
+                  type: boolean
+                  description: In production this deprecated input is ignored. In sandbox, false skips KYC for this account and true requires KYC. Omit to follow organization policy. Cannot be combined with requireKYC in sandbox.
+                requireKYC:
+                  type: boolean
+                  description: Legacy spelling of requireKyc. Ignored in production; uses the same override rules in sandbox. Send at most one spelling in sandbox.
+                country:
+                  type: object
+                  description: Declared legal residence. Required for organization-exempt accounts and used for currency eligibility.
+                  required:
+                  - code
+                  - name
+                  properties:
+                    code:
+                      type: string
+                      example: CA
+                    name:
+                      type: string
+                      example: Canada
                 meta:
                   type: object
                   description: Metadata to store about the account.
+              required:
+              - name
       responses:
         '200':
-          description: Successful response.
+          description: Success.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StandardResponse'
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    description: Message indicating the result of the operation.
+                    example: Sub-account created successfully
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: Unique identifier for the created sub-account.
+                        example: 907b90ef-d723-4b07-9f74-480afb5f09ef
+                      lastName:
+                        type: string
+                        description: Last name of the sub-account owner.
+                        example: Okeeke
+                      parent:
+                        type: string
+                        description: Parent account ID.
+                        example: qP3P6bjbjLZUMxVfxgEqzOF0hNM2
+                      feePercent:
+                        type: number
+                        description: Fee percentage for the sub-account.
+                        example: 0
+                      accountSecondCurrencies:
+                        type: array
+                        description: List of secondary currencies associated with the account.
+                        items:
+                          type: string
+                      verified:
+                        type: boolean
+                        description: Whether the sub-account is verified.
+                        example: true
+                      isScrimUser:
+                        type: boolean
+                        example: false
+                      subAccount:
+                        type: boolean
+                        example: true
+                      firstName:
+                        type: string
+                        example: Madueke
+                      preferredExchangeRate:
+                        type: boolean
+                        example: false
+                      uid:
+                        type: string
+                        example: 907b90ef-d723-4b07-9f74-480afb5f09ef
+                      approved:
+                        type: boolean
+                        example: true
+                      createdDate:
+                        type: string
+                        example: '2024-09-09T19:25:44.773Z'
+                      joinDate:
+                        type: string
+                        example: '2024-09-09T19:25:44.773Z'
+                      phoneNumber:
+                        type: string
+                        example: '+2348139955333'
+                      tier:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            example: tier-3
+                      meta:
+                        type: object
+                        properties:
+                          email:
+                            type: string
+                            example: Okyson@mail.com
+                      approvals:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            changedFields:
+                              type: array
+                              items:
+                                type: string
+                              example:
+                              - all
+                            deviceTime:
+                              type: string
+                              example: 9/9/2024
+                            timestamp:
+                              type: string
+                              example: '2024-09-09T19:25:33.918Z'
+                      name:
+                        type: string
+                        example: Madueke Okeeke
+                      apiUseEnabled:
+                        type: boolean
+                        example: true
+                      email:
+                        type: string
+                        example: Okyson@mail.com
+                      p_id:
+                        type: number
+                        example: 60250680
+                      verification:
+                        type: object
+                        properties:
+                          status:
+                            type: string
+                            example: completed
+        '400':
+          $ref: '#/components/responses/ValidationError'
         '401':
           $ref: '#/components/responses/Unauthorized'
-  /v0.2/multicurrency-wallets/get:
-    get:
-      operationId: get_v0.2_multicurrency-wallets_get
-      tags:
-      - MultiCurrency Wallets
-      summary: Get details of an existing multicurrency wallet
-      description: Get details of an existing multicurrency wallet.
-      parameters:
-      - name: id
-        in: query
-        required: true
-        description: Multicurrency wallet ID.
-        schema:
-          type: string
-      responses:
-        '200':
-          description: Successful response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/StandardResponse'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-  /v0.2/multicurrency-wallets/list:
-    get:
-      operationId: get_v0.2_multicurrency-wallets_list
-      tags:
-      - MultiCurrency Wallets
-      summary: Get all multicurrency wallets of an organization/account
-      description: Get all multicurrency wallets of an organization/account.
-      responses:
-        '200':
-          description: Successful response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/StandardResponse'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-  /v0.2/multicurrency-wallets/update:
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: postV024MulticurrencyWalletsCreate
+      x-operation-id-source: derived
+  /v0.2.4/multicurrency-wallets/update:
     post:
-      operationId: post_v0.2_multicurrency-wallets_update
+      summary: Update a multicurrency wallet
       tags:
       - MultiCurrency Wallets
-      summary: Update a multicurrency-wallets
-      description: Update a multicurrency-wallets.
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              additionalProperties: true
-      responses:
-        '200':
-          description: Successful response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/StandardResponse'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-  /v0.2/multicurrency-wallets/transfer:
-    post:
-      operationId: post_v0.2_multicurrency-wallets_transfer
-      tags:
-      - MultiCurrency Wallets
-      summary: Transfer from multicurrency wallet to another wallet, an email or a phone number
-      description: Transfer from multicurrency wallet to another wallet, an email or a phone number.
       requestBody:
         required: true
         content:
@@ -133,71 +210,830 @@ paths:
             schema:
               type: object
               properties:
-                walletID:
+                id:
                   type: string
-                receiver:
+                  description: MultiCurrency Wallet ID.
+                  example: 3c7b4a2a-dc67-439e-bde1-f5b30fb36bb7
+                meta:
+                  type: object
+                  description: meta to store any number of user information.
+                firstName:
                   type: string
-                  description: Destination wallet ID, email, or phone number.
-                amountToSend:
-                  type: number
-                currency:
+                  description: First Name of user.
+                  example: Mide
+                lastName:
                   type: string
-                  example: USD
+                  description: Last Name of user.
+                  example: Jones
+                phoneNumber:
+                  type: string
+                  description: Phone Number with country code starting with a +.
+                  example: '+16471234567'
+              required:
+              - id
+              - meta
       responses:
         '200':
-          description: Successful response.
+          description: Success.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StandardResponse'
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    description: A message indicating that the sub-account has been updated.
+                    example: Sub-account updated successfully
+                  data:
+                    type: object
+                    properties:
+                      _writeTime:
+                        type: object
+                        description: The timestamp indicating when the update occurred.
+                        properties:
+                          _seconds:
+                            type: integer
+                            description: The seconds part of the timestamp.
+                            example: 1725912009
+                          _nanoseconds:
+                            type: integer
+                            description: The nanoseconds part of the timestamp.
+                            example: 13040000
+        '400':
+          $ref: '#/components/responses/ValidationError'
         '401':
           $ref: '#/components/responses/Unauthorized'
-  /v0.2/multicurrency-wallets/transfer/quote:
-    post:
-      operationId: post_v0.2_multicurrency-wallets_transfer_quote
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: postV024MulticurrencyWalletsUpdate
+      x-operation-id-source: derived
+  /v0.2.4/multicurrency-wallets/get:
+    get:
+      summary: Get details of an existing multicurrency wallet
       tags:
       - MultiCurrency Wallets
+      parameters:
+      - in: query
+        name: id
+        schema:
+          type: string
+        description: Multicurrency wallet ID.
+        required: true
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Sub-account details fetched successfully
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: 907b90ef-d723-4b07-9f74-480afb5f09ef
+                      lastName:
+                        type: string
+                        example: Okeeke
+                      parent:
+                        type: string
+                        example: qP3P6bjbjLZUMxVfxgEqzOF0hNM2
+                      feePercent:
+                        type: integer
+                        example: 0
+                      accountSecondCurrencies:
+                        type: array
+                        items:
+                          type: string
+                        example: []
+                      verified:
+                        type: boolean
+                        example: true
+                      firstName:
+                        type: string
+                        example: Madueke
+                      phoneNumber:
+                        type: string
+                        example: '+2348139955333'
+                      tier:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            example: tier-3
+                      wallets:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              example: kmgq3kE1nUN5krrR3RcV
+                            owner:
+                              type: string
+                              example: 907b90ef-d723-4b07-9f74-480afb5f09ef
+                            balance:
+                              type: integer
+                              example: 1000
+                            type:
+                              type: string
+                              example: momo
+                            transactions:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  amount:
+                                    type: integer
+                                    example: 0
+                                  balanceBefore:
+                                    type: integer
+                                    example: 1000
+                                  meta:
+                                    type: object
+                                    properties:
+                                      date:
+                                        type: object
+                                        properties:
+                                          _seconds:
+                                            type: integer
+                                            example: 1725909944
+                                          _nanoseconds:
+                                            type: integer
+                                            example: 768000000
+                                  newBalance:
+                                    type: integer
+                                    example: 1000
+                                  description:
+                                    type: string
+                                    example: new wallet creation transaction
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Resource not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  error:
+                    type: string
+                    example: Resource Not Found
+                  code:
+                    type: string
+                    example: SUBACCOUNT_NOT_FOUND
+                  message:
+                    type: string
+                    example: Account with id 7fQ5Rrtl4iL1gmONEE5m not found
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: getV024MulticurrencyWalletsGet
+      x-operation-id-source: derived
+  /v0.2.4/multicurrency-wallets/list:
+    get:
+      summary: Get all multicurrency wallets of an organization/account
+      tags:
+      - MultiCurrency Wallets
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Sub-accounts listed successfully
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: 0c136fa6-84bc-49f0-a767-0804c1fd33f6
+                        lastName:
+                          type: string
+                          example: Jones
+                        parent:
+                          type: string
+                          example: qP3P6bjbjLZUMxVfxgEqzOF0hNM2
+                        feePercent:
+                          type: integer
+                          example: 0
+                        accountSecondCurrencies:
+                          type: array
+                          items:
+                            type: string
+                          example: []
+                        verified:
+                          type: boolean
+                          example: true
+                        isScrimUser:
+                          type: boolean
+                          example: false
+                        subAccount:
+                          type: boolean
+                          example: true
+                        firstName:
+                          type: string
+                          example: Mide
+                        preferredExchangeRate:
+                          type: boolean
+                          example: false
+                        uid:
+                          type: string
+                          example: 0c136fa6-84bc-49f0-a767-0804c1fd33f6
+                        approved:
+                          type: boolean
+                          example: true
+                        createdDate:
+                          type: string
+                          example: '2024-07-27T17:09:21.554Z'
+                        joinDate:
+                          type: string
+                          example: '2024-07-27T17:09:21.554Z'
+                        phoneNumber:
+                          type: string
+                          example: '+919647234567'
+                        meta:
+                          type: object
+                          properties:
+                            email:
+                              type: string
+                              example: oge@mail.com
+                        name:
+                          type: string
+                          example: Mide Jones
+                        apiUseEnabled:
+                          type: boolean
+                          example: true
+                        email:
+                          type: string
+                          example: oge@mail.com
+                        p_id:
+                          type: integer
+                          example: 23573993
+                        verification:
+                          type: object
+                          properties:
+                            status:
+                              type: string
+                              example: completed
+                        wallets:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                example: 2RjeBb1BQuNGpg40dVFo
+                              owner:
+                                type: string
+                                example: 0c136fa6-84bc-49f0-a767-0804c1fd33f6
+                              balance:
+                                type: integer
+                                example: 1000
+                              type:
+                                type: string
+                                example: momo
+                              transactions:
+                                type: array
+                                items:
+                                  type: object
+                                  properties:
+                                    amount:
+                                      type: integer
+                                      example: 0
+                                    balanceBefore:
+                                      type: integer
+                                      example: 1000
+                                    meta:
+                                      type: object
+                                      properties:
+                                        date:
+                                          type: object
+                                          properties:
+                                            _seconds:
+                                              type: integer
+                                              example: 1722100161
+                                            _nanoseconds:
+                                              type: integer
+                                              example: 553000000
+                                    newBalance:
+                                      type: integer
+                                      example: 1000
+                                    description:
+                                      type: string
+                                      example: new wallet creation transaction
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: getV024MulticurrencyWalletsList
+      x-operation-id-source: derived
+  /v0.2.4/multicurrency-wallets/transfer/quote:
+    post:
       summary: Get Quote to Transfer between multicurrency wallets
-      description: Get Quote to Transfer between multicurrency wallets.
+      tags:
+      - MultiCurrency Wallets
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               type: object
-              additionalProperties: true
+              properties:
+                sender:
+                  type: string
+                  description: ID of Multicurrency Account. Leave blank to transfer from parent.
+                  example: 907b90ef-d723-4b07-9f74-480afb5f09ef
+                amountToSend:
+                  type: string
+                  description: Amount in originCurrency currency to transfer/swap.
+                  example: '20'
+                originCurrency:
+                  type: string
+                  description: ISO Currency String like CAD, USD etc of the wallet to transfer from.
+                  example: USD
+                destinationCurrency:
+                  type: string
+                  description: ISO Currency String like CAD, USD etc of the wallet to transfer to.
+                  example: USD
+                receiver:
+                  type: string
+                  description: Receiver's Multicurrency Account ID.
+                  example: 0c136fa6-84bc-49f0-a767-0804c1fd33f6
+                email:
+                  type: string
+                  description: Receiver's email.
+                  example: ogedifavour2@gmail.com
+                phoneNumber:
+                  type: string
+                  description: Receiver's phone number.
+                  example: '+16471234567'
+              required:
+              - amountToSend
+              - originCurrency
+              - destinationCurrency
       responses:
         '200':
-          description: Successful response.
+          description: Success.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StandardResponse'
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Quote generated successfully
+                  data:
+                    type: object
+                    properties:
+                      receiver:
+                        type: string
+                        example: 0c136fa6-84bc-49f0-a767-0804c1fd33f6
+                      sender:
+                        type: string
+                        example: 907b90ef-d723-4b07-9f74-480afb5f09ef
+                      originCurrency:
+                        type: string
+                        example: USD
+                      originCurrencyDebitAmount:
+                        type: string
+                        example: '20'
+                      destinationCurrency:
+                        type: string
+                        example: USD
+                      destinationCurrencyCreditAmount:
+                        type: string
+                        example: '20'
+                      markups:
+                        type: object
+                        description: Additional fees or markups.
+                        example: {}
+        '400':
+          $ref: '#/components/responses/ValidationError'
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: postV024MulticurrencyWalletsTransferQuote
+      x-operation-id-source: derived
+  /v0.2.4/multicurrency-wallets/transfer:
+    post:
+      summary: Transfer from multicurrency wallet to another wallet, an email or a phone number
+      tags:
+      - MultiCurrency Wallets
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sender:
+                  type: string
+                  description: ID of Multicurrency Account. Leave blank to transfer from parent.
+                subAccount:
+                  type: string
+                  description: ID of Sub/Multicurrency Account. Overrides sender.
+                  example: 82628206-0253-4d37-b919-569efe896506
+                amountToSend:
+                  type: string
+                  description: Amount in originCurrency currency to transfer/swap.
+                  example: '2'
+                originCurrency:
+                  type: string
+                  description: ISO Currency String like CAD, USD, etc. of the wallet to transfer from.
+                  example: USD
+                receiver:
+                  type: string
+                  description: Valid Chimoney Multi-currency Account, User or Organization ID.
+                  example: '1234567'
+                email:
+                  type: string
+                  description: Send transfer to an email. Ignored if receiver is valid
+                  example: user@mail.com
+                phoneNumber:
+                  type: string
+                  description: Send transfer to a phone number. Ignored if receiver or email is valid
+                  example: '+16471234567'
+                destinationCurrency:
+                  type: string
+                  description: ISO Currency String like CAD, USD, etc. of the wallet to transfer to.
+                  example: USD
+                narration:
+                  type: string
+                  description: Narration/Description of the payment to be included in the notification to the user.
+                  example: Cross wallet transfer
+                turnOffNotification:
+                  type: boolean
+                  description: Disables email and other notifications from Chimoney.
+                  example: false
+                sendViaInterledger:
+                  type: boolean
+                  description: Instructs the transaction to be sent via Interledger. Sender is required to have a valid originCurrency payment Pointer and Receiver is required to have a valid destinationCurrency payment pointer.
+                  example: true
+              required:
+              - amountToSend
+              - originCurrency
+              - destinationCurrency
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Payout to Chimoney wallets completed successfully.
+                  data:
+                    type: object
+                    properties:
+                      paymentLink:
+                        type: string
+                        example: http://localhost:4000/pay/?issueID=82628206-0253-4d37-b919-569efe896506_2_1725919202472
+                      data:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              example: RnNDSRhA9xzTe9qSiBfb
+                            valueInUSD:
+                              type: string
+                              example: '2'
+                            chimoney:
+                              type: integer
+                              example: 2000
+                            issueID:
+                              type: string
+                              example: 82628206-0253-4d37-b919-569efe896506_2_1725919202472
+                            receiver:
+                              type: string
+                              example: ae07bf52-002b-489a-bc12-202f3beb3260
+                            personalizedMessage:
+                              type: string
+                              example: Cross wallet transfer
+                            fee:
+                              type: number
+                              example: 1
+                            type:
+                              type: string
+                              example: chimoney
+                            issuer:
+                              type: string
+                              example: 82628206-0253-4d37-b919-569efe896506
+                            t_id:
+                              type: integer
+                              example: 633011
+                            chiRef:
+                              type: string
+                              example: 3f4ca4f3-7bd7-44d0-bc8f-089bd9052b5e
+                            narration:
+                              type: string
+                              example: Cross wallet transfer
+                            integration:
+                              type: object
+                              properties:
+                                reference:
+                                  type: string
+                                appID:
+                                  type: string
+                                  example: TyGlLVepVqfOj3635qrC
+                            issueDate:
+                              type: string
+                              format: date-time
+                              example: '2024-09-09T22:00:18.901Z'
+                            redeemLink:
+                              type: string
+                              example: http://localhost:4000/redeem/?chi=3f4ca4f3-7bd7-44d0-bc8f-089bd9052b5e
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: postV024MulticurrencyWalletsTransfer
+      x-operation-id-source: derived
+  /v0.2.4/multicurrency-wallets/request:
+    post:
+      summary: Issue a new wallet to a subaccount
+      tags:
+      - MultiCurrency Wallets
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                subAccount:
+                  type: string
+                  description: ID of the subaccount to issue the wallet to
+                  example: 907b90ef-d723-4b07-9f74-480afb5f09ef
+                currency:
+                  type: string
+                  description: Currency code for the new wallet
+                  example: CAD
+              required:
+              - subAccount
+              - currency
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Wallet issued successfully
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      type:
+                        type: string
+                        example: chi
+                      currency:
+                        type: string
+                      owner:
+                        type: string
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: postV024MulticurrencyWalletsRequest
+      x-operation-id-source: derived
+  /v0.2.4/multicurrency-wallets/bank-account:
+    post:
+      summary: Issue a bank account to a subaccount
+      tags:
+      - MultiCurrency Wallets
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                subAccount:
+                  type: string
+                  description: ID of the subaccount to issue the bank account to
+                  example: 907b90ef-d723-4b07-9f74-480afb5f09ef
+                currency:
+                  type: string
+                  description: Currency code for the bank account (must be enabled for parent account)
+                  example: USD
+              required:
+              - subAccount
+              - currency
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Bank account issued successfully
+                  data:
+                    type: object
+                    properties:
+                      accountNumber:
+                        type: string
+                      routingNumber:
+                        type: string
+                      bankName:
+                        type: string
+                      accountType:
+                        type: string
+                      currency:
+                        type: string
+                      beneficiaryName:
+                        type: string
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: postV024MulticurrencyWalletsBankAccount
+      x-operation-id-source: derived
 components:
   schemas:
-    StandardResponse:
+    ValidationError:
       type: object
-      description: Standard Chimoney response envelope.
       properties:
         status:
           type: string
-          description: '"success" or "error".'
-          example: success
+          description: Status of the validation error.
+          example: error
+        type:
+          type: string
+          description: Type of validation error.
+          example: Validation Error
+        code:
+          type: string
+          description: Error code indicating validation issue.
+          example: INVALID_REQUEST
         message:
           type: string
-        data:
-          description: Endpoint-specific payload.
-  responses:
+          description: Detailed validation error message.
+          example: The request parameters are invalid.
+    NotFound:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the error.
+          example: error
+        type:
+          type: string
+          description: Type of error indicating resource not found.
+          example: Resource Not Found
+        code:
+          type: string
+          description: Error code for resource not found.
+          example: NOT_FOUND
+        message:
+          type: string
+          description: Detailed message explaining the resource not found error.
+          example: The requested resource could not be found.
+    Forbidden:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the response.
+          example: error
+        error:
+          type: string
+          description: Error message indicating forbidden access.
+          example: API Access not enabled for account Test. Email support@chimoney.io
     Unauthorized:
-      description: Missing or invalid API key.
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the response.
+          example: error
+        error:
+          type: string
+          description: Error message indicating unauthorized access.
+          example: API key is not defined. Generate a new one from the developer portal.
+    ServerError:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the error.
+          example: error
+        type:
+          type: string
+          description: Type of server error.
+          example: server error
+        code:
+          type: string
+          description: Specific error code for server issues.
+          example: INTERNAL_SERVER_ERROR
+        message:
+          type: string
+          description: Detailed message explaining the issue.
+          example: An internal server error occurred.
+  responses:
+    Forbidden:
+      description: Access to this resource is forbidden.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/StandardResponse'
+            $ref: '#/components/schemas/Forbidden'
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NotFound'
+    ValidationError:
+      description: Validation error in the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ValidationError'
+    ServerError:
+      description: Indicates an internal server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ServerError'
+    Unauthorized:
+      description: Access to this resource is not available for unauthenticated users.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Unauthorized'
   securitySchemes:
     apiKeyAuth:
       type: apiKey
       in: header
       name: X-API-KEY
-      description: API key issued from the Chimoney developer dashboard (https://dash.chimoney.io/developers), passed in the X-API-KEY request header.

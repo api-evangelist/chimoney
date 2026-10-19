@@ -1,29 +1,24 @@
 openapi: 3.2.0
 info:
-  title: Chimoney Wallet API
-  description: Chimoney is a developer-first global payouts and disbursement platform with deep coverage across Africa and 130+ countries.
-  version: 0.2.2
-  contact:
-    name: Chimoney
-    url: https://chimoney.io
+  title: Chimoney API Docs Wallet API
+  version: 0.2.4
+  description: This is the latest version of the Chimoney API. For deprecated version routes, please refer to /v0.2/api-docs.
 servers:
-- url: https://api.chimoney.io
-  description: Production (v0.2)
+- url: https://api.chimoney.io/
+  description: Prod Server
 - url: https://api-v2-sandbox.chimoney.io
-  description: Sandbox (v0.2)
+  description: Sandbox API v2 (v0.2.4)
 security:
 - apiKeyAuth: []
 tags:
 - name: Wallet
-  description: List, look up, and transfer between Chimoney wallets.
+  description: All wallet operations.
 paths:
-  /v0.2/wallets/list:
+  /v0.2.4/wallets/list:
     post:
-      operationId: post_v0.2_wallets_list
+      summary: List associated wallets
       tags:
       - Wallet
-      summary: List associated wallets
-      description: List associated wallets.
       requestBody:
         required: true
         content:
@@ -33,106 +28,468 @@ paths:
               properties:
                 subAccount:
                   type: string
+                  description: Subaccount if any.
+                  example: '1234567'
       responses:
         '200':
-          description: Successful response.
+          description: Success.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StandardResponse'
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the response.
+                    example: success
+                  message:
+                    type: string
+                    description: Descriptive message.
+                    example: Wallets retrieved successfully
+                  data:
+                    type: array
+                    description: List of wallets retrieved.
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: Unique ID of the wallet.
+                          example: 44rpn2F9rrmrf7OzWvch
+                        owner:
+                          type: string
+                          description: ID of the owner of the wallet.
+                          example: eaabe2eb-e774-4f81-8ba9-ede2ea2d0058
+                        balance:
+                          type: number
+                          description: Balance of the wallet.
+                          example: 1000
+                        type:
+                          type: string
+                          description: Type of the wallet.
+                          example: momo
+                        transactions:
+                          type: array
+                          description: List of transactions for the wallet.
+                          items:
+                            type: object
+                            description: Transaction object (empty in this example).
+        '400':
+          $ref: '#/components/responses/ValidationError'
         '401':
           $ref: '#/components/responses/Unauthorized'
-  /v0.2/wallets/lookup:
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: postV024WalletsList
+      x-operation-id-source: derived
+  /v0.2.4/wallets/lookup:
     post:
-      operationId: post_v0.2_wallets_lookup
+      summary: Get single wallet details
       tags:
       - Wallet
-      summary: Get single wallet details
-      description: Get single wallet details.
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required:
-              - walletID
               properties:
+                subAccount:
+                  type: string
+                  description: Subaccount if any.
+                  example: '1234567'
                 walletID:
                   type: string
-                subAccount:
-                  type: string
+                  description: Id of wallet.
+                  example: '12'
+              required:
+              - walletID
       responses:
         '200':
-          description: Successful response.
+          description: Success.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StandardResponse'
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the response.
+                    example: success
+                  message:
+                    type: string
+                    description: Descriptive message.
+                    example: Wallet retrieved successfully
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: Unique ID of the wallet.
+                        example: kb41D9JfAVL64RqRtUP7
+                      owner:
+                        type: string
+                        description: ID of the owner of the wallet.
+                        example: 63576330-b5f6-4279-9324-80633ce14710
+                      balance:
+                        type: number
+                        description: Balance of the wallet.
+                        example: 1000
+                      type:
+                        type: string
+                        description: Type of the wallet.
+                        example: airtime
+                      transactions:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            amount:
+                              type: number
+                              description: Amount involved in the transaction.
+                              example: 0
+                            balanceBefore:
+                              type: number
+                              description: Balance before the transaction.
+                              example: 1000
+                            meta:
+                              type: object
+                              properties:
+                                date:
+                                  type: object
+                                  properties:
+                                    _seconds:
+                                      type: integer
+                                      description: Date in seconds since epoch.
+                                      example: 1721543195
+                                    _nanoseconds:
+                                      type: integer
+                                      description: Nanoseconds part of the timestamp.
+                                      example: 417000000
+                            newBalance:
+                              type: number
+                              description: New balance after the transaction.
+                              example: 1000
+                            description:
+                              type: string
+                              description: Description of the transaction.
+                              example: new wallet creation transaction
+        '400':
+          $ref: '#/components/responses/ValidationError'
         '401':
           $ref: '#/components/responses/Unauthorized'
-  /v0.2/wallets/transfer:
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Resource not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  type:
+                    type: string
+                    example: Resource Not Found
+                  code:
+                    type: string
+                    example: WALLET_NOT_FOUND
+                  message:
+                    type: string
+                    example: Wallet not found or not owned by sender
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: postV024WalletsLookup
+      x-operation-id-source: derived
+  /v0.2.4/wallets/transfer:
     post:
-      operationId: post_v0.2_wallets_transfer
+      summary: Transfer between wallets
       tags:
       - Wallet
-      summary: Transfer between wallets
-      description: Transfer between wallets.
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required:
-              - receiver
-              - valueInUSD
               properties:
                 subAccount:
                   type: string
+                  description: Subaccount if any.
+                  example: '1234567'
                 receiver:
                   type: string
-                  description: Valid Chimoney user or organization ID.
+                  description: Valid Chimoney User or Organization ID.
+                  example: '1234567'
                 wallet:
                   type: string
-                  description: Wallet type. One of ["chi","momo","airtime"]. Leave blank unless you understand wallet types.
+                  description: Wallet type. Leave blank except you fully understand the different wallet types ["chi", "momo", "airtime"]
                   example: chi
                 valueInUSD:
                   type: number
+                  description: valueInUSD.
                   example: 200
+              required:
+              - receiver
+              - valueInUSD
       responses:
         '200':
-          description: Successful response.
+          description: Success.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StandardResponse'
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Payout to Chimoney wallets completed successfully.
+                  data:
+                    type: object
+                    properties:
+                      paymentLink:
+                        type: string
+                        description: Link to the payment details.
+                        example: /pay/?issueID=4cddf021-e908-4675-9ca3-59ad3b60046d_20_1726303299995
+                      data:
+                        type: array
+                        description: List of payout details.
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              example: bT5e8wArevVuaN5ApWWc
+                            valueInUSD:
+                              type: number
+                              example: 1
+                            chimoney:
+                              type: number
+                              example: 1000
+                            issueID:
+                              type: string
+                              example: 4cddf021-e908-4675-9ca3-59ad3b60046d_20_1726303299995
+                            fee:
+                              type: number
+                              example: 0
+                            type:
+                              type: string
+                              example: fee-collection
+                            issuer:
+                              type: string
+                              example: 4cddf021-e908-4675-9ca3-59ad3b60046d
+                            enabledToRedeem:
+                              type: array
+                              items:
+                                type: string
+                              example:
+                              - Products
+                            t_id:
+                              type: number
+                              example: 854474
+                            twitter:
+                              type: string
+                              example: Chimoney Fee
+                            chiRef:
+                              type: string
+                              example: 2050db96-fad8-42d3-a559-c366b850ad43
+                            issueDate:
+                              type: string
+                              format: date-time
+                              example: '2024-09-14T08:41:48.419Z'
+                            redeemData:
+                              type: object
+                              properties:
+                                walletID:
+                                  type: string
+                                  example: zj1MQ7fOYBhhRz9t7yMr
+                            initiatedBy:
+                              type: string
+                              example: 4cddf021-e908-4675-9ca3-59ad3b60046d
+                            redeemLink:
+                              type: string
+                              example: /redeem/?chi=2050db96-fad8-42d3-a559-c366b850ad43
+                      chimoneys:
+                        type: array
+                        description: List of Chimoneys.
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              example: bT5e8wArevVuaN5ApWWc
+                            valueInUSD:
+                              type: number
+                              example: 1
+                            chimoney:
+                              type: number
+                              example: 1000
+                            fee:
+                              type: number
+                              example: 0
+                            issuer:
+                              type: string
+                              example: 4cddf021-e908-4675-9ca3-59ad3b60046d
+                            issueDate:
+                              type: string
+                              format: date-time
+                              example: '2024-09-14T08:41:48.419Z'
+                            redeemData:
+                              type: object
+                              properties:
+                                walletID:
+                                  type: string
+                                  example: zj1MQ7fOYBhhRz9t7yMr
+                            redeemLink:
+                              type: string
+                              example: /redeem/?chi=2050db96-fad8-42d3-a559-c366b850ad43
+                      payouts:
+                        type: object
+                        properties:
+                          '0':
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                example: bT5e8wArevVuaN5ApWWc
+                              valueInUSD:
+                                type: number
+                                example: 1
+                              chimoney:
+                                type: number
+                                example: 1000
+                              fee:
+                                type: number
+                                example: 0
+                              status:
+                                type: string
+                                example: paid
+                          '1':
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                example: gyiMM5B8Cofo431cMAZm
+                              valueInUSD:
+                                type: number
+                                example: 20
+                              chimoney:
+                                type: number
+                                example: 20000
+                              fee:
+                                type: number
+                                example: 1
+                              status:
+                                type: string
+                                example: paid
+                          issueID:
+                            type: string
+                            example: 4cddf021-e908-4675-9ca3-59ad3b60046d_20_1726303299995
+        '400':
+          $ref: '#/components/responses/ValidationError'
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: postV024WalletsTransfer
+      x-operation-id-source: derived
 components:
   schemas:
-    StandardResponse:
+    ValidationError:
       type: object
-      description: Standard Chimoney response envelope.
       properties:
         status:
           type: string
-          description: '"success" or "error".'
-          example: success
+          description: Status of the validation error.
+          example: error
+        type:
+          type: string
+          description: Type of validation error.
+          example: Validation Error
+        code:
+          type: string
+          description: Error code indicating validation issue.
+          example: INVALID_REQUEST
         message:
           type: string
-        data:
-          description: Endpoint-specific payload.
-  responses:
+          description: Detailed validation error message.
+          example: The request parameters are invalid.
+    Forbidden:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the response.
+          example: error
+        error:
+          type: string
+          description: Error message indicating forbidden access.
+          example: API Access not enabled for account Test. Email support@chimoney.io
     Unauthorized:
-      description: Missing or invalid API key.
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the response.
+          example: error
+        error:
+          type: string
+          description: Error message indicating unauthorized access.
+          example: API key is not defined. Generate a new one from the developer portal.
+    ServerError:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the error.
+          example: error
+        type:
+          type: string
+          description: Type of server error.
+          example: server error
+        code:
+          type: string
+          description: Specific error code for server issues.
+          example: INTERNAL_SERVER_ERROR
+        message:
+          type: string
+          description: Detailed message explaining the issue.
+          example: An internal server error occurred.
+  responses:
+    Forbidden:
+      description: Access to this resource is forbidden.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/StandardResponse'
+            $ref: '#/components/schemas/Forbidden'
+    ValidationError:
+      description: Validation error in the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ValidationError'
+    ServerError:
+      description: Indicates an internal server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ServerError'
+    Unauthorized:
+      description: Access to this resource is not available for unauthenticated users.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Unauthorized'
   securitySchemes:
     apiKeyAuth:
       type: apiKey
       in: header
       name: X-API-KEY
-      description: API key issued from the Chimoney developer dashboard (https://dash.chimoney.io/developers), passed in the X-API-KEY request header.

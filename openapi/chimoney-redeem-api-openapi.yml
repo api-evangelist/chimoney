@@ -1,164 +1,809 @@
 openapi: 3.2.0
 info:
-  title: Chimoney Redeem API
-  description: Chimoney is a developer-first global payouts and disbursement platform with deep coverage across Africa and 130+ countries.
-  version: 0.2.2
-  contact:
-    name: Chimoney
-    url: https://chimoney.io
+  title: Chimoney API Docs Redeem API
+  version: 0.2.4
+  description: This is the latest version of the Chimoney API. For deprecated version routes, please refer to /v0.2/api-docs.
 servers:
-- url: https://api.chimoney.io
-  description: Production (v0.2)
+- url: https://api.chimoney.io/
+  description: Prod Server
 - url: https://api-v2-sandbox.chimoney.io
-  description: Sandbox (v0.2)
+  description: Sandbox API v2 (v0.2.4)
 security:
 - apiKeyAuth: []
 tags:
 - name: Redeem
-  description: Redeem issued Chimoney, airtime, gift cards, and mobile money.
+  description: All redeem operations.
 paths:
-  /v0.2/redeem/any:
+  /v0.2.4/redeem/any:
     post:
-      operationId: post_v0.2_redeem_any
-      tags:
-      - Redeem
       summary: Redeem any
-      description: Redeem any.
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              additionalProperties: true
-      responses:
-        '200':
-          description: Successful response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/StandardResponse'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-  /v0.2/redeem/chimoney:
-    post:
-      operationId: post_v0.2_redeem_chimoney
       tags:
       - Redeem
-      summary: Redeem Chimoney
-      description: Redeem Chimoney.
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required:
-              - chiRef
               properties:
-                chiRef:
-                  type: string
-                  description: Chimoney reference to redeem.
                 subAccount:
                   type: string
+                  description: Subaccount if any.
+                  example: '1234567'
+                chiRef:
+                  type: string
+                  description: Chi reference.
+                  example: '1234567'
+                meta:
+                  type: object
+                  description: Any data to be sent along with the request.
+                  properties:
+                    test:
+                      type: boolean
+                      example: true
+                redeemData:
+                  type: object
+                  description: Data needed to redeem. See examples in body.
+                  example:
+                    countryCode: US
+                    productId: '5'
+                    email: test@gmail.com
+              required:
+              - chiRef
+              - redeemData
       responses:
         '200':
-          description: Successful response.
+          description: Success.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StandardResponse'
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Redeemed successfully
+                  data:
+                    type: object
+                    properties:
+                      payoutLink:
+                        type: string
+                        example: http://localhost:4000/pay/?issueID=eaabe2eb-e774-4f81-8ba9-ede2ea2d0058_5_1726506283562
+                      error:
+                        type: string
+                        example: None
+                      timeStamp:
+                        type: string
+                        example: '2024-09-16 17:12:21'
+                      message:
+                        type: string
+                      path:
+                        type: string
+                        example: /orders
+                      errorCode:
+                        type: string
+                        example: INVALID_INPUT_PROVIDED
+                      infoLink:
+                        type:
+                        - string
+                        - 'null'
+                        example: null
+                      details:
+                        type: array
+                        items:
+                          type: object
+                        example: []
+        '400':
+          $ref: '#/components/responses/ValidationError'
         '401':
           $ref: '#/components/responses/Unauthorized'
-  /v0.2/redeem/airtime:
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/TransactionNotFoundError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: postV024RedeemAny
+      x-operation-id-source: derived
+  /v0.2.4/redeem/airtime:
     post:
-      operationId: post_v0.2_redeem_airtime
-      tags:
-      - Redeem
       summary: Redeem airtime
-      description: Redeem airtime.
+      tags:
+      - Redeem
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               type: object
-              additionalProperties: true
+              properties:
+                subAccount:
+                  type: string
+                  description: Subaccount if any.
+                  example: '1234567'
+                chiRef:
+                  type: string
+                  description: Chi reference.
+                  example: '1234567'
+                phoneNumber:
+                  type: string
+                  description: Phone number.
+                  example: '+2341234567'
+                countryToSend:
+                  type: string
+                  description: Country to send to.
+                  example: Nigeria
+                meta:
+                  type: object
+                  description: Any data to be sent along with request.
+                  properties:
+                    test:
+                      type: boolean
+                      example: true
+              required:
+              - chiRef
+              - phoneNumber
+              - countryToSend
       responses:
         '200':
-          description: Successful response.
+          description: Success.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StandardResponse'
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Airtime redeemed successfully
+                  data:
+                    type: object
+                    properties:
+                      payoutLink:
+                        type: string
+                        example: http://localhost:4000/pay/?issueID=eaabe2eb-e774-4f81-8ba9-ede2ea2d0058_10_1726494779981
+                      data:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            example: KGiwpulQZHnanhNnCEak
+                          valueInUSD:
+                            type: number
+                            example: 10
+                          chimoney:
+                            type: number
+                            example: 10000
+                          issueID:
+                            type: string
+                            example: eaabe2eb-e774-4f81-8ba9-ede2ea2d0058_10_1726494779981
+                          fee:
+                            type: number
+                            example: 0
+                          type:
+                            type: string
+                            example: api-payment
+                          subAccount:
+                            type: string
+                            example: eaabe2eb-e774-4f81-8ba9-ede2ea2d0058
+                          issuer:
+                            type: string
+                            example: eaabe2eb-e774-4f81-8ba9-ede2ea2d0058
+                          t_id:
+                            type: number
+                            example: 89448
+                          chiRef:
+                            type: string
+                            example: e8bb27c9-7e6d-4734-b242-36efbd5f8f5c
+                          meta:
+                            type: object
+                            example: {}
+                          integration:
+                            type: object
+                            properties:
+                              appID:
+                                type: string
+                                example: TyGlLVepVqfOj3635qrC
+                              isFromScrim:
+                                type: boolean
+                                example: false
+                          turnOffNotification:
+                            type: boolean
+                            example: false
+                          issueDate:
+                            type: string
+                            example: '2024-09-16T13:53:00.806Z'
+                          payerEmail:
+                            type: string
+                            example: favour@chimoney.io
+                          redirect_url:
+                            type: string
+                            example: https://test.com
+                          redeemData:
+                            type: object
+                            properties:
+                              walletID:
+                                type: string
+                                example: 6ShqiB470pYLLgFE1Duc
+                          initiatedBy:
+                            type: string
+                            example: 1d812de4-b5e3-474b-9572-19667eb985f3
+                          fundsAvailableDate:
+                            type:
+                            - string
+                            - 'null'
+                            example: null
+                          updatedDate:
+                            type: string
+                            example: '2024-09-16T13:54:52.078Z'
+                          paymentDate:
+                            type: string
+                            example: '2024-09-16T13:54:52.077Z'
+                          status:
+                            type: string
+                            example: paid
+                      error:
+                        type: string
+                        example: None
+                      payouts:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            amount:
+                              type: string
+                              example: NGN 15827.6000
+                            discount:
+                              type: string
+                              example: NGN 316.5520
+                            errorMessage:
+                              type: string
+                              example: None
+                            phoneNumber:
+                              type: string
+                              example: '+2348056849366'
+                            requestId:
+                              type: string
+                              example: ATQid_c6456457b765be56bf8d5a9d6c22a3ac
+                            status:
+                              type: string
+                              example: Sent
+        '400':
+          $ref: '#/components/responses/ValidationError'
         '401':
           $ref: '#/components/responses/Unauthorized'
-  /v0.2/redeem/gift-card:
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/TransactionNotFoundError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: postV024RedeemAirtime
+      x-operation-id-source: derived
+  /v0.2.4/redeem/chimoney:
     post:
-      operationId: post_v0.2_redeem_gift-card
+      summary: Redeem Chimoney
       tags:
       - Redeem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                subAccount:
+                  type: string
+                  description: Subaccount associated with the transaction, if any.
+                  example: 69791840-4f46-4e97-b6fd-b411bde50202
+                turnOffNotification:
+                  type: boolean
+                  description: Option to turn off notifications for this redemption. Defaults to false.
+                  example: false
+                chimoneys:
+                  type: array
+                  description: Array of Chimoney objects to redeem.
+                  items:
+                    type: object
+                    properties:
+                      valueInUSD:
+                        type: string
+                        description: Value of the Chimoney in USD.
+                        example: '5'
+                      email:
+                        type: string
+                        description: Email address of the recipient.
+                        example: ogedifavo@gmail.com
+              required:
+              - chimoneys
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Chimoney redeemed successfully
+                  data:
+                    type: object
+                    properties:
+                      paymentLink:
+                        type: string
+                        example: http://localhost:4000/pay/?issueID=69791840-4f46-4e97-b6fd-b411bde50202_5_1726496063760
+                      data:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              example: Es2SI02XwLHBFFT3MTHF
+                            t_id:
+                              type: number
+                              example: 34854
+                            valueInUSD:
+                              type: string
+                              example: '5'
+                            chimoney:
+                              type: number
+                              example: 5000
+                            issueID:
+                              type: string
+                              example: 69791840-4f46-4e97-b6fd-b411bde50202_5_1726496063760
+                            chiRef:
+                              type: string
+                              example: 0a6eef6c-3c38-4a3a-8b1e-2c46e63ac9d2
+                            fee:
+                              type: number
+                              example: 1
+                            type:
+                              type: string
+                              example: chimoney
+                            issueDate:
+                              type: string
+                              example: '2024-09-16T14:14:27.283Z'
+                            email:
+                              type: string
+                              example: ogedifavo@gmail.com
+                            issuer:
+                              type: string
+                              example: 69791840-4f46-4e97-b6fd-b411bde50202
+                            status:
+                              type: string
+                              example: unpaid
+                            redeemLink:
+                              type: string
+                              example: http://localhost:4000/redeem/?chi=0a6eef6c-3c38-4a3a-8b1e-2c46e63ac9d2
+                      error:
+                        type: string
+                        example: None
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: postV024RedeemChimoney
+      x-operation-id-source: derived
+  /v0.2.4/redeem/gift-card:
+    post:
       summary: Redeem giftcard
-      description: Redeem giftcard.
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              additionalProperties: true
-      responses:
-        '200':
-          description: Successful response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/StandardResponse'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-  /v0.2/redeem/mobile-money:
-    post:
-      operationId: post_v0.2_redeem_mobile-money
       tags:
       - Redeem
-      summary: Redeem mobile money
-      description: Redeem mobile money.
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               type: object
-              additionalProperties: true
+              properties:
+                subAccount:
+                  type: string
+                  description: Subaccount if any.
+                  example: '1234567'
+                chiRef:
+                  type: string
+                  description: Chi reference.
+                  example: '1234567'
+                redeemOptions:
+                  type: object
+                  description: Data needed to redeem.
+                  properties:
+                    email:
+                      type: string
+                      example: test@gmail.com
+                    countryCode:
+                      type: string
+                      example: '+234'
+                    productId:
+                      type: string
+                      example: '2334'
+              required:
+              - chiRef
+              - redeemOptions
       responses:
         '200':
-          description: Successful response.
+          description: Successfully redeemed gift card.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StandardResponse'
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Gift card redeemed successfully
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: APCPpcya0vyxtT6cHarp
+                      valueInUSD:
+                        type: number
+                        example: 10
+                      chimoney:
+                        type: integer
+                        example: 10000
+                      issueID:
+                        type: string
+                        example: 69791840-4f46-4e97-b6fd-b411bde50202_10_1723654027431
+                      fee:
+                        type: integer
+                        example: 0
+                      type:
+                        type: string
+                        example: api-payment
+                      subAccount:
+                        type: string
+                        example: 69791840-4f46-4e97-b6fd-b411bde50202
+                      issuer:
+                        type: string
+                        example: 69791840-4f46-4e97-b6fd-b411bde50202
+                      t_id:
+                        type: integer
+                        example: 429775
+                      chiRef:
+                        type: string
+                        example: 20091480-8f61-43d6-b2ec-97de96c21d01
+                      meta:
+                        type: object
+                        example: {}
+                      integration:
+                        type: object
+                        properties:
+                          appID:
+                            type: string
+                            example: rCh0APD3W3V7SE4EDVn6
+                          isFromScrim:
+                            type: boolean
+                            example: false
+                      turnOffNotification:
+                        type: boolean
+                        example: false
+                      issueDate:
+                        type: string
+                        example: '2024-08-14T16:47:08.253Z'
+                      payerEmail:
+                        type: string
+                        example: favour@chimoney.io
+                      redirect_url:
+                        type: string
+                        example: https://test.com
+                      redeemData:
+                        type: object
+                        properties:
+                          walletID:
+                            type: string
+                            example: bFQntsPMWtfg0MQ5r911
+                      initiatedBy:
+                        type: string
+                        example: qP3P6bjbjLZUMxVfxgEqzOF0hNM2
+                      fundsAvailableDate:
+                        type:
+                        - string
+                        - 'null'
+                        example: null
+                      updatedDate:
+                        type: string
+                        example: '2024-08-14T16:47:29.320Z'
+                      paymentDate:
+                        type: string
+                        example: '2024-08-14T16:47:29.320Z'
+                      status:
+                        type: string
+                        example: paid
+                      walletID:
+                        type: string
+                        example: bFQntsPMWtfg0MQ5r911
+                      email:
+                        type: string
+                        example: example@gmail.com
+                      countryCode:
+                        type: string
+                        example: 234
+                      productId:
+                        type: string
+                        example: 232222
+        '400':
+          $ref: '#/components/responses/ValidationError'
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/TransactionNotFoundError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: postV024RedeemGiftCard
+      x-operation-id-source: derived
+  /v0.2.4/redeem/mobile-money:
+    post:
+      summary: Redeem mobile money
+      tags:
+      - Redeem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                subAccount:
+                  type: string
+                  description: Subaccount if any.
+                  example: 69791840-4f46-4e97-b6fd-b411bde50202
+                chiRef:
+                  type: string
+                  description: Chi reference.
+                  example: 27583029-145b-4575-a608-0fbf655a0f2a
+                redeemOptions:
+                  type: object
+                  description: Data needed to redeem.
+                  properties:
+                    phoneNumber:
+                      type: string
+                      example: '+2248123388400'
+                    countryToSend:
+                      type: string
+                      example: Kenya
+                    momoCode:
+                      type: string
+                      example: MPS
+              required:
+              - chiRef
+              - redeemOptions
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Mobile money redeemed successfully
+                  data:
+                    type: object
+                    properties:
+                      payoutLink:
+                        type: string
+                        example: http://localhost:4000/pay/?issueID=69791840-4f46-4e97-b6fd-b411bde50202_10_1723717712329
+                      error:
+                        type: string
+                        example: None
+                      id:
+                        type: integer
+                        example: 648221
+                      account_number:
+                        type: string
+                        example: '2248123388400'
+                      bank_code:
+                        type: string
+                        example: MPS
+                      full_name:
+                        type: string
+                        example: NOT PROVIDED
+                      created_at:
+                        type: string
+                        example: '2024-08-15T12:22:56.000Z'
+                      currency:
+                        type: string
+                        example: KES
+                      debit_currency:
+                        type: string
+                        example: USD
+                      amount:
+                        type: number
+                        example: 1302.2987
+                      status:
+                        type: string
+                        example: NEW
+                      reference:
+                        type: string
+                        example: 27583029-145b-4575-a608-0fbf655a0f2a_1723724574832
+                      meta:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            Sender:
+                              type: string
+                              example: Uchi Uchibeke
+                            EmailAddress:
+                              type: string
+                              example: support@chimoney.io
+                            MobileNumber:
+                              type: string
+                              example: '16479330835'
+                            SenderCountry:
+                              type: string
+                              example: CA
+                            SenderIdType:
+                              type: string
+                              example: '04'
+                            SenderIdNumber:
+                              type: string
+                              example: '1204939024'
+                      narration:
+                        type: string
+                        example: 'Chi: 27583029-145b-4575-a608-0fbf655a0f2a'
+                      complete_message:
+                        type: string
+                        example: ''
+                      requires_approval:
+                        type: integer
+                        example: 0
+                      is_approved:
+                        type: integer
+                        example: 1
+                      bank_name:
+                        type: string
+                        example: FA-BANK
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/TransactionNotFoundError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      operationId: postV024RedeemMobileMoney
+      x-operation-id-source: derived
 components:
   schemas:
-    StandardResponse:
+    ValidationError:
       type: object
-      description: Standard Chimoney response envelope.
       properties:
         status:
           type: string
-          description: '"success" or "error".'
-          example: success
+          description: Status of the validation error.
+          example: error
+        type:
+          type: string
+          description: Type of validation error.
+          example: Validation Error
+        code:
+          type: string
+          description: Error code indicating validation issue.
+          example: INVALID_REQUEST
         message:
           type: string
-        data:
-          description: Endpoint-specific payload.
-  responses:
+          description: Detailed validation error message.
+          example: The request parameters are invalid.
+    TransactionNotFoundError:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the error.
+          example: error
+        type:
+          type: string
+          description: Type of error indicating transaction not found.
+          example: Resource Not Found
+        code:
+          type: string
+          description: Error code for transaction not found.
+          example: TRANSACTION_NOT_FOUND
+        message:
+          type: string
+          description: Detailed message explaining the transaction not found error.
+          example: The transaction with the provided ID could not be found.
+    Forbidden:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the response.
+          example: error
+        error:
+          type: string
+          description: Error message indicating forbidden access.
+          example: API Access not enabled for account Test. Email support@chimoney.io
     Unauthorized:
-      description: Missing or invalid API key.
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the response.
+          example: error
+        error:
+          type: string
+          description: Error message indicating unauthorized access.
+          example: API key is not defined. Generate a new one from the developer portal.
+    ServerError:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the error.
+          example: error
+        type:
+          type: string
+          description: Type of server error.
+          example: server error
+        code:
+          type: string
+          description: Specific error code for server issues.
+          example: INTERNAL_SERVER_ERROR
+        message:
+          type: string
+          description: Detailed message explaining the issue.
+          example: An internal server error occurred.
+  responses:
+    Forbidden:
+      description: Access to this resource is forbidden.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/StandardResponse'
+            $ref: '#/components/schemas/Forbidden'
+    TransactionNotFoundError:
+      description: Error indicating that the transaction was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TransactionNotFoundError'
+    ValidationError:
+      description: Validation error in the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ValidationError'
+    ServerError:
+      description: Indicates an internal server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ServerError'
+    Unauthorized:
+      description: Access to this resource is not available for unauthenticated users.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Unauthorized'
   securitySchemes:
     apiKeyAuth:
       type: apiKey
       in: header
       name: X-API-KEY
-      description: API key issued from the Chimoney developer dashboard (https://dash.chimoney.io/developers), passed in the X-API-KEY request header.
