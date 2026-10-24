@@ -365,6 +365,8 @@ apis:
   humanURL: https://chimoney.readme.io/reference/payouts
   baseURL: https://api.chimoney.io/v0.2
   tags:
+  - Artificial Intelligence
+  tags_raw:
   - AI
   properties:
   - type: OpenAPI
@@ -429,6 +431,8 @@ apis:
   humanURL: https://chimoney.readme.io/reference/payouts
   baseURL: https://api.chimoney.io/v0.2
   tags:
+  - Passthrough
+  tags_raw:
   - Pass-through
   properties:
   - type: OpenAPI
